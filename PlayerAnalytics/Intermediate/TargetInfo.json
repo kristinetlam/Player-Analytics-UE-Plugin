@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "PlayerAnalytics",
+			"Path": "..\\Source\\PlayerAnalytics.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "PlayerAnalyticsEditor",
+			"Path": "..\\Source\\PlayerAnalyticsEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

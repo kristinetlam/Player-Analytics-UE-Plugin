@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\PlayerAnalytics.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PlayerAnalytics.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\PlayerAnalyticsEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\PlayerAnalytics">
+      <UniqueIdentifier>{ABC0AFD6-C557-37BB-A4CC-BA3745858431}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PlayerAnalytics\PlayerAnalytics.Build.cs">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalytics.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalytics.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsCharacter.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsCharacter.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsGameMode.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsGameMode.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsPickUpComponent.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsPickUpComponent.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsProjectile.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsProjectile.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsWeaponComponent.cpp">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PlayerAnalytics\PlayerAnalyticsWeaponComponent.h">
+      <Filter>Source\PlayerAnalytics</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

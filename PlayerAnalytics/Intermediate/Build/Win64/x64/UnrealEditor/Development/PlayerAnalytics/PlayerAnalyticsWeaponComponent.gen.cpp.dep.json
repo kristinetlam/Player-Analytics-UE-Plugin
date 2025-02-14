@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\unrealeditor\\inc\\playeranalytics\\uht\\playeranalyticsweaponcomponent.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\x64\\playeranalyticseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\playeranalytics\\definitions.playeranalytics.h",
+            "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\source\\playeranalytics\\playeranalyticsweaponcomponent.h",
+            "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\unrealeditor\\inc\\playeranalytics\\uht\\playeranalyticsweaponcomponent.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

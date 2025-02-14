@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\playeranalytics\\permoduleinline.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\x64\\playeranalyticseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "c:\\users\\brack\\tamu\\capstone\\player-analytics-ue-plugin\\playeranalytics\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\playeranalytics\\definitions.playeranalytics.h",
+            "c:\\program files\\epic games\\ue_5.5\\engine\\source\\runtime\\core\\public\\hal\\permoduleinline.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
