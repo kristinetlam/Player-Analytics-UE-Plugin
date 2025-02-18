@@ -67,7 +67,8 @@ Build/*/**
 Saved/*
 
 # Compiled source files for the engine to use
-Intermediate/*
+PlayerAnalytics/Intermediate/*
+PlayerAnalytics/Intermediate
 Intermediate
 Plugins/**/Intermediate/*
 
@@ -79,3 +80,7 @@ Logs/*
 /PlayerAnalytics/Saved/Logs
 PlayerAnalytics/Saved/AutoScreenshot.png
 /PlayerAnalytics/Saved
+PlayerAnalytics/Binaries/Win64/PlayerAnalyticsEditor.target
+PlayerAnalytics/Binaries/Win64/UnrealEditor-PlayerAnalytics.exp
+PlayerAnalytics/Binaries/Win64/UnrealEditor-PlayerAnalytics.pdb
+PlayerAnalytics/Binaries/Win64/UnrealEditor.modules
