@@ -1,8 +1,0 @@
-{
-	"SourceFiles": [
-		"C:\\Users\\Brack\\Tamu\\Capstone\\Player-Analytics-UE-Plugin\\PlayerAnalytics\\Source\\PlayerAnalytics\\PlayerAnalytics.Build.cs",
-		"C:\\Users\\Brack\\Tamu\\Capstone\\Player-Analytics-UE-Plugin\\PlayerAnalytics\\Source\\PlayerAnalytics.Target.cs",
-		"C:\\Users\\Brack\\Tamu\\Capstone\\Player-Analytics-UE-Plugin\\PlayerAnalytics\\Source\\PlayerAnalyticsEditor.Target.cs"
-	],
-	"EngineVersion": "5.5.3"
-}
