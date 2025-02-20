@@ -13,4 +13,7 @@ public:
     // Expose PrintMessage to Blueprints
     UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
     static void PrintHelloWorld();
+
+    UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
+    static void PrintHelloWorld2();
 };
