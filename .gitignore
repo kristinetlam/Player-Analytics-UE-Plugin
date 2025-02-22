@@ -91,3 +91,16 @@ PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-Player
 PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.patch_0.exp
 PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.pdb
 PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.pdb
+PlayerAnalytics/Binaries/Win64/PlayerAnalyticsEditor-Win64-DebugGame.target
+PlayerAnalytics/Binaries/Win64/UnrealEditor-PlayerAnalytics-Win64-DebugGame.exp
+PlayerAnalytics/Binaries/Win64/UnrealEditor-PlayerAnalytics-Win64-DebugGame.pdb
+PlayerAnalytics/Binaries/Win64/UnrealEditor-Win64-DebugGame.modules
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin-Win64-DebugGame.exp
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin-Win64-DebugGame.pdb
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.exp
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.pdb
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-Win64-DebugGame.modules
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Source/PlayerAnalyticsPlugin/.vscode/c_cpp_properties.json
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Source/PlayerAnalyticsPlugin/.vscode/launch.json
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Source/PlayerAnalyticsPlugin/.vscode/settings.json
+PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.exp
