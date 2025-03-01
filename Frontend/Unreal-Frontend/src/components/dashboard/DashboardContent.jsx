@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-function DashboardContent({ pathname, children }) {
+function DashboardContent({ pathname, children, sx }) {
     console.log("Rendering DashboardContent", { pathname });
   return (
     <Box
       sx={{
+        ...sx,
         py: 4,
         display: 'flex',
         flexDirection: 'column',

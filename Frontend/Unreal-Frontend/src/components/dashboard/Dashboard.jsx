@@ -17,6 +17,9 @@ import BasicPie from '../graphs/PieChart';
 import BasicScatter from '../graphs/ScatterPlot';
 import CardComponent from '../CardComponent';
 import DashboardContent from './DashboardContent';
+import { Card } from '@mui/material';
+import ApexChart from '../graphs/Heatmap';
+import CompositionExample from '../graphs/GaugeChart';
 
 const NAVIGATION = [
   {
@@ -106,12 +109,14 @@ function DashboardLayoutBasic() {
     return (
       <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
         <DashboardLayout>
-          <DashboardContent pathname={router.pathname}>
+          <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <CardComponent title="Blablabla" description="blablabla"><BasicBars /></CardComponent>
+              <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent><BasicPie /></CardComponent>
               <CardComponent><BasicScatter /></CardComponent>
+              <CardComponent title="Player Location" description="Visualizes player movement density across the game map"><ApexChart/></CardComponent>
+              <CardComponent><CompositionExample /></CardComponent>
             </Box>
           </DashboardContent>
         </DashboardLayout>
