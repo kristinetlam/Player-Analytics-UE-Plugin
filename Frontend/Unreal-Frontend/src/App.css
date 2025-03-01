@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+body, .dashboard-container {
+  background-color: #f5f5f5; /* Replace with your chosen color hex code */
+}
+
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -39,4 +44,11 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.charts-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
