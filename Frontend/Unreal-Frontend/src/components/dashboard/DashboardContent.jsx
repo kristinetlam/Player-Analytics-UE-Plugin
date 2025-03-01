@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 function DashboardContent({ pathname, children }) {
+    console.log("Rendering DashboardContent", { pathname });
   return (
     <Box
       sx={{
@@ -14,10 +15,8 @@ function DashboardContent({ pathname, children }) {
         textAlign: 'center',
       }}
     >
-      <Typography variant="h6">Dashboard content for {pathname}</Typography>
-      <Box sx={{ width: '100%' }}>
-        {children}
-      </Box>
+      <Typography>Dashboard content for {pathname}</Typography>
+      {children}
     </Box>
   );
 }
@@ -26,3 +25,5 @@ DashboardContent.propTypes = {
   pathname: PropTypes.string.isRequired,
   children: PropTypes.node,
 };
+
+export default DashboardContent;

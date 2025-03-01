@@ -11,6 +11,12 @@ import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
+import BasicBars from '../graphs/BarGraph';
+import BasicLineChart from '../graphs/LineGraph';
+import BasicPie from '../graphs/PieChart';
+import BasicScatter from '../graphs/ScatterPlot';
+import CardComponent from '../CardComponent';
+import DashboardContent from './DashboardContent';
 
 const NAVIGATION = [
   {
@@ -94,29 +100,25 @@ DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
 };
 
-function DashboardLayoutBasic(props) {
-  const { window } = props;
-
-  const router = useDemoRouter('/dashboard');
-
-  // Remove this const when copying and pasting into your project.
-  const demoWindow = window !== undefined ? window() : undefined;
-
-  return (
-    // preview-start
-    <AppProvider
-      navigation={NAVIGATION}
-      router={router}
-      theme={demoTheme}
-      window={demoWindow}
-    >
-      <DashboardLayout>
-        <DemoPageContent pathname={router.pathname} />
-      </DashboardLayout>
-    </AppProvider>
-    // preview-end
-  );
-}
+function DashboardLayoutBasic() {
+    const router = useDemoRouter('/dashboard');
+  
+    return (
+      <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
+        <DashboardLayout>
+          <DashboardContent pathname={router.pathname}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <CardComponent><BasicBars /></CardComponent>
+              <CardComponent><BasicLineChart /></CardComponent>
+              <CardComponent><BasicPie /></CardComponent>
+              <CardComponent><BasicScatter /></CardComponent>
+              {/* Add more charts here if needed */}
+            </Box>
+          </DashboardContent>
+        </DashboardLayout>
+      </AppProvider>
+    );
+  }
 
 DashboardLayoutBasic.propTypes = {
   /**

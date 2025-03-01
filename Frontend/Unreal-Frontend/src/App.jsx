@@ -4,7 +4,7 @@ import BasicLineChart from './components/graphs/LineGraph'
 import BasicPie from './components/graphs/PieChart'
 import BasicScatter from './components/graphs/ScatterPlot'
 import CardComponent from './components/CardComponent'
-import Header from './components/header/Header'
+// import Header from './components/header/Header'
 import DashboardLayoutBasic from './components/dashboard/Dashboard'
 
 function App() {
