@@ -15,7 +15,7 @@ function DashboardContent({ pathname, children }) {
         textAlign: 'center',
       }}
     >
-      <Typography>Dashboard content for {pathname}</Typography>
+      {/* <Typography>Dashboard content for {pathname}</Typography> */}
       {children}
     </Box>
   );

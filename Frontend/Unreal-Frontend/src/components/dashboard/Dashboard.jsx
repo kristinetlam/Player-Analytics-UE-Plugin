@@ -91,7 +91,7 @@ function DemoPageContent({ pathname }) {
         textAlign: 'center',
       }}
     >
-      <Typography>Dashboard content for {pathname}</Typography>
+      {/* <Typography>Dashboard content for {pathname}</Typography> */}
     </Box>
   );
 }
@@ -108,11 +108,10 @@ function DashboardLayoutBasic() {
         <DashboardLayout>
           <DashboardContent pathname={router.pathname}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <CardComponent><BasicBars /></CardComponent>
-              <CardComponent><BasicLineChart /></CardComponent>
+              <CardComponent title="Blablabla" description="blablabla"><BasicBars /></CardComponent>
+              <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent><BasicPie /></CardComponent>
               <CardComponent><BasicScatter /></CardComponent>
-              {/* Add more charts here if needed */}
             </Box>
           </DashboardContent>
         </DashboardLayout>
