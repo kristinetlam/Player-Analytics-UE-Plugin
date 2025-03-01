@@ -1,0 +1,33 @@
+#include "PlayerTracker.h"
+#include "GameFramework/Actor.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+
+UPlayerPositionTracking::UPlayerPositionTracking()
+{
+    PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UPlayerPositionTracking::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    // Start tracking the player's position at set intervals
+    GetWorld()->GetTimerManager().SetTimer(TrackingTimer, this, &UPlayerPositionTracking::TrackPlayerPosition, TrackingInterval, true);
+}
+
+void UPlayerPositionTracking::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UPlayerPositionTracking::TrackPlayerPosition()
+{
+    if (AActor* Owner = GetOwner())
+    {
+        FVector CurrentPosition = Owner->GetActorLocation();
+        PlayerPositions.Add(CurrentPosition);
+
+        UE_LOG(LogTemp, Log, TEXT("Player Position Tracked: %s"), *CurrentPosition.ToString());
+    }
+}
