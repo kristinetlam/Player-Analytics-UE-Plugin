@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PlayerTracker.generated.h"
+#include "PlayerPositionTracking.generated.h"
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLAYERANALYTICSPLUGIN_API UPlayerPositionTracking : public UActorComponent
