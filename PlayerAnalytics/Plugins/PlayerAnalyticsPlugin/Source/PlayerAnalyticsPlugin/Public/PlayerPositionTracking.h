@@ -17,14 +17,20 @@ protected:
 
 public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    
+    UFUNCTION(BlueprintCallable, Category = "PositionTracking")
+    void StartPositionTracking();
 
+    UFUNCTION(BlueprintCallable, Category = "PositionTracking")
+    void StopPositionTracking();
 private:
     void TrackPlayerPosition();
 
     TArray<FVector> PlayerPositions;
     
-    UPROPERTY(EditAnywhere, Category="Tracking")
+    UPROPERTY(EditAnywhere, Category="PositionTracking")
     float TrackingInterval = 1.0f; // Time in seconds
+    bool bIsTracking = false;
 
     FTimerHandle TrackingTimer;
 };

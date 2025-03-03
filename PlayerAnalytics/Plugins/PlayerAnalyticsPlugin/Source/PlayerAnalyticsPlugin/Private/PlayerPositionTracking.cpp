@@ -12,13 +12,33 @@ void UPlayerPositionTracking::BeginPlay()
 {
     Super::BeginPlay();
     
-    // Start tracking the player's position at set intervals
-    GetWorld()->GetTimerManager().SetTimer(TrackingTimer, this, &UPlayerPositionTracking::TrackPlayerPosition, TrackingInterval, true);
+    
+   
 }
 
 void UPlayerPositionTracking::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UPlayerPositionTracking::StartPositionTracking()
+{
+    if (!bIsTracking)
+    {
+        bIsTracking = true;
+
+        // Start tracking the player's position at set intervals
+        GetWorld()->GetTimerManager().SetTimer(TrackingTimer, this, &UPlayerPositionTracking::TrackPlayerPosition, TrackingInterval, true);
+    }
+}
+
+void UPlayerPositionTracking::StopPositionTracking()
+{
+    if (bIsTracking)
+    {
+        bIsTracking = false;
+        GetWorld()->GetTimerManager().ClearTimer(TrackingTimer);
+    }
 }
 
 void UPlayerPositionTracking::TrackPlayerPosition()
