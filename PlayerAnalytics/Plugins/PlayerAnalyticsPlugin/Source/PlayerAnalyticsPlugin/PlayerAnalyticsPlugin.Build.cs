@@ -28,6 +28,9 @@ public class PlayerAnalyticsPlugin : ModuleRules
 				"Core", 
 				"Json", 
 				"JsonUtilities",
+				"CoreUObject",
+				"Engine",
+				"BlueprintGraph",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -36,8 +39,6 @@ public class PlayerAnalyticsPlugin : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"CoreUObject",
-				"Engine",
 				"Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...	
