@@ -1,0 +1,36 @@
+/* components/Header.css */
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff; /* Adjust color based on your theme */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .header-logo img {
+    height: 40px; /* Adjust size as needed */
+    margin-right: 20px;
+  }
+  
+  .header-titles {
+    flex-grow: 1;
+  }
+  
+  .header-titles h1 {
+    margin: 0;
+    color: #333; /* Adjust color based on your theme */
+    font-size: 24px; /* Adjust font size as needed */
+  }
+  
+  .header-subtitle {
+    display: flex;
+    margin-top: 8px;
+  }
+  
+  .header-subtitle span {
+    margin-right: 20px;
+    font-size: 16px;
+    color: #666; /* Adjust color based on your theme */
+    cursor: pointer;
+  }
+  
