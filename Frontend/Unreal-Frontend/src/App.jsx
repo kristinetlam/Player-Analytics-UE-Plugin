@@ -6,6 +6,7 @@ import BasicScatter from './components/graphs/ScatterPlot'
 import CardComponent from './components/CardComponent'
 // import Header from './components/header/Header'
 import DashboardLayoutBasic from './components/dashboard/Dashboard'
+import DoughnutChart from './components/graphs/DoughnutChart'
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
         </CardComponent>
         <CardComponent>
           <BasicScatter />
+        </CardComponent>
+        <CardComponent>
+          <DoughnutChart />
         </CardComponent>
         {/* Add more charts here if needed */}
       </div>

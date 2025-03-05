@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run dev",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -20,8 +20,10 @@
     "@mui/x-data-grid-pro": "^7.27.2",
     "@toolpad/core": "^0.12.1",
     "apexcharts": "^4.5.0",
+    "chart.js": "^4.4.8",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
