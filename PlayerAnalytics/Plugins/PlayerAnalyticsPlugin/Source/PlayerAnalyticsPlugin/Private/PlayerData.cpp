@@ -15,9 +15,6 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     // Create a JSON object
     TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
 
-   
-
-    JsonObject->SetStringField("Timestamp", Timestamp);
 
     // Add interactions to JSON
     TArray<TSharedPtr<FJsonValue>> InteractionsArray;
@@ -26,7 +23,6 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
         InteractionObject->SetStringField("ActorName", interactions[i].ActorName);
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
-        InteractionObject->SetStringField("Timestamp", FDateTime::Now().ToString(TEXT("%Y-%m-%d %H:%M:%S")));
         InteractionObject->SetNumberField("InteractionID", interactions[i].InteractionID);
 
         // Convert FVector to JSON array
@@ -59,9 +55,6 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     JsonObject->SetArrayField("Positions", PositionsArray);
 
     return JsonObject;
-
-    
-
 
 }
 

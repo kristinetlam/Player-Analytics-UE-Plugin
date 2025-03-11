@@ -39,6 +39,9 @@ void UPlayerDataHandler::AddPosition(FString ActorName, FVector Position)
 }
 
 
+/// <summary>
+/// Saves player data to a JSON file 
+/// </summary>
 void UPlayerDataHandler::SaveToJSON() {
 
     TSharedPtr<FJsonObject> JsonObject = playerData->ToJson();

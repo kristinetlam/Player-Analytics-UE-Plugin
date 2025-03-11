@@ -1,4 +1,6 @@
 #include "PlayerPositionTracking.h"
+#include "PlayerData.h"
+#include "PlayerDataHandler.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -47,6 +49,10 @@ void UPlayerPositionTracking::TrackPlayerPosition()
     {
         FVector CurrentPosition = Owner->GetActorLocation();
         PlayerPositions.Add(CurrentPosition);
+
+        //Grabs the player character's data handler
+        UPlayerDataHandler* dataHandler = Owner->FindComponentByClass<UPlayerDataHandler>();
+        dataHandler->AddPosition(Owner->GetActorLabel(), CurrentPosition);
 
         UE_LOG(LogTemp, Log, TEXT("Player Position Tracked: %s"), *CurrentPosition.ToString());
     }
