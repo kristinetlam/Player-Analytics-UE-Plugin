@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from datetime import datetime
@@ -25,6 +26,30 @@ def verify_token():
         return False
     return True
 
+def verify_required_fields(data, required_fields):
+    """
+    Recursively verifies that all required fields exist in the provided data.
+    
+    :param data: The JSON data (can be a dictionary or a list of dictionaries).
+    :param required_fields: A dictionary defining required fields and possible nested structures.
+    :return: None if valid, otherwise returns an error message.
+    """
+    for field, subfields in required_fields.items():
+        if field not in data:
+            return f"Missing required field: {field}"
+        
+        if isinstance(subfields, dict) and isinstance(data[field], list):
+            for item in data[field]:
+                error = verify_required_fields(item, subfields)
+                if error:
+                    return error
+        elif isinstance(subfields, dict) and isinstance(data[field], dict):
+            error = verify_required_fields(data[field], subfields)
+            if error:
+                return error
+    return None 
+
+
 @app.route("/add-player", methods=["POST"])
 def add_player():
     if not verify_token():
@@ -33,18 +58,23 @@ def add_player():
     try:
         # Get JSON data from the request
         data = request.json
+        print(json.dumps(data, indent=4))
  
-        # Validate required fields
-        required_fields = ["PlayerID", "VersionID", "Timestamp", "SessionID"]
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"Missing required field: {field}"}), 400
+        # Define required fields
+        required_fields = {
+            "Interactions": {
+                "Timestamp": {}  # Requires "Timestamp" in each interaction
+            }
+        }
 
-        # Convert Timestamp to a datetime object
-        data["Timestamp"] = datetime.fromisoformat(data["Timestamp"])
+        # Validate fields
+        error_message = verify_required_fields(data, required_fields)
+        if error_message:
+            return jsonify({"error": error_message}), 400
 
         # Insert the document into the collection
-        result = collection.insert_one(data)
+        interactions_data = data["Interactions"]
+        result = collection.insert_one({"Interactions": interactions_data})
 
         # Return the inserted document ID
         return jsonify({
@@ -74,4 +104,4 @@ def get_players():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, ssl_context=("C:/Users/Dallas/cert.pem", "C:/Users/Dallas/key.pem"))
+    app.run(host="0.0.0.0", port=5000)
