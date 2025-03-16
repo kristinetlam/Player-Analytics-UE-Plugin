@@ -16,4 +16,10 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
     static void LogPlayerHealthChange(AActor* InteractingActor, FString InteractionDescription, int health);
+
+    UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
+    static void LogAlterInventory(AActor* InteractingActor, FString InteractionDescription, int newAmount);
+
+    UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
+    static void LogInventory(const TArray<FString>& ItemNames, const TArray<int32>& ItemQuantities);
 };
