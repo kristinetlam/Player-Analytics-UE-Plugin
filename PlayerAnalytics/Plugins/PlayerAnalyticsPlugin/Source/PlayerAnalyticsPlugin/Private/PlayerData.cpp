@@ -23,6 +23,7 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
         InteractionObject->SetStringField("PlayerID", interactions[i].PlayerID);
+        InteractionObject->SetStringField("Timestamp", interactions[i].Timestamp);
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
 
         // Convert FVector to JSON array
@@ -42,6 +43,7 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> PositionObject = MakeShared<FJsonObject>();
         PositionObject->SetStringField("PlayerID", positions[i].PlayerID);
+        PositionObject->SetStringField("Timestamp", positions[i].Timestamp);
 
         // Convert FVector to JSON array
         TArray<TSharedPtr<FJsonValue>> PositionArray;

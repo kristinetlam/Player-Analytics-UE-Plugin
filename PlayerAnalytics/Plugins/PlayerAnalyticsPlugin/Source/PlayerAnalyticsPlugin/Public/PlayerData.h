@@ -35,7 +35,22 @@ struct FpositionData
     FString PlayerID;
 
     UPROPERTY(BlueprintReadWrite)
+    FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite)
     FVector Position;
+};
+
+USTRUCT(BlueprintType)
+struct FfpsData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite)
+    int fps;
 };
 
 UCLASS(Blueprintable, EditInlineNew)
@@ -51,6 +66,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     TArray<FpositionData> positions;
+
+    UPROPERTY(BlueprintReadWrite, Category = "FPS")
+    TArray<FpositionData> fpsPoints;
 
     // UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     // FString ActorName;

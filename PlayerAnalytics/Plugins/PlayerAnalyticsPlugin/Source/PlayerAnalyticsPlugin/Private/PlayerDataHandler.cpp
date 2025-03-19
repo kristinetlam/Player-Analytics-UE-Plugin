@@ -22,6 +22,7 @@ void UPlayerDataHandler::AddInteraction(FString PlayerID, FString InteractionDes
     interaction.PlayerID = playerData->playerID;
     interaction.InteractionDescription = InteractionDescription;
     interaction.InteractionLocation = InteractionLocation;
+    interaction.Timestamp = FDateTime::Now().ToString();
     playerData->interactions.Add(interaction);
 }
 
@@ -35,6 +36,7 @@ void UPlayerDataHandler::AddPosition(FString PlayerID, FVector Position)
     FpositionData position;
     position.PlayerID = PlayerID;
     position.Position = Position;
+    position.Timestamp = FDateTime::Now().ToString();
     playerData->positions.Add(position);
 }
 
