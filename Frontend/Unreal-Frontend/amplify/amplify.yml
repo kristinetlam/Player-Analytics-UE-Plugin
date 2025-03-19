@@ -1,0 +1,14 @@
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        - cd Frontend/Unreal-Frontend/         # Navigate to the directory with your frontend code
+        - npm install                          # Install dependencies
+        - npx vite build                       # Run the Vite build command
+        - chmod -R 755 dist                    # Update the permissions of the dist folder
+        - ls -la
+  artifacts:
+    baseDirectory: dist  # Specify the location of your build output (dist folder)
+    files:
+      - '**/*'  # Include all files from the dist folder
