@@ -16,10 +16,10 @@ public:
     void SaveToJSON();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddInteraction(FString ActorName, FString InteractionDescription, FVector InteractionLocation, int32 InteractionID);
+    void AddInteraction(FString PlayerID, FString InteractionDescription, FVector InteractionLocation);
     
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddPosition(FString ActorName, FVector Position);
+    void AddPosition(FString PlayerID, FVector Position);
     
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;

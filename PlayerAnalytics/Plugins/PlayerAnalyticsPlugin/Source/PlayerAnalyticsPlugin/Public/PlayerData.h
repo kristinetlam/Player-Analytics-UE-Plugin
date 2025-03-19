@@ -11,7 +11,7 @@ struct FinteractionData
     GENERATED_BODY()
     
     UPROPERTY(BlueprintReadWrite)
-    FString ActorName;
+    FString PlayerID;
     
     UPROPERTY(BlueprintReadWrite)
     FString InteractionDescription;
@@ -22,8 +22,8 @@ struct FinteractionData
     UPROPERTY(BlueprintReadWrite)
     FVector InteractionLocation;
 
-    UPROPERTY(BlueprintReadWrite)
-    int32 InteractionID;
+    /*UPROPERTY(BlueprintReadWrite)
+    int32 InteractionID;*/
 };
 
 USTRUCT(BlueprintType)
@@ -32,7 +32,7 @@ struct FpositionData
     GENERATED_BODY()
 
     UPROPERTY(BlueprintReadWrite)
-    FString ActorName;
+    FString PlayerID;
 
     UPROPERTY(BlueprintReadWrite)
     FVector Position;
@@ -75,6 +75,8 @@ public:
 
      // Convert to JSON
      TSharedPtr<FJsonObject> ToJson();
+
+     FString playerID;
 
     // UFUNCTION(BlueprintCallable, Category = "PlayerData")
     //static void AddInteraction(UPlayerData* NewInteraction);

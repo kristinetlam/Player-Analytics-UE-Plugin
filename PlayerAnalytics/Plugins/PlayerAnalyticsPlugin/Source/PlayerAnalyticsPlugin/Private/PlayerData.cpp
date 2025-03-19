@@ -1,12 +1,13 @@
 #include "PlayerData.h"
 #include "Misc/DateTime.h"
+#include "Misc/Guid.h"
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
 
 
 UPlayerData::UPlayerData()
 {
-
+    playerID = FGuid::NewGuid().ToString();
 }
 
 
@@ -21,9 +22,8 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     for (int i = 0; i < interactions.Num(); i++)
     {
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
-        InteractionObject->SetStringField("ActorName", interactions[i].ActorName);
+        InteractionObject->SetStringField("PlayerID", interactions[i].PlayerID);
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
-        InteractionObject->SetNumberField("InteractionID", interactions[i].InteractionID);
 
         // Convert FVector to JSON array
         TArray<TSharedPtr<FJsonValue>> LocationArray;
@@ -41,7 +41,7 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     for (int i = 0; i < positions.Num(); i++)
     {
         TSharedPtr<FJsonObject> PositionObject = MakeShared<FJsonObject>();
-        PositionObject->SetStringField("ActorName", positions[i].ActorName);
+        PositionObject->SetStringField("PlayerID", positions[i].PlayerID);
 
         // Convert FVector to JSON array
         TArray<TSharedPtr<FJsonValue>> PositionArray;

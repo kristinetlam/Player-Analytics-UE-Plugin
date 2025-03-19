@@ -1,5 +1,6 @@
 #include "PlayerDataHandler.h"
 #include "PlayerData.h"
+#include "Misc/Guid.h"
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
 
@@ -15,13 +16,12 @@ UPlayerDataHandler::UPlayerDataHandler()
 /// <param name="InteractionDescription"></param>
 /// <param name="InteractionLocation"></param>
 /// <param name="InteractionID"></param>
-void UPlayerDataHandler::AddInteraction(FString ActorName, FString InteractionDescription, FVector InteractionLocation, int32 InteractionID)
+void UPlayerDataHandler::AddInteraction(FString PlayerID, FString InteractionDescription, FVector InteractionLocation)
 {
     FinteractionData interaction;
-    interaction.ActorName = ActorName;
+    interaction.PlayerID = playerData->playerID;
     interaction.InteractionDescription = InteractionDescription;
     interaction.InteractionLocation = InteractionLocation;
-    interaction.InteractionID = InteractionID;
     playerData->interactions.Add(interaction);
 }
 
@@ -30,10 +30,10 @@ void UPlayerDataHandler::AddInteraction(FString ActorName, FString InteractionDe
 /// </summary>
 /// <param name="ActorName"></param>
 /// <param name="Position"></param>
-void UPlayerDataHandler::AddPosition(FString ActorName, FVector Position)
+void UPlayerDataHandler::AddPosition(FString PlayerID, FVector Position)
 {
     FpositionData position;
-    position.ActorName = ActorName;
+    position.PlayerID = PlayerID;
     position.Position = Position;
     playerData->positions.Add(position);
 }
