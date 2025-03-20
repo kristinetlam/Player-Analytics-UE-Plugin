@@ -113,9 +113,9 @@ function DashboardLayoutBasic() {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
-              <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
+              <CardComponent title="Item Usage" description="Displays the distribution of player item usage" sx={{ height: '30%'}}><BasicPie /></CardComponent>
               <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
-              <CardComponent title="Player Location" description="Visualizes player movement density across the game map"><ApexChart/></CardComponent>
+              <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '58%'}}><ApexChart/></CardComponent>
               <CardComponent><CompositionExample /></CardComponent>
             </Box>
           </DashboardContent>
