@@ -50,7 +50,29 @@ struct FfpsData
     FString PlayerID;
 
     UPROPERTY(BlueprintReadWrite)
-    int fps;
+    FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite)
+    int AverageFPS;
+};
+
+USTRUCT(BlueprintType)
+struct FsessionData 
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString StartTime;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString EndTime;
+
+    //Example types are "crash" and "exit"
+    UPROPERTY(BlueprintReadWrite)
+    FString EndType;
 };
 
 UCLASS(Blueprintable, EditInlineNew)
@@ -67,34 +89,19 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     TArray<FpositionData> positions;
 
-    UPROPERTY(BlueprintReadWrite, Category = "FPS")
-    TArray<FpositionData> fpsPoints;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    TArray<FfpsData> AvgFPSPoints;
 
-    // UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-    // FString ActorName;
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
+    TArray<FsessionData> Sessions;
 
-    // UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-    // FString InteractionDescription;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString Timestamp;
 
-     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-     FString Timestamp;
+    // Convert to JSON
+    TSharedPtr<FJsonObject> ToJson();
 
-    // UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-    // FVector InteractionLocation;
-
-    // UPROPERTY(BlueprintReadWrite, Category = "Interaction")
-    // int32 InteractionID;
-
-    // UFUNCTION(BlueprintCallable, Category = "File")
-    // static void SaveToJSON();
-
-    // // Constructor
-    // UPlayerData();
-
-     // Convert to JSON
-     TSharedPtr<FJsonObject> ToJson();
-
-     FString playerID;
+    FString playerID;
 
     // UFUNCTION(BlueprintCallable, Category = "PlayerData")
     //static void AddInteraction(UPlayerData* NewInteraction);

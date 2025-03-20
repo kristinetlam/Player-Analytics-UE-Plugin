@@ -56,6 +56,33 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Positions", PositionsArray);
 
+    // Add FPS data to JSON
+    TArray<TSharedPtr<FJsonValue>> FPSAveragesArray;
+    for (int i = 0; i < AvgFPSPoints.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
+        FPSObject->SetStringField("PlayerID", AvgFPSPoints[i].PlayerID);
+        FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
+        FPSObject->SetNumberField("AverageFPS", AvgFPSPoints[i].AverageFPS);
+
+        FPSAveragesArray.Add(MakeShared<FJsonValueObject>(FPSObject));
+    }
+    JsonObject->SetArrayField("AVG FPS", FPSAveragesArray);
+
+    // Add Session data to JSON
+    TArray<TSharedPtr<FJsonValue>> SessionArray;
+    for (int i = 0; i < Sessions.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
+        FPSObject->SetStringField("PlayerID", Sessions[i].PlayerID);
+        FPSObject->SetStringField("StartTime", Sessions[i].StartTime);
+        FPSObject->SetStringField("EndTime", Sessions[i].EndTime);
+        FPSObject->SetStringField("EndType", Sessions[i].EndType);
+
+        SessionArray.Add(MakeShared<FJsonValueObject>(FPSObject));
+    }
+    JsonObject->SetArrayField("Sessions", SessionArray);
+
     return JsonObject;
 
 }
