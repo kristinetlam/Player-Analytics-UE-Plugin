@@ -16,17 +16,17 @@ void UServerFunctions::SendPlayerData()
     }
 
     // Read the JSON file from the project directory
-    FString FilePath = FPaths::ProjectSavedDir() + TEXT("Interactions.json");
+    FString FilePath = FPaths::ProjectSavedDir() + TEXT("PlayerData.json");
     FString JsonString;
     if (!FFileHelper::LoadFileToString(JsonString, *FilePath))
     {
-        UE_LOG(LogTemp, Error, TEXT("Failed to load Interactions.json"));
+        UE_LOG(LogTemp, Error, TEXT("Failed to load PlayerData.json"));
         return;
     }
 
     // Create HTTP request
     TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = FHttpModule::Get().CreateRequest();
-    Request->SetURL(Settings->ServerIP + "/add-player");
+    Request->SetURL(Settings->ServerIP + "/add-data");
     Request->SetVerb("POST");
     Request->SetHeader("Content-Type", "application/json");
     Request->SetHeader("Authorization", "Bearer " + Settings->AuthToken);

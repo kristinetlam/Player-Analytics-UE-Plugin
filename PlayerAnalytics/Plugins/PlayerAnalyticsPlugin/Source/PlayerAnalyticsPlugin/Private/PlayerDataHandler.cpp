@@ -54,11 +54,11 @@ void UPlayerDataHandler::SaveToJSON() {
     FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
 
     //get the time in string format
-    FString DateString = FDateTime::Now().ToString(TEXT("%Y-%m-%d-%H-%M-%S"));
+    //FString DateString = FDateTime::Now().ToString(TEXT("%Y-%m-%d-%H-%M-%S"));
 
     // Save JSON string to file, giving a unique filename
-    FString SaveDirectory = FPaths::ProjectSavedDir() + DateString;
-    FString FileName = "json";
+    FString SaveDirectory = FPaths::ProjectSavedDir(); // + DateString;
+    FString FileName = "PlayerData.json";
     FString AbsoluteFilePath = SaveDirectory + FileName;
 
     if (FFileHelper::SaveStringToFile(OutputString, *AbsoluteFilePath))
