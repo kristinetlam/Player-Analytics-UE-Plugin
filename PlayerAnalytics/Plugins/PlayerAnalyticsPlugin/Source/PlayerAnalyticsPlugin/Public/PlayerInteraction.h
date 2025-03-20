@@ -13,4 +13,5 @@ public:
     // Expose PrintMessage to Blueprints
     UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
     static void LogPlayerInteraction(AActor* InteractingActor, FString InteractionDescription);
+    static void LogPlayerHealthChange(AActor* InteractingActor, FString InteractionDescription, int health);
 };
