@@ -13,14 +13,22 @@ public:
     UPlayerDataHandler();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void SaveToJSON();
+    FString SaveToJSON();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddInteraction(FString PlayerID, FString InteractionDescription, FVector InteractionLocation);
+    void AddInteraction(FString InteractionDescription, FVector InteractionLocation);
     
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddPosition(FString PlayerID, FVector Position);
+    void AddPosition(FVector Position);
     
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddAVGfps(int AVGfps);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddSession(FString StartTime, FString EndTime, FString EndType);
+
+    
+
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;
 protected:

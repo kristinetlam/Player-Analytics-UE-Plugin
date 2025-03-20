@@ -16,7 +16,7 @@ UPlayerDataHandler::UPlayerDataHandler()
 /// <param name="InteractionDescription"></param>
 /// <param name="InteractionLocation"></param>
 /// <param name="InteractionID"></param>
-void UPlayerDataHandler::AddInteraction(FString PlayerID, FString InteractionDescription, FVector InteractionLocation)
+void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector InteractionLocation)
 {
     FinteractionData interaction;
     interaction.PlayerID = playerData->playerID;
@@ -31,20 +31,37 @@ void UPlayerDataHandler::AddInteraction(FString PlayerID, FString InteractionDes
 /// </summary>
 /// <param name="ActorName"></param>
 /// <param name="Position"></param>
-void UPlayerDataHandler::AddPosition(FString PlayerID, FVector Position)
+void UPlayerDataHandler::AddPosition(FVector Position)
 {
     FpositionData position;
-    position.PlayerID = PlayerID;
+    position.PlayerID = playerData->playerID;
     position.Position = Position;
     position.Timestamp = FDateTime::Now().ToString();
     playerData->positions.Add(position);
+}
+
+void UPlayerDataHandler::AddAVGfps(int AVGfps) {
+    FfpsData fpsData;
+    fpsData.PlayerID = playerData->playerID;
+    fpsData.AverageFPS = AVGfps;
+    fpsData.Timestamp = FDateTime::Now().ToString();
+    playerData->AvgFPSPoints.Add(fpsData);
+}
+
+void UPlayerDataHandler::AddSession(FString StartTime, FString EndTime, FString EndType) {
+    FsessionData session;
+    session.PlayerID = playerData->playerID;
+    session.StartTime = StartTime;
+    session.EndTime = EndTime;
+    session.EndType = EndType;
+    playerData->Sessions.Add(session);
 }
 
 
 /// <summary>
 /// Saves player data to a JSON file 
 /// </summary>
-void UPlayerDataHandler::SaveToJSON() {
+FString UPlayerDataHandler::SaveToJSON() {
 
     TSharedPtr<FJsonObject> JsonObject = playerData->ToJson();
 
@@ -58,7 +75,7 @@ void UPlayerDataHandler::SaveToJSON() {
 
     // Save JSON string to file, giving a unique filename
     FString SaveDirectory = FPaths::ProjectSavedDir() + DateString;
-    FString FileName = "json";
+    FString FileName = ".json";
     FString AbsoluteFilePath = SaveDirectory + FileName;
 
     if (FFileHelper::SaveStringToFile(OutputString, *AbsoluteFilePath))
@@ -69,4 +86,6 @@ void UPlayerDataHandler::SaveToJSON() {
     {
         UE_LOG(LogTemp, Error, TEXT("Failed to save interactions to file."));
     }
+
+    return DateString + FileName;
 }

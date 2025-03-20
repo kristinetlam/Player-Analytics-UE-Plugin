@@ -14,8 +14,6 @@ void UPlayerPositionTracking::BeginPlay()
 {
     Super::BeginPlay();
     
-    
-   
 }
 
 void UPlayerPositionTracking::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -52,7 +50,7 @@ void UPlayerPositionTracking::TrackPlayerPosition()
 
         //Grabs the player character's data handler
         UPlayerDataHandler* dataHandler = Owner->FindComponentByClass<UPlayerDataHandler>();
-        dataHandler->AddPosition(Owner->GetActorLabel(), CurrentPosition);
+        //dataHandler->AddPosition(Owner->GetActorLabel(), CurrentPosition);
 
         UE_LOG(LogTemp, Log, TEXT("Player Position Tracked: %s"), *CurrentPosition.ToString());
     }
