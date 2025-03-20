@@ -1,11 +1,10 @@
+import json
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
-from datetime import datetime
-from bson.json_util import dumps
-from bson.objectid import ObjectId
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
@@ -13,62 +12,88 @@ app = Flask(__name__)
 # Secret token (store securely in an environment variable)
 SECRET_TOKEN = os.getenv("API_SECRET_TOKEN", "your_secure_token_here")
 
-# Connect to MongoDB
-client = MongoClient("mongodb://localhost:27017/")  # Replace with your MongoDB URI if needed
-db = client.PlayerAnalytics  # Use the "PlayerAnalytics" database
-collection = db.players  # Use the "players" collection
+# MongoDB Local Connection
+MONGO_LOCAL_URI = "mongodb://localhost:27017/"
+
+# Connect to Local MongoDB
+client_local = MongoClient(MONGO_LOCAL_URI)
+db_local = client_local.PlayerAnalytics
+interactions_local = db_local.interactions  
+positions_local = db_local.positions
+avg_fps_local = db_local.avg_fps
+sessions_local = db_local.sessions
 
 def verify_token():
     """Checks if the request has a valid token."""
     token = request.headers.get("Authorization")
-    if not token or token != f"Bearer {SECRET_TOKEN}":
-        return False
-    return True
+    return token == f"Bearer {SECRET_TOKEN}"
 
-@app.route("/add-player", methods=["POST"])
-def add_player():
+@app.route("/add-data", methods=["POST"])
+def add_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Get JSON data from the request
         data = request.json
- 
-        # Validate required fields
-        required_fields = ["PlayerID", "VersionID", "Timestamp", "SessionID"]
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"Missing required field: {field}"}), 400
+        print("Received data:", json.dumps(data, indent=4))
 
-        # Convert Timestamp to a datetime object
-        data["Timestamp"] = datetime.fromisoformat(data["Timestamp"])
+        # Insert Interactions
+        if "Interactions" in data:
+            try:
+                interactions_local.insert_many(data["Interactions"])
+                print("Inserted Interactions successfully.")
+            except Exception as e:
+                print("Error inserting interactions:", str(e))
 
-        # Insert the document into the collection
-        result = collection.insert_one(data)
+        # Insert Positions
+        if "Positions" in data:
+            try:
+                positions_local.insert_many(data["Positions"])
+                print("Inserted Positions successfully.")
+            except Exception as e:
+                print("Error inserting positions:", str(e))
 
-        # Return the inserted document ID
-        return jsonify({
-            "message": "Player added successfully",
-            "inserted_id": str(result.inserted_id)
-        }), 201
+        # Insert AVG FPS
+        if "AVG FPS" in data:
+            try:
+                avg_fps_local.insert_many(data["AVG FPS"])
+                print("Inserted AVG FPS successfully.")
+            except Exception as e:
+                print("Error inserting AVG FPS:", str(e))
+
+        # Insert Sessions
+        if "Sessions" in data:
+            try:
+                sessions_local.insert_many(data["Sessions"])
+                print("Inserted Sessions successfully.")
+            except Exception as e:
+                print("Error inserting sessions:", str(e))
+
+        return jsonify({"message": "Data added successfully"}), 201
 
     except Exception as e:
+        print("General Error:", str(e))
         return jsonify({"error": str(e)}), 500
 
-@app.route("/get-players", methods=["GET"])
-def get_players():
+
+@app.route("/get-data", methods=["GET"])
+def get_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Retrieve all players from the collection
-        players = list(collection.find())
+        # Retrieve all data from MongoDB
+        interactions = list(interactions_local.find({}, {"_id": 0}))
+        positions = list(positions_local.find({}, {"_id": 0}))
+        avg_fps = list(avg_fps_local.find({}, {"_id": 0}))
+        sessions = list(sessions_local.find({}, {"_id": 0}))
 
-        # Convert ObjectId to string for JSON serialization
-        for player in players:
-            player["_id"] = str(player["_id"])
-
-        return jsonify(players), 200
+        return jsonify({
+            "Interactions": interactions, 
+            "Positions": positions,
+            "AVG FPS": avg_fps,
+            "Sessions": sessions
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -78,5 +103,58 @@ def get_players():
 # get interaction data
 # get player position data
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+
+@app.route("/get-interaction-data", methods=["GET"])
+def get_interaction_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        interactions = list(interactions_local.find({}, {"_id": 0}))
+        return jsonify({"Interactions": interactions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get-position-data", methods=["GET"])
+def get_position_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        positions = list(positions_local.find({}, {"_id": 0}))
+        return jsonify({"Positions": positions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get-avg-fps-data", methods=["GET"])
+def get_avg_fps_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        avg_fps = list(avg_fps_local.find({}, {"_id": 0}))
+        return jsonify({"AVG FPS": avg_fps}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get-session-data", methods=["GET"])
+def get_session_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        sessions = list(sessions_local.find({}, {"_id": 0}))
+        return jsonify({"Sessions": sessions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

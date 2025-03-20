@@ -31,6 +31,8 @@ public class PlayerAnalyticsPlugin : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"BlueprintGraph",
+				"DeveloperSettings",
+                "HTTP"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
