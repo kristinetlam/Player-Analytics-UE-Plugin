@@ -11,7 +11,9 @@ class PLAYERANALYTICSPLUGIN_API UPlayerInteraction : public UBlueprintFunctionLi
 
 public:
     // Expose PrintMessage to Blueprints
-    UFUNCTION(BlueprintCallable, Category = "PlayerAnalyticsPlugin")
-    static void LogPlayerInteraction(AActor* InteractingActor, FString InteractionDescription);
+    UFUNCTION(BlueprintCallable, Category = "Interaction")
+     static void LogPlayerInteraction(AActor* InteractingActor, FString InteractionDescription);
+    
+    UFUNCTION(BlueprintCallable, Category = "Interaction")
     static void LogPlayerHealthChange(AActor* InteractingActor, FString InteractionDescription, int health);
 };
