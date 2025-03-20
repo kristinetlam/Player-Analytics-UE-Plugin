@@ -50,7 +50,7 @@ void UPlayerPositionTracking::TrackPlayerPosition()
 
         //Grabs the player character's data handler
         UPlayerDataHandler* dataHandler = Owner->FindComponentByClass<UPlayerDataHandler>();
-        //dataHandler->AddPosition(Owner->GetActorLabel(), CurrentPosition);
+        dataHandler->AddPosition(CurrentPosition);
 
         UE_LOG(LogTemp, Log, TEXT("Player Position Tracked: %s"), *CurrentPosition.ToString());
     }
