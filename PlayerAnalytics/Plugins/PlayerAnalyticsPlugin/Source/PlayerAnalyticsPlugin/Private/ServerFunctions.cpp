@@ -5,7 +5,7 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Json.h"
 
-void UServerFunctions::SendPlayerData()
+void UServerFunctions::SendPlayerData(FString FileName)
 {
     // Get settings
     const UPlayerAnalyticsSettings* Settings = GetDefault<UPlayerAnalyticsSettings>();
@@ -16,11 +16,11 @@ void UServerFunctions::SendPlayerData()
     }
 
     // Read the JSON file from the project directory
-    FString FilePath = FPaths::ProjectSavedDir() + TEXT("PlayerData.json");
+    FString FilePath = FPaths::ProjectSavedDir() + FileName;
     FString JsonString;
     if (!FFileHelper::LoadFileToString(JsonString, *FilePath))
     {
-        UE_LOG(LogTemp, Error, TEXT("Failed to load PlayerData.json"));
+        UE_LOG(LogTemp, Error, TEXT("Failed to load %s"), *FileName);
         return;
     }
 

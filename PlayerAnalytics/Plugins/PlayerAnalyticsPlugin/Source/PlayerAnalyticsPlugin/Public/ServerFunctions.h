@@ -17,5 +17,5 @@ class PLAYERANALYTICSPLUGIN_API UServerFunctions : public UBlueprintFunctionLibr
 public:
 
     UFUNCTION(BlueprintCallable, Category = "Player Analytics")
-    static void SendPlayerData();
+    static void SendPlayerData(FString FileName);
 };
