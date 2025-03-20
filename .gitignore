@@ -105,3 +105,4 @@ PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Source/PlayerAnalyticsPlugin/.vsco
 PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Source/PlayerAnalyticsPlugin/.vscode/settings.json
 PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries/Win64/UnrealEditor-PlayerAnalyticsPlugin.exp
 Server/.env
+PlayerAnalytics/Config/DefaultGame.ini
