@@ -72,6 +72,11 @@ def get_players():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Frontend Requests to receive all JSON file data based on DB queries
+
+# get interaction data
+# get player position data
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
