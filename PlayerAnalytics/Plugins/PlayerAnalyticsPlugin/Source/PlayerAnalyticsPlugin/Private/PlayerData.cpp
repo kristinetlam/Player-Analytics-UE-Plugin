@@ -1,9 +1,21 @@
 #include "PlayerData.h"
 #include "Misc/DateTime.h"
 #include "Misc/Guid.h"
+#include "Misc/SecureHash.h"
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
 
+FString GetMD5HashedMachineId()
+{
+    // Get machine ID
+    FGuid MachineId = FPlatformMisc::GetMachineId();
+    FString MachineIdString = MachineId.ToString(EGuidFormats::Digits);
+
+    // Generate MD5 hash
+    FString MD5Hash = FMD5::HashAnsiString(*MachineIdString);
+
+    return MD5Hash;
+}
 
 UPlayerData::UPlayerData()
 {
