@@ -21,6 +21,7 @@ import { Card } from '@mui/material';
 import ApexChart from '../graphs/Heatmap';
 import CompositionExample from '../graphs/GaugeChart';
 import AverageFPS from '../graphs/AverageFPS';
+import AverageSessionLength from '../graphs/AverageSessionLength';
 
 const NAVIGATION = [
   {
@@ -112,10 +113,11 @@ function DashboardLayoutBasic() {
         <DashboardLayout>
           <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {/* Add filters for users with dropdowns */}
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
               <CardComponent title="Average FPS" description="per player session" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* <CompositionExample /> */}  <AverageFPS /></CardComponent> 
-              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}></CardComponent>
-              <CardComponent title="Average Session Length" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}></CardComponent>
+              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* basdasd*/}</CardComponent>
+              <CardComponent title="Average Session Length" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}><AverageSessionLength /></CardComponent>
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
