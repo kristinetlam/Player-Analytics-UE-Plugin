@@ -27,6 +27,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddSession(FString StartTime, FString EndTime, FString EndType);
 
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddCPUSpecs(FString cpuName, FString cpuBrand);
+
     
 
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")

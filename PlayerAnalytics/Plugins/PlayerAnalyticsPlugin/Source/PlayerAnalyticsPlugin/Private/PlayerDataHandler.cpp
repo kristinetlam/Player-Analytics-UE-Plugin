@@ -57,6 +57,13 @@ void UPlayerDataHandler::AddSession(FString StartTime, FString EndTime, FString 
     playerData->Sessions.Add(session);
 }
 
+void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand) {
+    FcpuSpecs cpuspecs;
+    cpuspecs.PlayerID = playerData->playerID;
+    cpuspecs.cpuName = cpuName;
+    cpuspecs.cpuBrand = cpuBrand;
+    playerData->cpuSpecs.Add(cpuspecs);
+}
 
 /// <summary>
 /// Saves player data to a JSON file 
