@@ -37,7 +37,9 @@ export default function BasicBars() {
         }
         const result = await response.json();
         console.log(result)
-        setData(transformData(result.Interactions)); // Assuming the data needs transformation
+        // setData(transformData(result.Interactions)); // Assuming the data needs transformation
+        const interactionCounts = countInteractions(result.Interactions);
+        setData(interactionCounts);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -46,20 +48,36 @@ export default function BasicBars() {
     fetchData();
   }, []);
 
-  // Example transformation function
-  const transformData = (interactions) => {
-    // Transform the data into the format required by your chart
-    // This is a dummy transformation
-    return interactions.map(interaction => ({
-      x: interaction.eventType,
-      y: interaction.count
+  // // Example transformation function
+  // const transformData = (interactions) => {
+  //   // Transform the data into the format required by your chart
+  //   // This is a dummy transformation
+  //   return interactions.map(interaction => ({
+  //     x: interaction.eventType,
+  //     y: interaction.count
+  //   }));
+  // };
+
+  const countInteractions = (interactions) => {
+    // Count occurrences of 'Picked Up Rifle'
+    const interactionMap = interactions.reduce((acc, interaction) => {
+      const description = interaction.InteractionDescription; // Ensure this matches your JSON structure
+      if (description === 'Picked Up Rifle') {
+        acc[description] = (acc[description] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    return Object.entries(interactionMap).map(([description, count]) => ({
+      x: description, // The interaction description (e.g., 'Picked Up Rifle')
+      y: count,       // The count of interactions
     }));
   };
 
   return (
     <BarChart
-      xAxis={[{ scaleType: 'band', data: data.map(item => item.x) }]}
-      series={[{ data: data.map(item => item.y) }]}
+      xAxis={[{ scaleType: 'band', data: data.map(item => item.x) }]}  // x-axis labels (interaction descriptions)
+      series={[{ data: data.map(item => item.y) }]}  // y-axis values (counts)
       width={500}
       height={300}
     />
