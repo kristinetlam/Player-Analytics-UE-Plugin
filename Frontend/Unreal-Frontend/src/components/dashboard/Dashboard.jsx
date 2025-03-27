@@ -20,6 +20,7 @@ import DashboardContent from './DashboardContent';
 import { Card } from '@mui/material';
 import ApexChart from '../graphs/Heatmap';
 import CompositionExample from '../graphs/GaugeChart';
+import AverageFPS from '../graphs/AverageFPS';
 
 const NAVIGATION = [
   {
@@ -112,7 +113,7 @@ function DashboardLayoutBasic() {
           <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
-              <CardComponent title="Average FPS" description="per player session" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* <CompositionExample /> */} </CardComponent> 
+              <CardComponent title="Average FPS" description="per player session" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* <CompositionExample /> */}  <AverageFPS /></CardComponent> 
               <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}></CardComponent>
               <CardComponent title="Average Session Length" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}></CardComponent>
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
