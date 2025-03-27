@@ -32,8 +32,8 @@ const NAVIGATION = [
     icon: <DashboardIcon />,
   },
   {
-    segment: 'orders',
-    title: 'Orders',
+    segment: 'library',
+    title: 'UE5 Fab Library',
     icon: <ShoppingCartIcon />,
   },
   {
@@ -45,17 +45,17 @@ const NAVIGATION = [
   },
   {
     segment: 'reports',
-    title: 'Reports',
+    title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
     icon: <BarChartIcon />,
     children: [
       {
-        segment: 'sales',
-        title: 'Sales',
+        segment: 'optimization',
+        title: 'Optimization Data',
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'traffic',
-        title: 'Traffic',
+        segment: 'interest',
+        title: 'Player Insights',
         icon: <DescriptionIcon />,
       },
     ],
@@ -111,12 +111,15 @@ function DashboardLayoutBasic() {
         <DashboardLayout>
           <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
+              <CardComponent title="Average FPS" description="per player session" sx={{ width: '28%'}}><CompositionExample /></CardComponent> 
+              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '28%'}}></CardComponent>
+              <CardComponent title="Average Session Length" description="over past 30 days" sx={{ width: '28%'}}></CardComponent>
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
-              <CardComponent><BasicPie /></CardComponent>
-              <CardComponent><BasicScatter /></CardComponent>
-              <CardComponent title="Player Location" description="Visualizes player movement density across the game map"><ApexChart/></CardComponent>
-              <CardComponent><CompositionExample /></CardComponent>
+              <CardComponent title="Item Usage" description="Displays the distribution of player item usage" sx={{ height: '30%'}}><BasicPie /></CardComponent>
+              <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
+              <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '58%'}}><ApexChart/></CardComponent>
             </Box>
           </DashboardContent>
         </DashboardLayout>

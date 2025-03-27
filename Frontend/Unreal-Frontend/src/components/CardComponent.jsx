@@ -5,9 +5,9 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 
-const CardComponent = ({ title, description, children }) => {
+const CardComponent = ({ title, description, children, sx }) => {
   return (
-    <Card sx={{ margin: 2, boxShadow: 3, borderRadius: 2 }}>
+    <Card sx={{ margin: 2, boxShadow: 3, borderRadius: 2, ...sx }}>
       <CardContent>
         <Typography variant="h6" component="div" sx={{ textAlign: 'left', mt: 4, ml: 4, fontWeight: 'bold' }}>
             {title}
