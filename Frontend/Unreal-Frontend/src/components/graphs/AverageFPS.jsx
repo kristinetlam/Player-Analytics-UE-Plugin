@@ -38,9 +38,18 @@ const AverageFPS = () => {
   }
 
   return (
-    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-      {avgFps.toFixed(2)}
-    </Typography>
+    <>
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        {avgFps.toFixed(2)}
+        </Typography>
+        {/* CHANGE TO NOT HARD CODE LATER!! */}
+        <Typography variant="body1" sx={{ fontWeight: 'normal', color: 'green', mt: 1 }}>
+        ↑ 25%
+        </Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'normal', color: 'text.secondary', fontSize: '0.8rem', mt: 1 }}>
+        per player session
+        </Typography>
+    </>
   );
 };
 
