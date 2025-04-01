@@ -27,6 +27,36 @@ struct FinteractionData
 };
 
 USTRUCT(BlueprintType)
+struct FinventoryItem
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    int Amount;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString ItemName;
+};
+
+USTRUCT(BlueprintType)
+struct FinventoryData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    int Size;
+
+    UPROPERTY(BlueprintReadWrite)
+    int Capacity;
+
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FinventoryItem> Items;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString Timestamp;
+};
+
+USTRUCT(BlueprintType)
 struct FpositionData
 {
     GENERATED_BODY()
@@ -103,6 +133,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Inventory")
+    TArray<FinventoryData> Inventories;
 
     // Convert to JSON
     TSharedPtr<FJsonObject> ToJson();
