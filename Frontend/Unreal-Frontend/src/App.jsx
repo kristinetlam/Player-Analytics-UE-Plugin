@@ -27,7 +27,6 @@ function App() {
         <CardComponent>
           <DoughnutChart />
         </CardComponent>
-        {/* Add more charts here if needed */}
       </div>
     </DashboardLayoutBasic>
   );
