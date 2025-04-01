@@ -17,6 +17,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddInteraction(FString InteractionDescription, FVector InteractionLocation);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddInventory(int size, int capacity, TArray<FString> itemNames, TArray<int> itemAmounts);
     
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddPosition(FVector Position);
