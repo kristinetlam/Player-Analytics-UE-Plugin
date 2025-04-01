@@ -48,9 +48,11 @@ void UPlayerDataHandler::AddAVGfps(int AVGfps) {
     playerData->AvgFPSPoints.Add(fpsData);
 }
 
-void UPlayerDataHandler::AddSession(FString StartTime, FString EndTime, FString EndType) {
+void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType) {
     FsessionData session;
     session.PlayerID = playerData->playerID;
+    session.SessionName = SessionName;
+    session.SessionID = playerData->sessionID;
     session.StartTime = StartTime;
     session.EndTime = EndTime;
     session.EndType = EndType;

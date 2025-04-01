@@ -25,7 +25,7 @@ public:
     void AddAVGfps(int AVGfps);
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddSession(FString StartTime, FString EndTime, FString EndType);
+    void AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType);
 
     
 
