@@ -108,3 +108,4 @@ Server/.env
 PlayerAnalytics/Config/DefaultGame.ini
 env
 Frontend/Unreal-Frontend/.env
+/PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
