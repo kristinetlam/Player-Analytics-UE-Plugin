@@ -104,9 +104,6 @@ def get_data():
     
 # Frontend Requests to receive all JSON file data based on DB queries
 
-# get interaction data
-# get player position data
-
 
 @app.route("/get-interaction-data", methods=["GET"])
 def get_interaction_data():
@@ -158,6 +155,101 @@ def get_session_data():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-interaction-data/player/<player_id>", methods=["GET"])
+def get_interaction_data_by_player(player_id):
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        interactions = list(interactions_local.find({"PlayerID": player_id}, {"_id": 0}))
+        return jsonify({"Interactions": interactions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-session-data/session/<session_id>", methods=["GET"])
+def get_session_data_by_session(session_id):
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        sessions = list(sessions_local.find({"SessionID": session_id}, {"_id": 0}))
+        return jsonify({"Sessions": sessions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-session-data/game-version/<game_version>", methods=["GET"])
+def get_session_data_by_game_version(game_version):
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        sessions = list(sessions_local.find({"Game Version": game_version}, {"_id": 0}))
+        return jsonify({"Sessions": sessions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-session-data/session-name/<session_name>", methods=["GET"])
+def get_session_data_by_session_name(session_name):
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        sessions = list(sessions_local.find({"Session Name": session_name}, {"_id": 0}))
+        return jsonify({"Sessions": sessions}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-data/timeframe", methods=["GET"])
+def get_data_by_timeframe():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        query = {"Timestamp": {"$gte": start_time, "$lte": end_time}}
+
+        interactions = list(interactions_local.find(query, {"_id": 0}))
+        positions = list(positions_local.find(query, {"_id": 0}))
+        avg_fps = list(avg_fps_local.find(query, {"_id": 0}))
+        sessions = list(sessions_local.find(query, {"_id": 0}))
+
+        return jsonify({
+            "Interactions": interactions,
+            "Positions": positions,
+            "AVG FPS": avg_fps,
+            "Sessions": sessions
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-player-ids", methods=["GET"])
+def get_player_ids():
+    """
+    Endpoint to retrieve all unique PlayerIDs from the database.
+    """
+    # Query the collections for PlayerID
+    player_ids = set()
+
+    # Extract PlayerIDs from interactions
+    interactions = interactions_local.find({}, {"PlayerID": 1})
+    for interaction in interactions:
+        player_ids.add(interaction.get("PlayerID"))
+
+    # Extract PlayerIDs from sessions
+    sessions = sessions_local.find({}, {"PlayerID": 1})
+    for session in sessions:
+        player_ids.add(session.get("PlayerID"))
+
+    # Return the unique PlayerIDs as a JSON response
+    return jsonify({"PlayerIDs": list(player_ids)}), 200
 
 
 if __name__ == "__main__":
