@@ -11,7 +11,7 @@ import DoughnutChart from './components/graphs/DoughnutChart'
 function App() {
   return (
     <DashboardLayoutBasic>
-      <div className="charts-container">
+      {/* <div className="charts-container">
         <CardComponent>
           <BasicBars />
         </CardComponent>
@@ -27,7 +27,7 @@ function App() {
         <CardComponent>
           <DoughnutChart />
         </CardComponent>
-      </div>
+      </div> */}
     </DashboardLayoutBasic>
   );
 }

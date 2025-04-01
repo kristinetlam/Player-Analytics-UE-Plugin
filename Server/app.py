@@ -3,11 +3,15 @@ from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
 
 # Secret token (store securely in an environment variable)
 SECRET_TOKEN = os.getenv("API_SECRET_TOKEN", "your_secure_token_here")
@@ -97,6 +101,11 @@ def get_data():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Frontend Requests to receive all JSON file data based on DB queries
+
+# get interaction data
+# get player position data
 
 
 @app.route("/get-interaction-data", methods=["GET"])

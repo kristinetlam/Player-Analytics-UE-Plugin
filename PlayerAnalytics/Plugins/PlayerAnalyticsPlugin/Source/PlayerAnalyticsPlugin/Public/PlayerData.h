@@ -65,6 +65,12 @@ struct FsessionData
     FString PlayerID;
 
     UPROPERTY(BlueprintReadWrite)
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString SessionName;
+
+    UPROPERTY(BlueprintReadWrite)
     FString StartTime;
 
     UPROPERTY(BlueprintReadWrite)
@@ -102,6 +108,12 @@ public:
     TSharedPtr<FJsonObject> ToJson();
 
     FString playerID;
+    FString sessionID;
+
+    // Basic Game Data
+    FString gameTitle = "Default Game Title";
+    FString gameVersion = "0.0.0";
+
 
     // UFUNCTION(BlueprintCallable, Category = "PlayerData")
     //static void AddInteraction(UPlayerData* NewInteraction);
