@@ -115,14 +115,16 @@ function DashboardLayoutBasic() {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
               {/* Add filters for users with dropdowns */}
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
-              <CardComponent title="Average FPS" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* <CompositionExample /> */}  <AverageFPS /></CardComponent> 
-              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}>{/* basdasd*/}</CardComponent>
-              <CardComponent title="Average Session Length" sx={{ width: '30%', height: '15%'}} moveTitleUp={true}><AverageSessionLength /></CardComponent>
+              <CardComponent title="Average FPS" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <CompositionExample /> */}
+                <AverageFPS />
+              </CardComponent> 
+              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}></CardComponent>
+              <CardComponent title="Average Session Length" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
               <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
-              <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '70%'}}><ApexChart/></CardComponent>
+              <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '70%'}} centerContent={false}><ApexChart/></CardComponent>
             </Box>
           </DashboardContent>
         </DashboardLayout>
