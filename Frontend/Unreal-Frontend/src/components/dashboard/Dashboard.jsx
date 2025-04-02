@@ -11,7 +11,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
-import BasicBars from '../graphs/BarGraph';
+import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
 import BasicLineChart from '../graphs/LineGraph';
 import BasicPie from '../graphs/PieChart';
 import BasicScatter from '../graphs/ScatterPlot';
@@ -120,7 +120,7 @@ function DashboardLayoutBasic() {
               </CardComponent> 
               <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}></CardComponent>
               <CardComponent title="Average Session Length" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
-              <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
+              <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><PlayerInteractionsBarGraph /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
               <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>

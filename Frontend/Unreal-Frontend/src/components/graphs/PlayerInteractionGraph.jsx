@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 // }
 
 
-export default function BasicBars() {
+export default function PlayerInteractionsBarGraph() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -57,22 +57,32 @@ export default function BasicBars() {
   //     y: interaction.count
   //   }));
   // };
-
   const countInteractions = (interactions) => {
-    // Count occurrences of 'Picked Up Rifle'
+    // Helper function to normalize description and ignore dynamic parts (numbers)
+    const normalizeDescription = (description) => {
+      // Remove numbers or dynamic parts, assuming the number is after a colon
+      return description.split(':')[0].trim(); // Only take the part before the colon
+    };
+  
     const interactionMap = interactions.reduce((acc, interaction) => {
-      const description = interaction.InteractionDescription; // Ensure this matches your JSON structure
-      if (description === 'Picked Up Rifle') {
-        acc[description] = (acc[description] || 0) + 1;
-      }
+      const description = interaction.InteractionDescription;
+      const normalizedDescription = normalizeDescription(description); // Normalize the description to remove numbers
+  
+      // Increment the count for this normalized description
+      acc[normalizedDescription] = (acc[normalizedDescription] || 0) + 1;
+  
       return acc;
     }, {});
-
+  
+    // Convert the map to an array of objects for the chart
     return Object.entries(interactionMap).map(([description, count]) => ({
-      x: description, // The interaction description (e.g., 'Picked Up Rifle')
-      y: count,       // The count of interactions
+      x: description,  // Normalized interaction description (without numbers)
+      y: count,        // Count of occurrences
     }));
   };
+  
+  
+  
 
   return (
     <BarChart

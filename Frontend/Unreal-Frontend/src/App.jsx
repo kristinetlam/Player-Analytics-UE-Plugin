@@ -1,5 +1,5 @@
 import './App.css'
-import BasicBars from './components/graphs/BarGraph'
+import BasicBars from './components/graphs/PlayerInteractionGraph'
 import BasicLineChart from './components/graphs/LineGraph'
 import BasicPie from './components/graphs/PieChart'
 import BasicScatter from './components/graphs/ScatterPlot'
