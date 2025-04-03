@@ -57,12 +57,20 @@ void UPlayerDataHandler::AddSession(FString StartTime, FString EndTime, FString 
     playerData->Sessions.Add(session);
 }
 
-void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand) {
+void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores) {
     FcpuSpecs cpuspecs;
     cpuspecs.PlayerID = playerData->playerID;
     cpuspecs.cpuName = cpuName;
     cpuspecs.cpuBrand = cpuBrand;
+    cpuspecs.cpuCores = cpuCores;
     playerData->cpuSpecs.Add(cpuspecs);
+}
+
+void UPlayerDataHandler::AddGPUSpecs(FString gpuName) {
+    FgpuSpecs gpuspecs;
+    gpuspecs.PlayerID = playerData->playerID;
+    gpuspecs.gpuName = gpuName;
+    playerData->gpuSpecs.Add(gpuspecs);
 }
 
 /// <summary>

@@ -28,7 +28,10 @@ public:
     void AddSession(FString StartTime, FString EndTime, FString EndType);
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddCPUSpecs(FString cpuName, FString cpuBrand);
+    void AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddGPUSpecs(FString gpuName);
 
     
 

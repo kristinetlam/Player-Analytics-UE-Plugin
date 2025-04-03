@@ -88,7 +88,23 @@ struct FcpuSpecs
 
     UPROPERTY(BlueprintReadWrite)
     FString cpuBrand;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 cpuCores;
 };
+
+USTRUCT(BlueprintType)
+struct FgpuSpecs 
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString gpuName;
+};
+
 
 UCLASS(Blueprintable, EditInlineNew)
 class PLAYERANALYTICSPLUGIN_API UPlayerData : public UObject
@@ -115,6 +131,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     TArray<FcpuSpecs> cpuSpecs;
+
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
+    TArray<FgpuSpecs> gpuSpecs;
 
     // Convert to JSON
     TSharedPtr<FJsonObject> ToJson();

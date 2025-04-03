@@ -103,6 +103,9 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
         CPUObject->SetStringField("PlayerID", cpuSpecs[i].PlayerID);
         CPUObject->SetStringField("CPUName", cpuSpecs[i].cpuName);
         CPUObject->SetStringField("CPUBrand", cpuSpecs[i].cpuBrand);
+        CPUObject->SetNumberField("CPUCoreNo", cpuSpecs[i].cpuCores);
+
+        CPUObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
 
         cpuSpecsArray.Add(MakeShared<FJsonValueObject>(CPUObject));
     }
