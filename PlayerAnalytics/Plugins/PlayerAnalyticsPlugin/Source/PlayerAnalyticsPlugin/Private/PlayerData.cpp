@@ -8,8 +8,8 @@
 FString GetMD5HashedMachineId()
 {
     // Get machine ID
-    FGuid MachineId = FPlatformMisc::GetMachineId();
-    FString MachineIdString = MachineId.ToString(EGuidFormats::Digits);
+    //FGuid MachineId = ;
+    FString MachineIdString = FPlatformMisc::GetLoginId();
 
     // Generate MD5 hash
     FString MD5Hash = FMD5::HashAnsiString(*MachineIdString);
@@ -25,7 +25,7 @@ UPlayerData::UPlayerData()
 }
 
 
-TSharedPtr<FJsonObject> UPlayerData::ToJson()
+TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 {
     // Create a JSON object
     TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();

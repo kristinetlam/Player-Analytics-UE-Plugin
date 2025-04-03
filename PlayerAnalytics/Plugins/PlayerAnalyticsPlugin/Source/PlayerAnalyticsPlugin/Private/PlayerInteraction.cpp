@@ -1,4 +1,5 @@
 #include "PlayerInteraction.h"
+#include "GameFramework/Actor.h"
 #include "Misc/OutputDeviceDebug.h"
 
 void UPlayerInteraction::LogPlayerInteraction(AActor* InteractingActor, FString InteractionDescription)

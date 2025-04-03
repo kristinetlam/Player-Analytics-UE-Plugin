@@ -2,7 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
+#include "Serialization/JsonWriter.h"
+#include "Serialization/JsonReader.h"
+#include "Dom/JsonObject.h"  
+#include "Templates/SharedPointer.h"
 #include "PlayerData.generated.h"
+
 
 
 USTRUCT(BlueprintType)
@@ -10,16 +16,16 @@ struct FinteractionData
 {
     GENERATED_BODY()
     
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString PlayerID;
     
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString InteractionDescription;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FVector InteractionLocation;
 
     /*UPROPERTY(BlueprintReadWrite)
@@ -61,13 +67,13 @@ struct FpositionData
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Position")
     FVector Position;
 };
 
@@ -76,13 +82,13 @@ struct FfpsData
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     int AverageFPS;
 };
 
@@ -91,23 +97,23 @@ struct FsessionData
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString SessionID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString SessionName;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString StartTime;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString EndTime;
 
     //Example types are "crash" and "exit"
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString EndType;
 };
 
@@ -175,7 +181,7 @@ public:
     TArray<FgpuSpecs> gpuSpecs;
 
     // Convert to JSON
-    TSharedPtr<FJsonObject> ToJson();
+    TSharedPtr<FJsonObject, ESPMode::ThreadSafe> ToJson();
 
     FString playerID;
     FString sessionID;
