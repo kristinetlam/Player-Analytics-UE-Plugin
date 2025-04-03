@@ -5,6 +5,8 @@
 			"guid": "00000000000000000000000000000000",
 			"description": "Default Uncontrolled Changelist",
 			"files": [
+				"C:/Users/Brack/Tamu/Capstone/Player-Analytics-UE-Plugin/LyraStarterGame/Plugins/GameFeatures/ShooterCore/Content/Game/B_Hero_ShooterMannequin.uasset",
+				"C:/Users/Brack/Tamu/Capstone/Player-Analytics-UE-Plugin/LyraStarterGame/Content/BP_LyraCharacter.uasset",
 				"C:/Users/Brack/TAGD/Workshops/unreal2025/LyraStarterGame/Content/BP_LyraCharacter.uasset",
 				"C:/Users/Brack/TAGD/Workshops/unreal2025/LyraStarterGame/Content/B_LyraGameMode.uasset",
 				"C:/Users/Brack/TAGD/Workshops/unreal2025/LyraStarterGame/Content/BP_Test.uasset",
