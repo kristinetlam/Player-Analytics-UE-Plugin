@@ -26,6 +26,7 @@ interactions_local = db_local.interactions
 positions_local = db_local.positions
 avg_fps_local = db_local.avg_fps
 sessions_local = db_local.sessions
+computer_specs_local = db_local.computer_specs
 
 def verify_token():
     """Checks if the request has a valid token."""
@@ -72,6 +73,10 @@ def add_data():
                 print("Inserted Sessions successfully.")
             except Exception as e:
                 print("Error inserting sessions:", str(e))
+                
+        # Insert Computer Specifications
+        if "Computer Specifications" in data:
+            computer_specs_local.insert_many(data["Computer Specifications"])
 
         return jsonify({"message": "Data added successfully"}), 201
 
@@ -91,20 +96,20 @@ def get_data():
         positions = list(positions_local.find({}, {"_id": 0}))
         avg_fps = list(avg_fps_local.find({}, {"_id": 0}))
         sessions = list(sessions_local.find({}, {"_id": 0}))
+        specs = list(computer_specs_local.find({}, {"_id": 0}))
 
         return jsonify({
             "Interactions": interactions, 
             "Positions": positions,
             "AVG FPS": avg_fps,
-            "Sessions": sessions
+            "Sessions": sessions,
+            "Computer Specifications": specs
         }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
 # Frontend Requests to receive all JSON file data based on DB queries
-
-
 @app.route("/get-interaction-data", methods=["GET"])
 def get_interaction_data():
     if not verify_token():
@@ -156,50 +161,83 @@ def get_session_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/get-interaction-data/player/<player_id>", methods=["GET"])
+@app.route("/get-computer-specs", methods=["GET"])
+def get_computer_specs():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        specs = list(computer_specs_local.find({}, {"_id": 0}))
+        return jsonify({"Computer Specifications": specs}), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-data/player/<player_id>", methods=["GET"])
 def get_interaction_data_by_player(player_id):
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
         interactions = list(interactions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        return jsonify({"Interactions": interactions}), 200
+        positions = list(positions_local.find({"PlayerID": player_id}, {"_id": 0}))
+        avg_fps = list(avg_fps_local.find({"PlayerID": player_id}, {"_id": 0}))
+        sessions = list(sessions_local.find({"PlayerID": player_id}, {"_id": 0}))
+        specs = list(computer_specs_local.find({"PlayerID": player_id}, {"_id": 0}))
+        
+        return jsonify({
+            "Interactions": interactions, 
+            "Positions": positions,
+            "AVG FPS": avg_fps,
+            "Sessions": sessions,
+            "Computer Specifications": specs
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/get-session-data/session/<session_id>", methods=["GET"])
+@app.route("/get-data/session-version/<session_id>", methods=["GET"])
 def get_session_data_by_session(session_id):
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
+        interactions = list(interactions_local.find({"SessionID": session_id}, {"_id": 0}))
+        positions = list(positions_local.find({"SessionID": session_id}, {"_id": 0}))
+        avg_fps = list(avg_fps_local.find({"SessionID": session_id}, {"_id": 0}))
         sessions = list(sessions_local.find({"SessionID": session_id}, {"_id": 0}))
-        return jsonify({"Sessions": sessions}), 200
+        specs = list(computer_specs_local.find({"SessionID": session_id}, {"_id": 0}))
+        
+        return jsonify({
+            "Interactions": interactions, 
+            "Positions": positions,
+            "AVG FPS": avg_fps,
+            "Sessions": sessions,
+            "Computer Specifications": specs
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/get-session-data/game-version/<game_version>", methods=["GET"])
+@app.route("/get-data/game-version/<game_version>", methods=["GET"])
 def get_session_data_by_game_version(game_version):
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
+        interactions = list(interactions_local.find({"Game Version": game_version}, {"_id": 0}))
+        positions = list(positions_local.find({"Game Version": game_version}, {"_id": 0}))
+        avg_fps = list(avg_fps_local.find({"Game Version": game_version}, {"_id": 0}))
         sessions = list(sessions_local.find({"Game Version": game_version}, {"_id": 0}))
-        return jsonify({"Sessions": sessions}), 200
+        specs = list(computer_specs_local.find({"Game Version": game_version}, {"_id": 0}))
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/get-session-data/session-name/<session_name>", methods=["GET"])
-def get_session_data_by_session_name(session_name):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        sessions = list(sessions_local.find({"Session Name": session_name}, {"_id": 0}))
-        return jsonify({"Sessions": sessions}), 200
+        return jsonify({
+            "Interactions": interactions, 
+            "Positions": positions,
+            "AVG FPS": avg_fps,
+            "Sessions": sessions,
+            "Computer Specifications": specs
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -219,12 +257,14 @@ def get_data_by_timeframe():
         positions = list(positions_local.find(query, {"_id": 0}))
         avg_fps = list(avg_fps_local.find(query, {"_id": 0}))
         sessions = list(sessions_local.find(query, {"_id": 0}))
+        specs = list(computer_specs_local.find(query, {"_id": 0}))
 
         return jsonify({
-            "Interactions": interactions,
+            "Interactions": interactions, 
             "Positions": positions,
             "AVG FPS": avg_fps,
-            "Sessions": sessions
+            "Sessions": sessions,
+            "Computer Specifications": specs
         }), 200
 
     except Exception as e:
