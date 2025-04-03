@@ -10,25 +10,7 @@ import DoughnutChart from './components/graphs/DoughnutChart'
 
 function App() {
   return (
-    <DashboardLayoutBasic>
-      {/* <div className="charts-container">
-        <CardComponent>
-          <BasicBars />
-        </CardComponent>
-        <CardComponent>
-          <BasicLineChart />
-        </CardComponent>
-        <CardComponent>
-          <BasicPie />
-        </CardComponent>
-        <CardComponent>
-          <BasicScatter />
-        </CardComponent>
-        <CardComponent>
-          <DoughnutChart />
-        </CardComponent>
-      </div> */}
-    </DashboardLayoutBasic>
+    <DashboardLayoutBasic></DashboardLayoutBasic>
   );
 }
 

@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 function DashboardContent({ pathname, children, sx }) {
-    console.log("Rendering DashboardContent", { pathname });
   return (
     <Box
       sx={{

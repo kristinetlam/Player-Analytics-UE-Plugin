@@ -9,7 +9,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import { DashboardLayout, ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
 import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
 import BasicLineChart from '../graphs/LineGraph';
@@ -22,6 +22,13 @@ import ApexChart from '../graphs/Heatmap';
 import CompositionExample from '../graphs/GaugeChart';
 import AverageFPS from '../graphs/AverageFPS';
 import AverageSessionLength from '../graphs/AverageSessionLength';
+import BasicFilterSelect from '../FilterComponent';
+import CustomAppBar from './CustomDashLayout';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
 
 const NAVIGATION = [
   {
@@ -105,26 +112,81 @@ DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
 };
 
+function ToolbarActionsSearch() {
+  return (
+    <Stack direction="row">
+      <Tooltip title="Search" enterDelay={1000}>
+        <div>
+          <IconButton
+            type="button"
+            aria-label="search"
+            sx={{
+              display: { xs: 'inline', md: 'none' },
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </div>
+      </Tooltip>
+      <TextField
+        label="Search"
+        variant="outlined"
+        size="small"
+        slotProps={{
+          input: {
+            endAdornment: (
+              <IconButton type="button" aria-label="search" size="small">
+                <SearchIcon />
+              </IconButton>
+            ),
+            sx: { pr: 0.5 },
+          },
+        }}
+        sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
+      />
+      <ThemeSwitcher />
+    </Stack>
+  );
+}
+
+
 function DashboardLayoutBasic() {
     const router = useDemoRouter('/dashboard');
   
     return (
-      <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
-        <DashboardLayout>
+      <AppProvider 
+        navigation={NAVIGATION} 
+        router={router} 
+        theme={demoTheme}
+        branding={{
+          logo: <img src="/UE-Icon-2023-Black.svg" alt="Unreal Engine 5 Logo" />,
+          title:"UE5 Player Analytics"
+        }}
+      >
+        <DashboardLayout
+        slots={{
+          toolbarActions: ToolbarActionsSearch,
+        }}
+        >
           <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
               {/* Add filters for users with dropdowns */}
+              {/* <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                <BasicFilterSelect />
+              </Box> */}
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
-              <CardComponent title="Average FPS" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <CompositionExample /> */}
-                <AverageFPS />
-              </CardComponent> 
-              <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}></CardComponent>
-              <CardComponent title="Average Session Length" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
-              <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><PlayerInteractionsBarGraph /></CardComponent>
-              <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
-              <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
-              <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
-              <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '70%'}} centerContent={false}><ApexChart/></CardComponent>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <CardComponent title="Average FPS" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <CompositionExample /> */}
+                  <AverageFPS />
+                </CardComponent> 
+                <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}></CardComponent>
+                <CardComponent title="Average Session Length" sx={{ width: '30%', height: '15%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
+                <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><PlayerInteractionsBarGraph /></CardComponent>
+                <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
+                <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
+                <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
+                <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '70%'}} centerContent={false}><ApexChart/></CardComponent>
+              </Box>   
             </Box>
           </DashboardContent>
         </DashboardLayout>
@@ -132,12 +194,12 @@ function DashboardLayoutBasic() {
     );
   }
 
-DashboardLayoutBasic.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
-  window: PropTypes.func,
-};
+// DashboardLayoutBasic.propTypes = {
+//   /**
+//    * Injected by the documentation to work in an iframe.
+//    * Remove this when copying and pasting into your project.
+//    */
+//   window: PropTypes.func,
+// };
 
 export default DashboardLayoutBasic;
