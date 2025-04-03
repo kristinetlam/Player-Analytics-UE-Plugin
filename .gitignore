@@ -110,3 +110,4 @@ env
 Frontend/Unreal-Frontend/.env
 /PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
 .env
+/Server/__pycache__
