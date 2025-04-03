@@ -171,8 +171,8 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     TArray<FcpuSpecs> cpuSpecs;
 
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs");
     TArray<FgpuSpecs> gpuSpecs;
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
 
     // Convert to JSON
     TSharedPtr<FJsonObject> ToJson();
