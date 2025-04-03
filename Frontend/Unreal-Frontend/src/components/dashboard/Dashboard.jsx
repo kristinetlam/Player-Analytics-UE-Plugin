@@ -23,7 +23,6 @@ import CompositionExample from '../graphs/GaugeChart';
 import AverageFPS from '../graphs/AverageFPS';
 import AverageSessionLength from '../graphs/AverageSessionLength';
 import BasicFilterSelect from '../FilterComponent';
-import CustomAppBar from './CustomDashLayout';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -149,6 +148,15 @@ function ToolbarActionsSearch() {
   );
 }
 
+function ToolbarActions() {
+  return (
+    <Stack direction="row" spacing={2}>
+      <BasicFilterSelect />
+      <ToolbarActionsSearch />
+    </Stack>
+  );
+}
+
 
 function DashboardLayoutBasic() {
     const router = useDemoRouter('/dashboard');
@@ -165,7 +173,7 @@ function DashboardLayoutBasic() {
       >
         <DashboardLayout
         slots={{
-          toolbarActions: ToolbarActionsSearch,
+          toolbarActions: ToolbarActions,
         }}
         >
           <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>

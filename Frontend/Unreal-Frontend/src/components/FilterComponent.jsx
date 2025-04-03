@@ -13,12 +13,12 @@ export default function BasicFilterSelect() {
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+    <Box sx={{ width: 200, display: { xs: 'none', md: 'inline-block' }, mr: 1 }}>
+      <FormControl fullWidth size="small" >
+        <InputLabel id="filter-select-label">Filter</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="filter-select-label"
+          id="filter-select"
           value={filter}
           label="Filter"
           onChange={handleChange}
@@ -31,3 +31,4 @@ export default function BasicFilterSelect() {
     </Box>
   );
 }
+
