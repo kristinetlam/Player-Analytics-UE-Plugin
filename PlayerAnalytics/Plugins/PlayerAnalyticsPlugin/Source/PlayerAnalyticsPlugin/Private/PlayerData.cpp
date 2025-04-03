@@ -126,5 +126,21 @@ TSharedPtr<FJsonObject> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Sessions", SessionArray);
 
+    // Add CPU spec data to JSON
+    TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
+    for (int i = 0; i < cpuSpecs.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
+        CPUObject->SetStringField("PlayerID", cpuSpecs[i].PlayerID);
+        CPUObject->SetStringField("CPUName", cpuSpecs[i].cpuName);
+        CPUObject->SetStringField("CPUBrand", cpuSpecs[i].cpuBrand);
+        CPUObject->SetNumberField("CPUCoreNo", cpuSpecs[i].cpuCores);
+
+        CPUObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
+
+        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(CPUObject));
+    }
+    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
+
     return JsonObject;
 }

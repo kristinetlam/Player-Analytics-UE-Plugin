@@ -30,6 +30,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType);
 
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddGPUSpecs(FString gpuName);
+
     
 
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")

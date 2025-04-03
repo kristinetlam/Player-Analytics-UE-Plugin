@@ -111,6 +111,37 @@ struct FsessionData
     FString EndType;
 };
 
+USTRUCT(BlueprintType)
+struct FcpuSpecs 
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString cpuName;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString cpuBrand;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 cpuCores;
+};
+
+USTRUCT(BlueprintType)
+struct FgpuSpecs 
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite)
+    FString gpuName;
+};
+
+
 UCLASS(Blueprintable, EditInlineNew)
 class PLAYERANALYTICSPLUGIN_API UPlayerData : public UObject
 {
@@ -136,6 +167,12 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "Inventory")
     TArray<FinventoryData> Inventories;
+
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
+    TArray<FcpuSpecs> cpuSpecs;
+
+    TArray<FgpuSpecs> gpuSpecs;
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
 
     // Convert to JSON
     TSharedPtr<FJsonObject> ToJson();
