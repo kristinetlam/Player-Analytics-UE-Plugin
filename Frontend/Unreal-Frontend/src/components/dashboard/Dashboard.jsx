@@ -168,7 +168,7 @@ function DashboardLayoutBasic() {
         theme={demoTheme}
         branding={{
           logo: <img src="/UE-Icon-2023-Black.svg" alt="Unreal Engine 5 Logo" />,
-          title:"UE5 Player Analytics"
+          title:<span style={{ color: 'rgba(0, 0, 0, 0.87)' }}>UE5 Player Analytics</span>
         }}
       >
         <DashboardLayout
