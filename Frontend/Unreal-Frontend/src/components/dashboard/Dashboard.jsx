@@ -28,6 +28,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import FilterPanel from '../PrettyFilterComponent';
 
 const NAVIGATION = [
   {
@@ -151,7 +152,7 @@ function ToolbarActionsSearch() {
 function ToolbarActions() {
   return (
     <Stack direction="row" spacing={2}>
-      <BasicFilterSelect />
+      <FilterPanel />
       <ToolbarActionsSearch />
     </Stack>
   );

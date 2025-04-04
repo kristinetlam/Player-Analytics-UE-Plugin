@@ -110,3 +110,5 @@ env
 Frontend/Unreal-Frontend/.env
 /PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
 .env
+
+Frontend/Unreal-Frontend/node_modules
