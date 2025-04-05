@@ -45,6 +45,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
         InteractionObject->SetStringField("PlayerID", interactions[i].PlayerID);
+        InteractionObject->SetStringField("SessionID", interactions[i].SessionID);
         InteractionObject->SetStringField("Timestamp", interactions[i].Timestamp);
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
 
@@ -65,6 +66,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> PositionObject = MakeShared<FJsonObject>();
         PositionObject->SetStringField("PlayerID", positions[i].PlayerID);
+        PositionObject->SetStringField("SessionID", positions[i].SessionID);
         PositionObject->SetStringField("Timestamp", positions[i].Timestamp);
 
         // Convert FVector to JSON array
@@ -85,23 +87,25 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
         FPSObject->SetStringField("PlayerID", AvgFPSPoints[i].PlayerID);
         FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
+        FPSObject->SetStringField("SessionID", AvgFPSPoints[i].SessionID);
         FPSObject->SetNumberField("AverageFPS", AvgFPSPoints[i].AverageFPS);
 
         FPSAveragesArray.Add(MakeShared<FJsonValueObject>(FPSObject));
     }
-    JsonObject->SetArrayField("AVG FPS", FPSAveragesArray);
+    JsonObject->SetArrayField("FPS (Frames Per Second)", FPSAveragesArray);
 
     // Add Session data to JSON
     TArray<TSharedPtr<FJsonValue>> SessionArray;
     for (int i = 0; i < Sessions.Num(); i++)
     {
-        TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
-        FPSObject->SetStringField("PlayerID", Sessions[i].PlayerID);
-        FPSObject->SetStringField("StartTime", Sessions[i].StartTime);
-        FPSObject->SetStringField("EndTime", Sessions[i].EndTime);
-        FPSObject->SetStringField("EndType", Sessions[i].EndType);
+        TSharedPtr<FJsonObject> SessionObject = MakeShared<FJsonObject>();
+        SessionObject->SetStringField("PlayerID", Sessions[i].PlayerID);
+        SessionObject->SetStringField("SessionID", Sessions[i].SessionID);
+        SessionObject->SetStringField("StartTime", Sessions[i].StartTime);
+        SessionObject->SetStringField("EndTime", Sessions[i].EndTime);
+        SessionObject->SetStringField("EndType", Sessions[i].EndType);
 
-        SessionArray.Add(MakeShared<FJsonValueObject>(FPSObject));
+        SessionArray.Add(MakeShared<FJsonValueObject>(SessionObject));
     }
     JsonObject->SetArrayField("Sessions", SessionArray);
 

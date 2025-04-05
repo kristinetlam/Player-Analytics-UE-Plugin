@@ -23,6 +23,7 @@ void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector 
 {
     FinteractionData interaction;
     interaction.PlayerID = playerData->playerID;
+    interaction.SessionID = playerData->sessionID;
     interaction.InteractionDescription = InteractionDescription;
     interaction.InteractionLocation = InteractionLocation;
     interaction.Timestamp = FDateTime::Now().ToString();
@@ -38,19 +39,31 @@ void UPlayerDataHandler::AddPosition(FVector Position)
 {
     FpositionData position;
     position.PlayerID = playerData->playerID;
+    position.SessionID = playerData->sessionID;
     position.Position = Position;
     position.Timestamp = FDateTime::Now().ToString();
     playerData->positions.Add(position);
 }
 
+/// <summary>
+/// Adds FPS data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="Position"></param>
 void UPlayerDataHandler::AddAVGfps(int AVGfps) {
     FfpsData fpsData;
     fpsData.PlayerID = playerData->playerID;
+    fpsData.SessionID = playerData->sessionID;
     fpsData.AverageFPS = AVGfps;
     fpsData.Timestamp = FDateTime::Now().ToString();
     playerData->AvgFPSPoints.Add(fpsData);
 }
 
+/// <summary>
+/// Adds a Session data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="Position"></param>
 void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType) {
     FsessionData session;
     session.PlayerID = playerData->playerID;

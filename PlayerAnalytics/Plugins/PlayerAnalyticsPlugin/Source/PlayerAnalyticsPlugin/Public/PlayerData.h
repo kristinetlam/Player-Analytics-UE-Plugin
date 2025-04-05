@@ -18,6 +18,9 @@ struct FinteractionData
     
     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
     
     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString InteractionDescription;
@@ -40,6 +43,9 @@ struct FpositionData
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString PlayerID;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
+
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString Timestamp;
 
@@ -54,6 +60,9 @@ struct FfpsData
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString Timestamp;
