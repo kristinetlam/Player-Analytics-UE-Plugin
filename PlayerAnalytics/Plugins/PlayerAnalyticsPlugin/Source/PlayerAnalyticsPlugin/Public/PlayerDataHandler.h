@@ -17,6 +17,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddInteraction(FString InteractionDescription, FVector InteractionLocation);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddInventory(int size, int capacity, TArray<FString> itemNames, TArray<int> itemAmounts);
     
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddPosition(FVector Position);
@@ -26,6 +29,12 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddGPUSpecs(FString gpuName);
 
     
 

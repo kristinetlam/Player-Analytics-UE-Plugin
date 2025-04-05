@@ -60,6 +60,27 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Interactions", InteractionsArray);
 
+    // Add inventory to JSON
+    TArray<TSharedPtr<FJsonValue>> InventoryArray;
+    for (int i = 0; i < Inventories.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> InventoryObject = MakeShared<FJsonObject>();
+        InventoryObject->SetNumberField("Size", Inventories[i].Size);
+        InventoryObject->SetNumberField("Capacity", Inventories[i].Capacity);
+        InventoryObject->SetStringField("Timestamp", Inventories[i].Timestamp);
+
+        // Convert TArray to JSON array
+        TArray<TSharedPtr<FJsonValue>> ItemsArray;
+        for (int j = 0; j < Inventories[i].Size; j++) {
+            ItemsArray.Add(MakeShared<FJsonValueNumber>(Inventories[i].Items[j].Amount));
+            ItemsArray.Add(MakeShared<FJsonValueString>(Inventories[i].Items[j].ItemName));
+        }
+        InventoryObject->SetArrayField("Items", ItemsArray);
+        
+        InventoryArray.Add(MakeShared<FJsonValueObject>(InventoryObject));
+    }
+    JsonObject->SetArrayField("Inventories", InventoryArray);
+
     // Add positions to JSON
     TArray<TSharedPtr<FJsonValue>> PositionsArray;
     for (int i = 0; i < positions.Num(); i++)
@@ -108,6 +129,22 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         SessionArray.Add(MakeShared<FJsonValueObject>(SessionObject));
     }
     JsonObject->SetArrayField("Sessions", SessionArray);
+
+    // Add CPU spec data to JSON
+    TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
+    for (int i = 0; i < cpuSpecs.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
+        CPUObject->SetStringField("PlayerID", cpuSpecs[i].PlayerID);
+        CPUObject->SetStringField("CPUName", cpuSpecs[i].cpuName);
+        CPUObject->SetStringField("CPUBrand", cpuSpecs[i].cpuBrand);
+        CPUObject->SetNumberField("CPUCoreNo", cpuSpecs[i].cpuCores);
+
+        CPUObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
+
+        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(CPUObject));
+    }
+    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
 
     return JsonObject;
 }
