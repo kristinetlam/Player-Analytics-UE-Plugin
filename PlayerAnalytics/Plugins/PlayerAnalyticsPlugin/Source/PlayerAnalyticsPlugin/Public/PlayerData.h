@@ -127,33 +127,21 @@ struct FsessionData
 };
 
 USTRUCT(BlueprintType)
-struct FcpuSpecs 
+struct FmemoryUsage 
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
-    FString cpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
 
-    UPROPERTY(BlueprintReadWrite)
-    FString cpuBrand;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite)
-    int32 cpuCores;
-};
-
-USTRUCT(BlueprintType)
-struct FgpuSpecs 
-{
-    GENERATED_BODY()
-
-    UPROPERTY(BlueprintReadWrite)
-    FString PlayerID;
-
-    UPROPERTY(BlueprintReadWrite)
-    FString gpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float RAMUsed;
 };
 
 
@@ -183,11 +171,8 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory")
     TArray<FinventoryData> Inventories;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    TArray<FcpuSpecs> cpuSpecs;
-
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs");
-    TArray<FgpuSpecs> gpuSpecs;
+    UPROPERTY(BlueprintReadWrite, Category = "Memory Usage")
+    TArray<FmemoryUsage> MemoryPoints;
 
     // Convert to JSON
     TSharedPtr<FJsonObject, ESPMode::ThreadSafe> ToJson();

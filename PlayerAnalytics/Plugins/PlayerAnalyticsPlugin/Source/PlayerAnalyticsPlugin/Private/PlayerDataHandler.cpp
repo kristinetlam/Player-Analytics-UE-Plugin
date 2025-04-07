@@ -5,6 +5,7 @@
 #include "Serialization/JsonSerializer.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
+#include "GenericPlatform/GenericPlatformMemory.h"
 
 
 UPlayerDataHandler::UPlayerDataHandler()
@@ -95,20 +96,18 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     playerData->Sessions.Add(session);
 }
 
-void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores) {
-    FcpuSpecs cpuspecs;
-    cpuspecs.PlayerID = playerData->playerID;
-    cpuspecs.cpuName = cpuName;
-    cpuspecs.cpuBrand = cpuBrand;
-    cpuspecs.cpuCores = cpuCores;
-    playerData->cpuSpecs.Add(cpuspecs);
-}
-
-void UPlayerDataHandler::AddGPUSpecs(FString gpuName) {
-    FgpuSpecs gpuspecs;
-    gpuspecs.PlayerID = playerData->playerID;
-    gpuspecs.gpuName = gpuName;
-    playerData->gpuSpecs.Add(gpuspecs);
+/// <summary>
+/// Adds a RAM usage data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="RAM"></param>
+void UPlayerDataHandler::AddMemory() {
+    FmemoryUsage RAMData;
+    RAMData.PlayerID = playerData->playerID;
+    RAMData.SessionID = playerData->sessionID;
+    RAMData.RAMUsed = static_cast<double>(FPlatformMemory::GetStats().UsedPhysical) / (1024 * 1024);
+    RAMData.Timestamp = FDateTime::Now().ToString();
+    playerData->MemoryPoints.Add(RAMData);
 }
 
 /// <summary>

@@ -31,12 +31,7 @@ public:
     void AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType);
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores);
-
-    UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddGPUSpecs(FString gpuName);
-
-    
+    void AddMemory();
 
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;

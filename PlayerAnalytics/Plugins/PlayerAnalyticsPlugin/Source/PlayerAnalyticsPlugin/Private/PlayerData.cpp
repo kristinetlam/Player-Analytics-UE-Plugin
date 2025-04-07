@@ -5,6 +5,11 @@
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
 
+//Computer Specification-related includes
+#include "GenericPlatform/GenericPlatformMisc.h"
+#include "GenericPlatform/GenericPlatformDriver.h"
+#include "GenericPlatform/GenericPlatformMemory.h"
+
 FString GetMD5HashedMachineId()
 {
     // Get machine ID
@@ -130,21 +135,50 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Sessions", SessionArray);
 
-    // Add CPU spec data to JSON
-    TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
-    for (int i = 0; i < cpuSpecs.Num(); i++)
+    // Add RAM data to JSON
+    TArray<TSharedPtr<FJsonValue>> RAMArray;
+    for (int i = 0; i < MemoryPoints.Num(); i++)
     {
-        TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
-        CPUObject->SetStringField("PlayerID", cpuSpecs[i].PlayerID);
-        CPUObject->SetStringField("CPUName", cpuSpecs[i].cpuName);
-        CPUObject->SetStringField("CPUBrand", cpuSpecs[i].cpuBrand);
-        CPUObject->SetNumberField("CPUCoreNo", cpuSpecs[i].cpuCores);
+        TSharedPtr<FJsonObject> RAMObject = MakeShared<FJsonObject>();
+        RAMObject->SetStringField("PlayerID", MemoryPoints[i].PlayerID);
+        RAMObject->SetStringField("Timestamp", MemoryPoints[i].Timestamp);
+        RAMObject->SetStringField("SessionID", MemoryPoints[i].SessionID);
+        RAMObject->SetNumberField("MemoryMB", MemoryPoints[i].RAMUsed);
 
-        CPUObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
-
-        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(CPUObject));
+        RAMArray.Add(MakeShared<FJsonValueObject>(RAMObject));
     }
-    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
+    JsonObject->SetArrayField("RAM Usage", RAMArray);
+
+
+
+    // Add Computer Specs data to JSON
+    TArray<TSharedPtr<FJsonValue>> SpecsArray;
+
+        TSharedPtr<FJsonObject> SpecsObject = MakeShared<FJsonObject>();
+        SpecsObject->SetStringField("PlayerID", playerID);
+
+        // Operating System Version (numeric OS version)
+        SpecsObject->SetStringField("OSLabel", FPlatformMisc::GetOSVersion());
+
+        // RAM Maximum available for UE5 to use
+        SpecsObject->SetNumberField("RAMPhysMaxMB", static_cast<double>(FPlatformMemory::GetStats().AvailablePhysical) / (1024 * 1024));
+        SpecsObject->SetNumberField("RAMVirtMaxMB", static_cast<double>(FPlatformMemory::GetStats().AvailableVirtual) / (1024 * 1024));
+        
+        // CPU Specs
+        SpecsObject->SetStringField("CPUName", FPlatformMisc::GetCPUBrand());
+        SpecsObject->SetStringField("CPUBrand", FPlatformMisc::GetCPUVendor());
+        SpecsObject->SetNumberField("CPUCoreNo", FPlatformMisc::NumberOfCores());
+
+        // GPU Specs
+        FGPUDriverInfo GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
+        SpecsObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
+        SpecsObject->SetStringField("GPUDriverVersion", GPUInfo.UserDriverVersion);
+        SpecsObject->SetStringField("GPUDriverVersionInternal", GPUInfo.InternalDriverVersion);
+        SpecsObject->SetStringField("GPUDriverDate", GPUInfo.DriverDate);
+
+        SpecsArray.Add(MakeShared<FJsonValueObject>(SpecsObject));
+
+    JsonObject->SetArrayField("Computer Specifications", SpecsArray);
 
     return JsonObject;
 }
