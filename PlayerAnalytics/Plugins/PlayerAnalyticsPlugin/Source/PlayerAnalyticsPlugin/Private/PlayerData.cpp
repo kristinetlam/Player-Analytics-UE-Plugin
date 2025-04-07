@@ -150,6 +150,21 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     JsonObject->SetArrayField("RAM Usage", RAMArray);
 
 
+    // Add CPU data to JSON
+    TArray<TSharedPtr<FJsonValue>> CPUArray;
+    for (int i = 0; i < CPUPoints.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
+        CPUObject->SetStringField("PlayerID", CPUPoints[i].PlayerID);
+        CPUObject->SetStringField("Timestamp", CPUPoints[i].Timestamp);
+        CPUObject->SetStringField("SessionID", CPUPoints[i].SessionID);
+        CPUObject->SetNumberField("CPU%Used", CPUPoints[i].CPUUsed);
+
+        CPUArray.Add(MakeShared<FJsonValueObject>(CPUObject));
+    }
+    JsonObject->SetArrayField("CPU Usage", CPUArray);
+
+
 
     // Add Computer Specs data to JSON
     TArray<TSharedPtr<FJsonValue>> SpecsArray;

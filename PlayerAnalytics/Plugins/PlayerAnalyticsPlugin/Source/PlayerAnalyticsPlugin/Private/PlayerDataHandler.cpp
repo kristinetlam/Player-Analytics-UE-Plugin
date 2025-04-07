@@ -6,6 +6,7 @@
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "GenericPlatform/GenericPlatformMemory.h"
+#include "GenericPlatform/GenericPlatformTime.h"
 
 
 UPlayerDataHandler::UPlayerDataHandler()
@@ -108,6 +109,20 @@ void UPlayerDataHandler::AddMemory() {
     RAMData.RAMUsed = static_cast<double>(FPlatformMemory::GetStats().UsedPhysical) / (1024 * 1024);
     RAMData.Timestamp = FDateTime::Now().ToString();
     playerData->MemoryPoints.Add(RAMData);
+}
+
+/// <summary>
+/// Adds a CPU usage data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="CPU"></param>
+void UPlayerDataHandler::AddCPUUsage() {
+    FCPUUsage CPUData;
+    CPUData.PlayerID = playerData->playerID;
+    CPUData.SessionID = playerData->sessionID;
+    CPUData.CPUUsed = FPlatformTime::GetCPUTime().CPUTimePct;
+    CPUData.Timestamp = FDateTime::Now().ToString();
+    playerData->CPUPoints.Add(CPUData);
 }
 
 /// <summary>

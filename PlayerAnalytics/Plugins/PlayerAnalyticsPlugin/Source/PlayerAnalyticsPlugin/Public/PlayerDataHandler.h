@@ -33,6 +33,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddMemory();
 
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddCPUUsage();
+
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;
 protected:

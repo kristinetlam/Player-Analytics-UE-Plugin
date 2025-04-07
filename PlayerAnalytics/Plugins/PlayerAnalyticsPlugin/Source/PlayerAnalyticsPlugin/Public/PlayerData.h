@@ -144,6 +144,24 @@ struct FmemoryUsage
     float RAMUsed;
 };
 
+USTRUCT(BlueprintType)
+struct FCPUUsage 
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float CPUUsed;
+};
+
 
 UCLASS(Blueprintable, EditInlineNew)
 class PLAYERANALYTICSPLUGIN_API UPlayerData : public UObject
@@ -173,6 +191,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "Memory Usage")
     TArray<FmemoryUsage> MemoryPoints;
+
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Usage")
+    TArray<FCPUUsage> CPUPoints;
 
     // Convert to JSON
     TSharedPtr<FJsonObject, ESPMode::ThreadSafe> ToJson();
