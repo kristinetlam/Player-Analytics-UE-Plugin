@@ -137,6 +137,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         SessionObject->SetStringField("PlayerID", Sessions[i].PlayerID);
         SessionObject->SetStringField("SessionID", Sessions[i].SessionID);
         SessionObject->SetStringField("Game Version", gameVersion);
+        SessionObject->SetStringField("Timestamp", Sessions[i].TimeStamp);
 
         SessionObject->SetStringField("StartTime", Sessions[i].StartTime);
         SessionObject->SetStringField("EndTime", Sessions[i].EndTime);
