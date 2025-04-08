@@ -51,7 +51,9 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
         InteractionObject->SetStringField("PlayerID", interactions[i].PlayerID);
         InteractionObject->SetStringField("SessionID", interactions[i].SessionID);
+        InteractionObject->SetStringField("Game Version", gameVersion);
         InteractionObject->SetStringField("Timestamp", interactions[i].Timestamp);
+        
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
 
         // Convert FVector to JSON array
@@ -70,9 +72,13 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     for (int i = 0; i < Inventories.Num(); i++)
     {
         TSharedPtr<FJsonObject> InventoryObject = MakeShared<FJsonObject>();
+        InventoryObject->SetStringField("PlayerID", interactions[i].PlayerID);
+        InventoryObject->SetStringField("SessionID", interactions[i].SessionID);
+        InventoryObject->SetStringField("Game Version", gameVersion);
+        InventoryObject->SetStringField("Timestamp", Inventories[i].Timestamp);
+        
         InventoryObject->SetNumberField("Size", Inventories[i].Size);
         InventoryObject->SetNumberField("Capacity", Inventories[i].Capacity);
-        InventoryObject->SetStringField("Timestamp", Inventories[i].Timestamp);
 
         // Convert TArray to JSON array
         TArray<TSharedPtr<FJsonValue>> ItemsArray;
@@ -93,6 +99,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> PositionObject = MakeShared<FJsonObject>();
         PositionObject->SetStringField("PlayerID", positions[i].PlayerID);
         PositionObject->SetStringField("SessionID", positions[i].SessionID);
+        PositionObject->SetStringField("Game Version", gameVersion);
         PositionObject->SetStringField("Timestamp", positions[i].Timestamp);
 
         // Convert FVector to JSON array
@@ -112,8 +119,10 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
         FPSObject->SetStringField("PlayerID", AvgFPSPoints[i].PlayerID);
-        FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
         FPSObject->SetStringField("SessionID", AvgFPSPoints[i].SessionID);
+        FPSObject->SetStringField("Game Version", gameVersion);
+        FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
+        
         FPSObject->SetNumberField("AverageFPS", AvgFPSPoints[i].AverageFPS);
 
         FPSAveragesArray.Add(MakeShared<FJsonValueObject>(FPSObject));
@@ -127,8 +136,11 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> SessionObject = MakeShared<FJsonObject>();
         SessionObject->SetStringField("PlayerID", Sessions[i].PlayerID);
         SessionObject->SetStringField("SessionID", Sessions[i].SessionID);
+        SessionObject->SetStringField("Game Version", gameVersion);
+
         SessionObject->SetStringField("StartTime", Sessions[i].StartTime);
         SessionObject->SetStringField("EndTime", Sessions[i].EndTime);
+
         SessionObject->SetStringField("EndType", Sessions[i].EndType);
 
         SessionArray.Add(MakeShared<FJsonValueObject>(SessionObject));
@@ -141,8 +153,11 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> RAMObject = MakeShared<FJsonObject>();
         RAMObject->SetStringField("PlayerID", MemoryPoints[i].PlayerID);
-        RAMObject->SetStringField("Timestamp", MemoryPoints[i].Timestamp);
         RAMObject->SetStringField("SessionID", MemoryPoints[i].SessionID);
+        RAMObject->SetStringField("Game Version", gameVersion);
+        RAMObject->SetStringField("Timestamp", MemoryPoints[i].Timestamp);
+        
+
         RAMObject->SetNumberField("MemoryMB", MemoryPoints[i].RAMUsed);
 
         RAMArray.Add(MakeShared<FJsonValueObject>(RAMObject));
@@ -156,8 +171,10 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
         CPUObject->SetStringField("PlayerID", CPUPoints[i].PlayerID);
-        CPUObject->SetStringField("Timestamp", CPUPoints[i].Timestamp);
         CPUObject->SetStringField("SessionID", CPUPoints[i].SessionID);
+        CPUObject->SetStringField("Game Version", gameVersion);
+        CPUObject->SetStringField("Timestamp", CPUPoints[i].Timestamp);
+
         CPUObject->SetNumberField("CPU%Used", CPUPoints[i].CPUUsed);
 
         CPUArray.Add(MakeShared<FJsonValueObject>(CPUObject));
@@ -171,6 +188,8 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 
         TSharedPtr<FJsonObject> SpecsObject = MakeShared<FJsonObject>();
         SpecsObject->SetStringField("PlayerID", playerID);
+        SpecsObject->SetStringField("SessionID", CPUPoints[i].SessionID);
+        SpecsObject->SetStringField("Game Version", gameVersion);
 
         // Operating System Version (numeric OS version)
         SpecsObject->SetStringField("OSLabel", FPlatformMisc::GetOSVersion());
