@@ -116,6 +116,9 @@ struct FsessionData
     FString SessionName;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString TimeStamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString StartTime;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")

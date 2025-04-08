@@ -89,6 +89,7 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     session.PlayerID = playerData->playerID;
     session.SessionName = SessionName;
     session.SessionID = playerData->sessionID;
+    session.TimeStamp = FDateTime::Now().ToString();
     session.StartTime = StartTime;
     session.EndTime = EndTime;
     session.EndType = EndType;
