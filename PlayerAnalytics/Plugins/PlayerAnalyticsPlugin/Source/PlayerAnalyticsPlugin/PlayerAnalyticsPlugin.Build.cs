@@ -19,7 +19,8 @@ public class PlayerAnalyticsPlugin : ModuleRules
                 // ... add other private include paths required here ...
             }
         );
-            
+        
+        // Runtime dependencies (Valid for packaged builds)
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
@@ -30,20 +31,18 @@ public class PlayerAnalyticsPlugin : ModuleRules
                 "Engine",
                 "DeveloperSettings",
                 "HTTP"
-                // Removed "BlueprintGraph" from here
             }
         );
-            
+        
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
                 "Slate",
-                "SlateCore",
-                // ... add private dependencies that you statically link with here ...    
+                "SlateCore"
             }
         );
 
-        // Only include editor dependencies when building for the editor
+        // Editor-only dependencies (Excluded from packaged builds)
         if (Target.bBuildEditor)
         {
             PrivateDependencyModuleNames.AddRange(
@@ -53,10 +52,9 @@ public class PlayerAnalyticsPlugin : ModuleRules
                 }
             );
         }
-        
+
         DynamicallyLoadedModuleNames.AddRange(
-            new string[]
-            {
+            new string[] {
                 // ... add any modules that your module loads dynamically here ...
             }
         );

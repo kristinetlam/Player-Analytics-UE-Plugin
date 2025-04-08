@@ -108,7 +108,49 @@ Server/.env
 PlayerAnalytics/Config/DefaultGame.ini
 env
 Frontend/Unreal-Frontend/.env
-/PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
-.env
+/LyraStarterGame/Binaries
+/LyraStarterGame/Build
+/LyraStarterGame/Config
+LyraStarterGame/DerivedDataCache/Compressed.ddp
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK02D4C3BCAD7DFA48AB32B8281FB06B8B83DB6275
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK20ED922B48ADACE806570DE43FF0F850C34A4597
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK2A5F9F60441DA258D18B46D59C64D5BAD50E8EE3
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK44B429B40BB45A070EB17C1259C28734996A2F49
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK7893532B20573A7D88963CCFE0C98CB655CCCE7B
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNK967C747FFC357A828288FA05D93CD5DCECDA891B
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNKC0393DE8C5B4673D99D1BECB92AA8C1F72FEB491
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNKD8B06C79C172491401FC1D10AE4436FB6B31EE2F
+LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTCHUNKDC408B95F3AE08C88A97E0307B1A8296AF55F5C7
+LyraStarterGame/Content/Effects/Textures/Flipbooks/SmokeSwirl_3_Flipbook_CHANNELPACK.uasset
+/LyraStarterGame/Saved
+/LyraStarterGame/Saved
 
-Frontend/Unreal-Frontend/node_modules
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# amplify
+.amplify
+amplify_outputs*
+amplifyconfiguration*

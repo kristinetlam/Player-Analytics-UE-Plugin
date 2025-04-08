@@ -16,10 +16,4 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "Interaction")
     static void LogPlayerHealthChange(AActor* InteractingActor, FString InteractionDescription, int health);
-
-    UFUNCTION(BlueprintCallable, Category = "Interaction")
-    static void LogAlterInventory(AActor* InteractingActor, FString InteractionDescription, int newAmount);
-
-    UFUNCTION(BlueprintCallable, Category = "Interaction")
-    static void LogInventory(const TArray<FString>& ItemNames, const TArray<int32>& ItemQuantities);
 };

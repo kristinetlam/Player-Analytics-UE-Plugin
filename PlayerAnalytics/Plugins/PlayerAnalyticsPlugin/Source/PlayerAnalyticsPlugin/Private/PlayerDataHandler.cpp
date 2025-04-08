@@ -3,6 +3,9 @@
 #include "Misc/Guid.h"
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
+
 
 UPlayerDataHandler::UPlayerDataHandler()
 {
@@ -10,7 +13,7 @@ UPlayerDataHandler::UPlayerDataHandler()
 }
 
 /// <summary>
-/// Adds an interaction to the playerD ata class
+/// Adds an interaction to the playerData class
 /// </summary>
 /// <param name="ActorName"></param>
 /// <param name="InteractionDescription"></param>
@@ -24,6 +27,26 @@ void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector 
     interaction.InteractionLocation = InteractionLocation;
     interaction.Timestamp = FDateTime::Now().ToString();
     playerData->interactions.Add(interaction);
+}
+
+/// <summary>
+/// Adds an inventory to the playerData class. Inventory is specified by two arrays of equal size, one listing item names, and one listing corresponding amounts of those items.
+/// </summary>
+/// <param name="Size"></param>
+/// <param name="Capacity"></param>
+/// <param name="ItemNames"></param>
+/// <param name="ItemAmounts"></param>
+void UPlayerDataHandler::AddInventory(int size, int capacity, TArray<FString> itemNames, TArray<int> itemAmounts)
+{
+    FinventoryData inventory;
+    inventory.Size = size;
+    inventory.Capacity = capacity;
+    inventory.Timestamp = FDateTime::Now().ToString();
+    for (int i = 0; i < size; i++) {
+        inventory.Items[i].ItemName = itemNames[i];
+        inventory.Items[i].Amount = itemAmounts[i];
+    }
+    playerData->Inventories.Add(inventory);
 }
 
 /// <summary>
@@ -59,6 +82,21 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     playerData->Sessions.Add(session);
 }
 
+void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores) {
+    FcpuSpecs cpuspecs;
+    cpuspecs.PlayerID = playerData->playerID;
+    cpuspecs.cpuName = cpuName;
+    cpuspecs.cpuBrand = cpuBrand;
+    cpuspecs.cpuCores = cpuCores;
+    playerData->cpuSpecs.Add(cpuspecs);
+}
+
+void UPlayerDataHandler::AddGPUSpecs(FString gpuName) {
+    FgpuSpecs gpuspecs;
+    gpuspecs.PlayerID = playerData->playerID;
+    gpuspecs.gpuName = gpuName;
+    playerData->gpuSpecs.Add(gpuspecs);
+}
 
 /// <summary>
 /// Saves player data to a JSON file 
