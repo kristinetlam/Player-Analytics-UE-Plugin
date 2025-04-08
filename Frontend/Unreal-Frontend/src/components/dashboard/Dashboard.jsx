@@ -152,7 +152,7 @@ function ToolbarActionsSearch() {
 function ToolbarActions() {
   return (
     <Stack direction="row" spacing={2}>
-      <FilterPanel />
+      <BasicFilterSelect />
       <ToolbarActionsSearch />
     </Stack>
   );
