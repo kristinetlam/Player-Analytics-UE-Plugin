@@ -36,6 +36,8 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     TSharedPtr<FJsonObject> GameDataObject = MakeShared<FJsonObject>();
     GameDataObject->SetStringField("Game Title", gameTitle);
     GameDataObject->SetStringField("Game Version", gameVersion);
+    GameDataObject->SetStringField("PlayerID", playerID);
+    GameDataObject->SetStringField("SessionID", sessionID);
     gameDataPoint.Add(MakeShared<FJsonValueObject>(GameDataObject));
     JsonObject->SetArrayField("Game Data", gameDataPoint);
 
