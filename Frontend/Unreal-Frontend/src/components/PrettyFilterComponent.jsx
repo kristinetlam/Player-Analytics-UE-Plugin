@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+
 
 const FilterPanel = () => {
     const [playerId, setPlayerId] = useState(null);
@@ -51,8 +54,15 @@ const FilterPanel = () => {
                 selected={selectedDate}
                 onChange={date => setSelectedDate(date)}
             />
-            <button onClick={handleApplyFilters}>Apply</button>
-            <button onClick={handleResetFilters}>Reset</button>
+            <Box>
+                <Button variant="contained" onClick={handleApplyFilters} sx={{ mr: 1 }}>
+                Apply
+                </Button>
+                <Button variant="outlined" onClick={handleResetFilters}>
+                Reset
+                </Button>
+            </Box>
+
         </div>
     );
 };
