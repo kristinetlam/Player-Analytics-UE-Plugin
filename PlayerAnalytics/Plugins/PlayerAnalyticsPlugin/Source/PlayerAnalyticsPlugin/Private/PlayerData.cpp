@@ -189,7 +189,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 
         TSharedPtr<FJsonObject> SpecsObject = MakeShared<FJsonObject>();
         SpecsObject->SetStringField("PlayerID", playerID);
-        SpecsObject->SetStringField("SessionID", CPUPoints[i].SessionID);
+        SpecsObject->SetStringField("SessionID", sessionID);
         SpecsObject->SetStringField("Game Version", gameVersion);
 
         // Operating System Version (numeric OS version)
