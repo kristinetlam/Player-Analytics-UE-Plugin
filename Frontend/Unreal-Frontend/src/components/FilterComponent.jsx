@@ -2,46 +2,37 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Paper from '@mui/material/Paper';
 import FilterPanel from './PrettyFilterComponent';
+import Select from '@mui/material/Select';
 
 export default function BasicFilterSelect() {
   const [showFilter, setShowFilter] = useState(false);
 
-  const handleOpen = () => {
-    setShowFilter(true);
-  };
-
-  const handleClose = () => {
-    setShowFilter(false);
-  };
-
   return (
     <Box sx={{ width: 200, display: { xs: 'none', md: 'inline-block' }, mr: 1 }}>     
-     <FormControl fullWidth size="small" onClick={() => setShowFilter(prev => !prev)}>
-        <InputLabel id="filter-select-label">Filter</InputLabel>
-        <Select
-          labelId="filter-select-label"
-          id="filter-select"
-          label="Filter"
-        />
-      </FormControl>
+    <FormControl fullWidth size="small">
+       <InputLabel id="filter-select-label">Filter</InputLabel>
+       <Select
+         labelId="filter-select-label"
+         id="filter-select"
+         label="Filter"
+         open={false}
+         onClick={() => setShowFilter(prev => !prev)}
+       />
+     </FormControl>
 
       {showFilter && (
-        <Paper
+        <Box
           sx={{
             position: 'absolute',
-            zIndex: 10,
+            top: '100%',
             mt: 1,
-            p: 2,
             width: 300,
-            bgcolor: 'background.paper',
-            boxShadow: 3,
+            zIndex: 10,
           }}
         >
           <FilterPanel />
-        </Paper>
+        </Box>
       )}
     </Box>
   );
