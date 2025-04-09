@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -28,10 +28,13 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
-import FilterPanel from '../PrettyFilterComponent';
+// import FilterPanel from '../DONTUSE_PrettyFilterComponent';
 import SessionLineChart from '../graphs/PlayerSessionLineGraph';
 import FPSOverTime from '../graphs/FPSPlayerScatter';
 import FPSLineChart from '../graphs/AverageFPSOverTime';
+import TuneIcon from '@mui/icons-material/Tune';
+import FilterDrawer from '../FilterComponent';
+
 
 const NAVIGATION = [
   {
@@ -153,11 +156,19 @@ function ToolbarActionsSearch() {
 }
 
 function ToolbarActions() {
+  const [openFilter, setOpenFilter] = useState(false);
   return (
+    <>
     <Stack direction="row" spacing={2}>
-      <BasicFilterSelect />
+      {/* <BasicFilterSelect /> */}
+      <IconButton onClick={() => setOpenFilter(true)}>
+        <TuneIcon />
+      </IconButton>
       <ToolbarActionsSearch />
     </Stack>
+
+    <FilterDrawer open={openFilter} onClose={() => setOpenFilter(false)} />
+    </>
   );
 }
 
