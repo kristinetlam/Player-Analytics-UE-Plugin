@@ -133,6 +133,36 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Sessions", SessionArray);
 
+    // Add UI Interaction data to JSON
+    TArray<TSharedPtr<FJsonValue>> uiInteractionArray;
+    for (int i = 0; i < uiInteractions.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> uiInteractionObject = MakeShared<FJsonObject>();
+        uiInteractionObject->SetStringField("PlayerID", uiInteractions[i].PlayerID);
+        uiInteractionObject->SetStringField("SessionID", uiInteractions[i].SessionID);
+        uiInteractionObject->SetStringField("Game Version", gameVersion);
+        uiInteractionObject->SetStringField("UIElementName", uiInteractions[i].UIElementName);
+        uiInteractionObject->SetStringField("ActionType", uiInteractions[i].ActionType);
+
+        uiInteractionArray.Add(MakeShared<FJsonValueObject>(uiInteractionObject));
+    }
+    JsonObject->SetArrayField("Sessions", uiInteractionArray);
+
+    // Add UI screen visit data to JSON
+    TArray<TSharedPtr<FJsonValue>> ScreenVisitArray;
+    for (int i = 0; i < screenVisits.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> screenVisitObject = MakeShared<FJsonObject>();
+        screenVisitObject->SetStringField("PlayerID", screenVisits[i].PlayerID);
+        screenVisitObject->SetStringField("SessionID", screenVisits[i].SessionID);
+        screenVisitObject->SetStringField("Game Version", gameVersion);
+        screenVisitObject->SetStringField("ScreenName", screenVisits[i].ScreenName);
+        screenVisitObject->SetNumberField("SessionID", screenVisits[i].Duration);
+
+        ScreenVisitArray.Add(MakeShared<FJsonValueObject>(screenVisitObject));
+    }
+    JsonObject->SetArrayField("Sessions", ScreenVisitArray);
+
     // Add CPU spec data to JSON
     TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
     for (int i = 0; i < cpuSpecs.Num(); i++)

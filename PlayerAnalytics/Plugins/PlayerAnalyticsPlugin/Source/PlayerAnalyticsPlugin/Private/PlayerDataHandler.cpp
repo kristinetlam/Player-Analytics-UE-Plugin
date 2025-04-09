@@ -96,6 +96,24 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     playerData->Sessions.Add(session);
 }
 
+void  UPlayerDataHandler::AddUiInteraction(FString elementName, FString actionType) {
+    FuiInteractionData interaction;
+    interaction.PlayerID = playerData->playerID;
+    interaction.SessionID = playerData->sessionID;
+    interaction.UIElementName = elementName;
+    interaction.ActionType = actionType;
+    playerData->uiInteractions.Add(interaction);
+}
+
+void  UPlayerDataHandler::AddScreenVisit(FString screenName, float duration) {
+    FuiScreenVisitData visit;
+    visit.PlayerID = playerData->playerID;
+    visit.SessionID = playerData->sessionID;
+    visit.ScreenName = screenName;
+    visit.Duration = duration;
+    playerData->screenVisits.Add(visit);
+}
+
 void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores) {
     FcpuSpecs cpuspecs;
     cpuspecs.PlayerID = playerData->playerID;

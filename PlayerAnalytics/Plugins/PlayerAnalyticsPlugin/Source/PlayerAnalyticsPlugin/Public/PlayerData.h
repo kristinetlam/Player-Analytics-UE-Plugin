@@ -106,27 +106,65 @@ struct FsessionData
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString SessionID;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString SessionName;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString TimeStamp;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString StartTime;
 
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString EndTime;
 
     //Example types are "crash" and "exit"
-    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    UPROPERTY(BlueprintReadWrite, Category = "Session")
     FString EndType;
+};
+
+USTRUCT(BlueprintType)
+struct FuiInteractionData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString UIElementName;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString ActionType;
+    
+};
+
+USTRUCT(BlueprintType)
+struct FuiScreenVisitData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    FString ScreenName;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    float Duration; //NOTE: may want to consider a different data type (such as a double)
+
 };
 
 USTRUCT(BlueprintType)
@@ -134,16 +172,16 @@ struct FcpuSpecs
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     FString cpuName;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     FString cpuBrand;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     int32 cpuCores;
 };
 
@@ -152,10 +190,10 @@ struct FgpuSpecs
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
     FString gpuName;
 };
 
@@ -186,10 +224,16 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory")
     TArray<FinventoryData> Inventories;
 
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    TArray<FuiInteractionData> uiInteractions;
+
+    UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
+    TArray<FuiScreenVisitData> screenVisits;
+
     UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
     TArray<FcpuSpecs> cpuSpecs;
 
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs");
+    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
     TArray<FgpuSpecs> gpuSpecs;
 
     // Convert to JSON
