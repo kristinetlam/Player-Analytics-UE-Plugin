@@ -13,8 +13,10 @@ import {
   Typography,
 } from '@mui/material';
 // import DatePicker from 'react-datepicker';
-import DatePicker from '@mui/lab/DatePicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import 'react-datepicker/dist/react-datepicker.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -35,7 +37,20 @@ export default function FilterDrawer({ open, onClose }) {
   };
 
   return (
-    <Backdrop open={open} sx={{ zIndex: 1200, position: 'fixed',}}>
+<Backdrop
+  open={open}
+  sx={{
+    zIndex: 1200,
+    position: 'fixed',
+    left: 0,
+    top: 0,
+    width: '100vw',
+    height: '100vh',
+    '&.MuiBackdrop-root': {
+      marginLeft: 0,
+    },
+  }}
+>
       <Paper
         elevation={3}
         sx={{
@@ -85,15 +100,17 @@ export default function FilterDrawer({ open, onClose }) {
         </Select>
 
         <Typography variant="body2">Timestamp</Typography>
-        <DatePicker
-          fullWidth
-          size="small"
-          displayEmpty
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          placeholderText="Select date"
-          customInput={<TextField fullWidth size="small" />}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            fullWidth
+            size="small"
+            displayEmpty
+            label="Enter Time"
+            value={selectedDate}
+            onChange={(newValue) => setSelectedDate(newValue)}
+            renderInput={(params) => <TextField {...params} fullWidth size="small" />}
+          />
+        </LocalizationProvider>
 
         <Stack direction="row" spacing={1} sx={{ mt: 3 }}>
           <Button fullWidth variant="contained" onClick={handleApply}>
