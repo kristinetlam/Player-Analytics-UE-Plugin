@@ -100,12 +100,25 @@ export default function FilterDrawer({ open, onClose }) {
           displayEmpty
           value={patchVersion}
           onChange={(e) => setPatchVersion(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            '& .MuiSelect-select': {
+              textAlign: 'center',
+              paddingRight: '18px !important', // remove icon padding
+            },
+            '& .MuiSelect-icon': {
+              position: 'absolute',
+              right: 8,
+              pointerEvents: 'none',
+            },
+            color: patchVersion === '' ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
+          }}
         >
           <MenuItem value="" disabled>Select patch</MenuItem>
           <MenuItem value="v1.0">v1.0</MenuItem>
           <MenuItem value="v1.1">v1.1</MenuItem>
         </Select>
+
 
         <Typography variant="body2">Timestamp</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -119,10 +132,10 @@ export default function FilterDrawer({ open, onClose }) {
                 placeholder: 'Enter Time',
                 sx: {
                   '& .MuiInputBase-root': {
-                    justifyContent: 'center', // centers input + icon as siblings
+                    justifyContent: 'center',
                   },
                   '& .MuiInputBase-input': {
-                    textAlign: 'center',      // centers the text
+                    textAlign: 'center',     
                   },
                   '& .MuiInputAdornment-root': {
                     position: 'absolute',
