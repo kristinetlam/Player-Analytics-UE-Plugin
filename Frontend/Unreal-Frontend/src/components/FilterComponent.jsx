@@ -37,20 +37,20 @@ export default function FilterDrawer({ open, onClose }) {
   };
 
   return (
-<Backdrop
-  open={open}
-  sx={{
-    zIndex: 1200,
-    position: 'fixed',
-    left: 0,
-    top: 0,
-    width: '100vw',
-    height: '100vh',
-    '&.MuiBackdrop-root': {
-      marginLeft: 0,
-    },
-  }}
->
+    <Backdrop
+      open={open}
+      sx={{
+        zIndex: 1200,
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        width: '100vw',
+        height: '100vh',
+        '&.MuiBackdrop-root': {
+          marginLeft: 0,
+        },
+      }}
+    >
       <Paper
         elevation={3}
         sx={{
@@ -82,7 +82,15 @@ export default function FilterDrawer({ open, onClose }) {
           placeholder="Enter player ID"
           value={playerId}
           onChange={(e) => setPlayerId(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            '& input::placeholder': {
+              textAlign: 'center',
+            },
+            '& input': {
+              textAlign: 'center',
+            },
+          }}
         />
 
         <Typography variant="body2">Patch</Typography>
@@ -100,15 +108,30 @@ export default function FilterDrawer({ open, onClose }) {
         </Select>
 
         <Typography variant="body2">Timestamp</Typography>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            fullWidth
-            size="small"
-            displayEmpty
-            label="Enter Time"
             value={selectedDate}
             onChange={(newValue) => setSelectedDate(newValue)}
-            renderInput={(params) => <TextField {...params} fullWidth size="small" />}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                size: 'small',
+                placeholder: 'Enter Time',
+                sx: {
+                  '& .MuiInputBase-root': {
+                    justifyContent: 'center', // centers input + icon as siblings
+                  },
+                  '& .MuiInputBase-input': {
+                    textAlign: 'center',      // centers the text
+                  },
+                  '& .MuiInputAdornment-root': {
+                    position: 'absolute',
+                    right: 8,
+                  },
+                },
+              },
+            }}
+            
           />
         </LocalizationProvider>
 
