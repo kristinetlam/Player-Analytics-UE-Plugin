@@ -30,7 +30,7 @@ function GaugePointer() {
   );
 }
 
-export default function CompositionExample() {
+export default function GaugeChart() {
   return (
     <GaugeContainer
       width={200}
