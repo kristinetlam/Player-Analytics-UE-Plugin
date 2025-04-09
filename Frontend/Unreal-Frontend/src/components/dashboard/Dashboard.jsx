@@ -182,8 +182,18 @@ function DashboardLayoutBasic() {
         router={router} 
         theme={demoTheme}
         branding={{
-          logo: <img src="/UE-Icon-2023-Black.svg" alt="Unreal Engine 5 Logo" />,
-          title:<span style={{ color: 'rgba(0, 0, 0, 0.87)' }}>UE5 Player Analytics</span>
+          logo: (
+            <Box sx={{ display: 'flex', alignItems: 'center', height: 40 }}>
+              <img
+                src="/UE-Icon-2023-Black.svg"
+                alt="Unreal Engine 5 Logo"
+                width={32}
+                height={32}
+                style={{ display: 'block', marginLeft: '15px' }}
+              />
+            </Box>
+          ),
+          title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
         }}
       >
         <DashboardLayout
