@@ -12,9 +12,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
+import DatePicker from '@mui/lab/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function FilterDrawer({ open, onClose }) {
   const [playerId, setPlayerId] = useState('');
@@ -33,7 +35,7 @@ export default function FilterDrawer({ open, onClose }) {
   };
 
   return (
-    <Backdrop open={open} sx={{ zIndex: 1200, position: 'fixed' }}>
+    <Backdrop open={open} sx={{ zIndex: 1200, position: 'fixed',}}>
       <Paper
         elevation={3}
         sx={{
@@ -42,6 +44,7 @@ export default function FilterDrawer({ open, onClose }) {
           width: 300,
           backgroundColor: 'white',
           position: 'relative',
+          marginLeft: 0
         }}
       >
         <IconButton
@@ -49,11 +52,12 @@ export default function FilterDrawer({ open, onClose }) {
           onClick={onClose}
           sx={{ position: 'absolute', top: 16, right: 16 }}
         >
-          <ArrowForwardIcon />
+          <CloseIcon />
+          {/* <ArrowForwardIcon /> */}
         </IconButton>
 
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Filters
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+          Filter
         </Typography>
 
         <Typography variant="body2">Player ID</Typography>
@@ -82,6 +86,9 @@ export default function FilterDrawer({ open, onClose }) {
 
         <Typography variant="body2">Timestamp</Typography>
         <DatePicker
+          fullWidth
+          size="small"
+          displayEmpty
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
           placeholderText="Select date"
