@@ -18,6 +18,9 @@ struct FinteractionData
     
     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
     
     UPROPERTY(BlueprintReadWrite, Category = "Interaction")
     FString InteractionDescription;
@@ -70,6 +73,9 @@ struct FpositionData
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString PlayerID;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
+
     UPROPERTY(BlueprintReadWrite, Category = "Position")
     FString Timestamp;
 
@@ -84,6 +90,9 @@ struct FfpsData
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString Timestamp;
@@ -107,6 +116,9 @@ struct FsessionData
     FString SessionName;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString TimeStamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString StartTime;
 
     UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
@@ -118,33 +130,39 @@ struct FsessionData
 };
 
 USTRUCT(BlueprintType)
-struct FcpuSpecs 
+struct FmemoryUsage 
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
-    FString cpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
 
-    UPROPERTY(BlueprintReadWrite)
-    FString cpuBrand;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite)
-    int32 cpuCores;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float RAMUsed;
 };
 
 USTRUCT(BlueprintType)
-struct FgpuSpecs 
+struct FCPUUsage 
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite)
-    FString gpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float CPUUsed;
 };
 
 
@@ -174,11 +192,11 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory")
     TArray<FinventoryData> Inventories;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    TArray<FcpuSpecs> cpuSpecs;
+    UPROPERTY(BlueprintReadWrite, Category = "Memory Usage")
+    TArray<FmemoryUsage> MemoryPoints;
 
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs");
-    TArray<FgpuSpecs> gpuSpecs;
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Usage")
+    TArray<FCPUUsage> CPUPoints;
 
     // Convert to JSON
     TSharedPtr<FJsonObject, ESPMode::ThreadSafe> ToJson();

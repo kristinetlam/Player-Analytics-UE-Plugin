@@ -5,6 +5,8 @@
 #include "Serialization/JsonSerializer.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
+#include "GenericPlatform/GenericPlatformMemory.h"
+#include "GenericPlatform/GenericPlatformTime.h"
 
 
 UPlayerDataHandler::UPlayerDataHandler()
@@ -23,6 +25,7 @@ void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector 
 {
     FinteractionData interaction;
     interaction.PlayerID = playerData->playerID;
+    interaction.SessionID = playerData->sessionID;
     interaction.InteractionDescription = InteractionDescription;
     interaction.InteractionLocation = InteractionLocation;
     interaction.Timestamp = FDateTime::Now().ToString();
@@ -58,44 +61,69 @@ void UPlayerDataHandler::AddPosition(FVector Position)
 {
     FpositionData position;
     position.PlayerID = playerData->playerID;
+    position.SessionID = playerData->sessionID;
     position.Position = Position;
     position.Timestamp = FDateTime::Now().ToString();
     playerData->positions.Add(position);
 }
 
+/// <summary>
+/// Adds FPS data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="Position"></param>
 void UPlayerDataHandler::AddAVGfps(int AVGfps) {
     FfpsData fpsData;
     fpsData.PlayerID = playerData->playerID;
+    fpsData.SessionID = playerData->sessionID;
     fpsData.AverageFPS = AVGfps;
     fpsData.Timestamp = FDateTime::Now().ToString();
     playerData->AvgFPSPoints.Add(fpsData);
 }
 
+/// <summary>
+/// Adds a Session data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="Position"></param>
 void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType) {
     FsessionData session;
     session.PlayerID = playerData->playerID;
     session.SessionName = SessionName;
     session.SessionID = playerData->sessionID;
+    session.TimeStamp = FDateTime::Now().ToString();
     session.StartTime = StartTime;
     session.EndTime = EndTime;
     session.EndType = EndType;
     playerData->Sessions.Add(session);
 }
 
-void UPlayerDataHandler::AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores) {
-    FcpuSpecs cpuspecs;
-    cpuspecs.PlayerID = playerData->playerID;
-    cpuspecs.cpuName = cpuName;
-    cpuspecs.cpuBrand = cpuBrand;
-    cpuspecs.cpuCores = cpuCores;
-    playerData->cpuSpecs.Add(cpuspecs);
+/// <summary>
+/// Adds a RAM usage data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="RAM"></param>
+void UPlayerDataHandler::AddMemory() {
+    FmemoryUsage RAMData;
+    RAMData.PlayerID = playerData->playerID;
+    RAMData.SessionID = playerData->sessionID;
+    RAMData.RAMUsed = static_cast<double>(FPlatformMemory::GetStats().UsedPhysical) / (1024 * 1024);
+    RAMData.Timestamp = FDateTime::Now().ToString();
+    playerData->MemoryPoints.Add(RAMData);
 }
 
-void UPlayerDataHandler::AddGPUSpecs(FString gpuName) {
-    FgpuSpecs gpuspecs;
-    gpuspecs.PlayerID = playerData->playerID;
-    gpuspecs.gpuName = gpuName;
-    playerData->gpuSpecs.Add(gpuspecs);
+/// <summary>
+/// Adds a CPU usage data point to the playerData object
+/// </summary>
+/// <param name="ActorName"></param>
+/// <param name="CPU"></param>
+void UPlayerDataHandler::AddCPUUsage() {
+    FCPUUsage CPUData;
+    CPUData.PlayerID = playerData->playerID;
+    CPUData.SessionID = playerData->sessionID;
+    CPUData.CPUUsed = FPlatformTime::GetCPUTime().CPUTimePct;
+    CPUData.Timestamp = FDateTime::Now().ToString();
+    playerData->CPUPoints.Add(CPUData);
 }
 
 /// <summary>
