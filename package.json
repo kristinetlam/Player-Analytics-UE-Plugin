@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@mui/x-date-pickers": "^7.28.3",
     "react-datepicker": "^8.2.1",
     "react-select": "^5.10.1"
   }
