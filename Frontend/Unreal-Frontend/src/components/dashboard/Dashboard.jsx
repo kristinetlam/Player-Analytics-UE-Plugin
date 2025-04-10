@@ -210,15 +210,15 @@ function DashboardLayoutBasic() {
               </Box> */}
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
               <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <CardComponent title="Average FPS" sx={{ width: '30%', height: '9.5%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <GaugeChartComp /> */}
+                <CardComponent title="Average FPS" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <GaugeChartComp /> */}
                   <AverageFPS />
                 </CardComponent> 
-                <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '9.5%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}>
+                <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}>
                   <Box sx={{ mt: '-60px' }}> 
                     <GaugeChartComp />
                   </Box>
                 </CardComponent>
-                <CardComponent title="Average Session Length" sx={{ width: '30%', height: '9.5%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
+                <CardComponent title="Average Session Length" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
                 <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><PlayerInteractionsBarGraph /></CardComponent>
                 <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
                 <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
