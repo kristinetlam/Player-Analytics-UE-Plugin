@@ -211,14 +211,19 @@ def get_session_data():
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
         if start_time and end_time:
-            query["Timestamp"] = {"$gte": start_time, "$lte": end_time}
+            # Convert YYYY-MM-DD to MongoDB's timestamp format
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
 
+        print("Session Query:", query)
         sessions = list(sessions_local.find(query, {"_id": 0}))
         return jsonify({"Sessions": sessions}), 200
 
     except Exception as e:
+        print("Error fetching session data:", str(e))
         return jsonify({"error": str(e)}), 500
-    
 @app.route("/get-computer-specs", methods=["GET"])
 def get_computer_specs():
     if not verify_token():

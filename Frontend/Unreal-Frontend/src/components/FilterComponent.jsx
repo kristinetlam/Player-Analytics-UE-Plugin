@@ -73,7 +73,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           p: 3,
           borderRadius: 3,
           width: 300,
-          backgroundColor: 'white',
+          backgroundColor: 'black',
           position: 'relative',
         }}
       >
