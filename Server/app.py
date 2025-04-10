@@ -109,18 +109,37 @@ def get_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-# Frontend Requests to receive all JSON file data based on DB queries
 @app.route("/get-interaction-data", methods=["GET"])
 def get_interaction_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        interactions = list(interactions_local.find({}, {"_id": 0}))
+        query = {}
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+        if game_version:
+            query["Game Version"] = game_version
+        if start_time and end_time:
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59"
+            }
+
+        print("Interaction Query:", query)
+        interactions = list(interactions_local.find(query, {"_id": 0}))
+
         return jsonify({"Interactions": interactions}), 200
 
     except Exception as e:
+        print("Error fetching interaction data:", str(e))
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/get-position-data", methods=["GET"])
@@ -142,10 +161,33 @@ def get_avg_fps_data():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        avg_fps = list(avg_fps_local.find({}, {"_id": 0}))
-        return jsonify({"AVG FPS": avg_fps}), 200
+        query = {}
+
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("Avg FPS query:", query)  # ✅ Debug line
+        fps_docs = list(avg_fps_local.find(query, {"_id": 0}))
+
+        return jsonify({"AVG FPS": fps_docs}), 200
 
     except Exception as e:
+        print("Error fetching AVG FPS:", str(e))
         return jsonify({"error": str(e)}), 500
 
 
@@ -155,7 +197,23 @@ def get_session_data():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        sessions = list(sessions_local.find({}, {"_id": 0}))
+        query = {}
+
+        # Apply filters if provided
+        player_id = request.args.get("player_id")
+        if player_id:
+            query["PlayerID"] = player_id
+
+        game_version = request.args.get("game_version")
+        if game_version:
+            query["Game Version"] = game_version
+
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+        if start_time and end_time:
+            query["Timestamp"] = {"$gte": start_time, "$lte": end_time}
+
+        sessions = list(sessions_local.find(query, {"_id": 0}))
         return jsonify({"Sessions": sessions}), 200
 
     except Exception as e:
@@ -290,6 +348,19 @@ def get_player_ids():
 
     # Return the unique PlayerIDs as a JSON response
     return jsonify({"PlayerIDs": list(player_ids)}), 200
+
+@app.route("/get-game-versions", methods=["GET"])
+def get_game_versions():
+    """Retrieve all unique Game Versions from the sessions collection."""
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        versions = sessions_local.distinct("Game Version")
+        return jsonify({"GameVersions": versions}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":

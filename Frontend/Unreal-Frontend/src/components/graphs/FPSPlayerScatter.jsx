@@ -1,14 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import dayjs from 'dayjs';
 
-const FpsScatterChart = () => {
+const FpsScatterChart = ({ filter }) => {
   const [seriesData, setSeriesData] = useState([]);
   const [xLabels, setXLabels] = useState([]);
 
   useEffect(() => {
+    if (!filter) return;
+
     const fetchFpsData = async () => {
       try {
-        const response = await fetch('http://50.30.211.229:5000/get-avg-fps-data', {
+        const url = new URL('http://50.30.211.229:5000/get-avg-fps-data');
+        const { playerId, patchVersion, startDate, endDate } = filter;
+
+        const params = {
+          player_id: playerId,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (value) url.searchParams.append(key, value);
+        });
+
+        const response = await fetch(url.toString(), {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
@@ -19,7 +36,7 @@ const FpsScatterChart = () => {
         if (!response.ok) throw new Error('Failed to fetch FPS data');
 
         const result = await response.json();
-        const fpsData = result['AVG FPS'];
+        const fpsData = result['AVG FPS'] || [];
 
         const grouped = {};
         const xSet = new Set();
@@ -37,12 +54,11 @@ const FpsScatterChart = () => {
 
           if (!grouped[item.PlayerID]) grouped[item.PlayerID] = [];
           grouped[item.PlayerID].push(point);
-
           xSet.add(dateLabel);
         });
 
         const formattedSeries = Object.entries(grouped).map(([playerId, points]) => ({
-          label: `Player ${playerId.slice(0, 4)}`, // Shortened label
+          label: `Player ${playerId.slice(0, 4)}`,
           data: points,
         }));
 
@@ -54,7 +70,7 @@ const FpsScatterChart = () => {
     };
 
     fetchFpsData();
-  }, []);
+  }, [filter]);
 
   return (
     <ScatterChart

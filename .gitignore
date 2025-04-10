@@ -154,3 +154,4 @@ dist-ssr
 .amplify
 amplify_outputs*
 amplifyconfiguration*
+/PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
