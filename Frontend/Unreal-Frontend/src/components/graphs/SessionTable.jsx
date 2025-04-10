@@ -24,21 +24,21 @@ const statData = [
 
 const PlayerSessionStats = () => {
   return (
-    <Grid2 container spacing={4} justifyContent="center" alignItems="center" mt={4} gap= {10}>
-  {statData.map((item, index) => (
-    <Grid2 key={index}>
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        {item.icon}
-        <Typography variant="body2" color="text.secondary">
-          {item.title}
-        </Typography>
-        <Typography fontWeight={700} fontSize="1.25rem">
-          {item.value}
-        </Typography>
-      </Box>
+    <Grid2 container spacing={4} justifyContent="center" alignItems="center" mt={4} gap= {8}>
+    {statData.map((item, index) => (
+        <Grid2 key={index}>
+        <Box display="flex" flexDirection="column" alignItems="center" gap={1} sx={{ minWidth: 100 }}>
+            {item.icon}
+            <Typography variant="body2" color="text.secondary">
+            {item.title}
+            </Typography>
+            <Typography fontWeight={700} fontSize="1.25rem">
+            {item.value}
+            </Typography>
+        </Box>
+        </Grid2>
+    ))}
     </Grid2>
-  ))}
-</Grid2>
 
   );
 };
