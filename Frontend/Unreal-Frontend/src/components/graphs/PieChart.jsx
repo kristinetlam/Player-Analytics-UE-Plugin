@@ -1,8 +1,11 @@
-import * as React from 'react';
+import React from 'react';
+import { Box } from '@mui/material';
+
 import { PieChart } from '@mui/x-charts/PieChart';
 
 export default function BasicPie() {
   return (
+    <Box mt={3}>
     <PieChart
       series={[
         {
@@ -16,5 +19,6 @@ export default function BasicPie() {
       width={400}
       height={170}
     />
+    </Box>
   );
 }

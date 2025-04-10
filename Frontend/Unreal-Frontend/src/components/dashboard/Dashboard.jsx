@@ -225,12 +225,12 @@ function DashboardLayoutBasic() {
                 <CardComponent title="Average Session Length" sx={{ width: '30%', height: '10%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength /></CardComponent>
                 <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent={true} > <PlayerInteractionsBarGraph /></CardComponent>
                 <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps" centerContent={true} ><BasicLineChart /></CardComponent>
-                <CardComponent title="Item Usage" description="Displays the distribution of player item usage" sx={{ height: '12%'}} centerContent={true} pieBottom={true} ><BasicPie /></CardComponent>
-                <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" sx={{ width: '50%', height: '12%'}} centerContent={true} ><PlayerSessionStats /></CardComponent>
-                <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"centerContent={true} ><SessionLineChart /></CardComponent>
+                <CardComponent title="Item Usage" description="Displays the distribution of player item usage" centerContent={true} pieBottom={true} ><BasicPie /></CardComponent>
+                <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" sx={{ width: '53%', height: '13%' }} centerContent={true} ><PlayerSessionStats /></CardComponent>
                 <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates"centerContent={true} ><FPSOverTime /></CardComponent>
                 <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent={true} ><FPSLineChart /></CardComponent>
                 <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%'}} centerContent={false}><ApexChart/></CardComponent>
+                <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"centerContent={true} ><SessionLineChart /></CardComponent>
 
               </Box>   
             </Box>
