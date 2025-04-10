@@ -1,5 +1,5 @@
 import './App.css'
-import BasicBars from './components/graphs/BarGraph'
+import BasicBars from './components/graphs/PlayerInteractionGraph'
 import BasicLineChart from './components/graphs/LineGraph'
 import BasicPie from './components/graphs/PieChart'
 import BasicScatter from './components/graphs/ScatterPlot'
@@ -10,25 +10,7 @@ import DoughnutChart from './components/graphs/DoughnutChart'
 
 function App() {
   return (
-    <DashboardLayoutBasic>
-      {/* <div className="charts-container">
-        <CardComponent>
-          <BasicBars />
-        </CardComponent>
-        <CardComponent>
-          <BasicLineChart />
-        </CardComponent>
-        <CardComponent>
-          <BasicPie />
-        </CardComponent>
-        <CardComponent>
-          <BasicScatter />
-        </CardComponent>
-        <CardComponent>
-          <DoughnutChart />
-        </CardComponent>
-      </div> */}
-    </DashboardLayoutBasic>
+    <DashboardLayoutBasic></DashboardLayoutBasic>
   );
 }
 
