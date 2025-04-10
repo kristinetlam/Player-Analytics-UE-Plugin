@@ -6,16 +6,14 @@ function parseTimestamp(timestampStr) {
   if (!timestampStr) return null;
 
   try {
-    const [datePart, timePart] = timestampStr.split('-');
-    if (!datePart || !timePart) throw new Error("Invalid timestamp format");
+    const [datePart, ...timeParts] = timestampStr.split('-');
+    const timePart = timeParts.join('-'); // Reconstruct in case multiple hyphens exist
 
-    const formattedDate = datePart.replace(/\./g, '-');
-    const formattedTime = timePart.replace(/\./g, ':');
+    const formattedDate = datePart.replace(/\./g, '-'); // e.g. 2025.04.10 → 2025-04-10
+    const formattedTime = timePart.replace(/\./g, ':'); // e.g. 14.34.32 → 14:34:32
 
     const date = new Date(`${formattedDate}T${formattedTime}`);
-    if (isNaN(date)) throw new Error("Invalid date");
-
-    return date;
+    return isNaN(date.getTime()) ? null : date;
   } catch (error) {
     console.error("Error parsing timestamp:", timestampStr, error);
     return null;
@@ -56,19 +54,19 @@ const SessionLineChart = ({ filter }) => {
           },
         });
 
-        if (!response.ok) throw new Error('Failed to fetch session data');
+        if (!response.ok) {
+          throw new Error('Failed to fetch session data');
+        }
 
         const result = await response.json();
         const sessionData = result['Sessions'] || [];
-
+        
         const validData = sessionData.filter(item => item.TimeStamp && parseTimestamp(item.TimeStamp));
         const sorted = validData.sort((a, b) => parseTimestamp(a.TimeStamp) - parseTimestamp(b.TimeStamp));
 
         const x = sorted.map(item => {
           const date = parseTimestamp(item.TimeStamp);
-          return date
-            ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : 'Invalid';
+          return date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Invalid';
         });
 
         const y = sorted.map(item => item.EndTime ? parseFloat(item.EndTime) : 0);
@@ -87,9 +85,7 @@ const SessionLineChart = ({ filter }) => {
 
   if (loading) return <p>Loading session data...</p>;
 
-  const hasValidData = xData.length > 0 && yData.length > 0;
-
-  return hasValidData ? (
+  return xData.length && yData.length ? (
     <LineChart
       xAxis={[{ data: xData, scaleType: 'point', label: 'Date' }]}
       series={[{ data: yData, label: 'Session Length (s)' }]}

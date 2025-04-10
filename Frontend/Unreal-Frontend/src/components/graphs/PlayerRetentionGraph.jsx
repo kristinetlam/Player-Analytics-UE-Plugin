@@ -25,22 +25,21 @@ const PlayerRetentionGraph = ({ filter }) => {
       setLoading(true);
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
-        const params = {
-          player_id: filter.playerId,
-          game_version: filter.patchVersion,
-        };
+        const { playerId, patchVersion, startDate, endDate } = filter;
 
-        if (filter.selectedDate) {
-          const dateStr = dayjs(filter.selectedDate).format('YYYY-MM-DD');
-          params.start_time = dateStr;
-          params.end_time = dateStr;
-        }
+        const params = {
+          player_id: playerId,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
 
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
 
         const response = await fetch(url.toString(), {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
             'Content-Type': 'application/json',
