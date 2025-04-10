@@ -15,6 +15,7 @@ import BasicBars from '../graphs/BarGraph';
 import BasicLineChart from '../graphs/LineGraph';
 import BasicPie from '../graphs/PieChart';
 import BasicScatter from '../graphs/ScatterPlot';
+import PlayerLocation from '../graphs/LocationScatter';
 import CardComponent from '../CardComponent';
 import DashboardContent from './DashboardContent';
 import { Card } from '@mui/material';
@@ -121,7 +122,7 @@ function DashboardLayoutBasic() {
               <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><BasicBars /></CardComponent>
               <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
               <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
-              <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><BasicScatter /></CardComponent>
+              <CardComponent title="Player Location Scatterplot" description="Illustrates player location throughout time"><PlayerLocation /></CardComponent>
               <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '70%'}}><ApexChart/></CardComponent>
             </Box>
           </DashboardContent>
