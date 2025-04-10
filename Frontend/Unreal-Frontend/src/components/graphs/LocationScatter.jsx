@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 
-const playerLocation = () => {
+
+const PlayerLocation = () => {
   const [locData, setLocData] = useState(null);
-  //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLocData = async () => {
       try {
-        const response = await fetch('http://50.30.211.229:5000/get-location-data', {
+        const response = await fetch('http://50.30.211.229:5000/get-position-data', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
@@ -20,23 +22,26 @@ const playerLocation = () => {
           throw new Error('Failed to fetch player location data');
         }
 
-        const rawData = await response.json();
+        const data = await response.json();
 
         // Group by ID
-        const grouped = rawData.reduce((acc, point) => {
-          if (!acc[point.id]) acc[point.id] = [];
-          acc[point.id].push({
-            x: point.x,
-            y: point.y,
-            timestamp: new Date(point.timestamp),
+        const grouped = {};
+        data.Positions.forEach(pos => {
+          if (!grouped[pos.PlayerID]) {
+            grouped[pos.PlayerID] = [];
+          }
+          grouped[pos.PlayerID].push({
+            x: pos.x,
+            y: pos.y,
+            time: pos.Timestamp
           });
-          return acc;
-        }, {});
+        });
 
         // Convert to series array
         const series = Object.entries(grouped).map(([id, points]) => ({
           label: `Player ${id}`,
-          data: points.sort((a, b) => a.timestamp - b.timestamp),
+          data: points.sort((a, b) => a.time - b.time),
+          showMarkLine: true
         }));
 
         setLocData(series); // Set the location data
@@ -53,17 +58,21 @@ const playerLocation = () => {
   }
 
   return (
-    <ScatterChart
-      width={600}
-      height={300}
-      series={seriesData}
-      xAxis={[{ label: 'X Position' }]}
-      yAxis={[{ label: 'Y Position' }]}
-      grid={{ vertical: true, horizontal: true }}
-      connectNulls
-      showConnectingLine
-    />
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <ScatterChart
+        width={600}
+        height={300}
+        series={locData}
+        xAxis={[{ label: 'X Position', dataKey: 'x' }]}
+        yAxis={[{ label: 'Y Position', dataKey: 'y' }]}
+        grid={{ vertical: true, horizontal: true }}
+      />
+    </motion.div>
   );
 };
 
-export default playerLocation;
+export default PlayerLocation;
