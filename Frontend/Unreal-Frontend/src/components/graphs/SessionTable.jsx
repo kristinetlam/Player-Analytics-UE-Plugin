@@ -96,11 +96,11 @@ const PlayerSessionStats = ({ filter }) => {
         ))}
       </Grid>
 
-      <Box mt={3} display="flex" justifyContent="center" width="100%">
+      {/**<Box mt={3} display="flex" justifyContent="center" width="100%">
         <Typography variant="body2" color="text.secondary" textAlign="center">
           vs previous 30 days
         </Typography>
-      </Box>
+      </Box> **/}
     </Box>
   );
 };

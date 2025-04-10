@@ -53,7 +53,7 @@ const Dashboard = () => {
         <Box sx={{ p: 2 }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
             <CardComponent title="Average FPS"><AverageFPS filter={filter} /></CardComponent>
-            <CardComponent title="Average Player Return"><GaugeChartComp filter={filter} /></CardComponent>
+            {/* <CardComponent title="Average Player Return"><GaugeChartComp filter={filter} /></CardComponent> */}
             <CardComponent title="Average Session Length"><AverageSessionLength filter={filter} /></CardComponent>
             <CardComponent title="Environment Interaction"><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
             <CardComponent title="Player Retention"><PlayerRetentionGraph filter={filter} /></CardComponent>

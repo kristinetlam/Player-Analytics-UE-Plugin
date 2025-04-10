@@ -5,12 +5,15 @@ import dayjs from 'dayjs';
 const FpsScatterChart = ({ filter }) => {
   const [seriesData, setSeriesData] = useState([]);
   const [xLabels, setXLabels] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!filter) return;
 
     const fetchFpsData = async () => {
       try {
+        setLoading(true);
+
         const url = new URL('http://50.30.211.229:5000/get-avg-fps-data');
         const { playerId, patchVersion, startDate, endDate } = filter;
 
@@ -42,6 +45,8 @@ const FpsScatterChart = ({ filter }) => {
         const xSet = new Set();
 
         fpsData.forEach((item, i) => {
+          if (!item.Timestamp || item.AverageFPS === undefined) return;
+
           const [year, month, day] = item.Timestamp.split('-')[0].split('.').map(Number);
           const date = new Date(year, month - 1, day);
           const dateLabel = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -66,11 +71,20 @@ const FpsScatterChart = ({ filter }) => {
         setXLabels([...xSet]);
       } catch (error) {
         console.error('Error fetching FPS data:', error);
+        setSeriesData([]);
+        setXLabels([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchFpsData();
   }, [filter]);
+
+  const hasData = seriesData.length > 0 && xLabels.length > 0;
+
+  if (loading) return <p>Loading scatter chart...</p>;
+  if (!hasData) return <p>No FPS scatter data available for this filter.</p>;
 
   return (
     <ScatterChart
