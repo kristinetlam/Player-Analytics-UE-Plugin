@@ -40,28 +40,123 @@ import ApexChart from '../graphs/Heatmap';
 import SessionLineChart from '../graphs/PlayerSessionLineGraph';
 
 const NAVIGATION = [
-  { kind: 'header', title: 'Main items' },
-  { segment: 'dashboard', title: 'Dashboard', icon: <DashboardIcon /> },
-  { segment: 'library', title: 'UE5 Fab Library', icon: <ShoppingCartIcon /> },
-  { kind: 'divider' },
-  { kind: 'header', title: 'Analytics' },
+  {
+    kind: 'header',
+    title: 'Main items',
+  },
+  {
+    segment: 'dashboard',
+    title: 'Dashboard',
+    icon: <DashboardIcon />,
+  },
+  {
+    segment: 'library',
+    title: 'UE5 Fab Library',
+    icon: <ShoppingCartIcon />,
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    kind: 'header',
+    title: 'Analytics',
+  },
   {
     segment: 'reports',
-    title: 'Reports',
+    title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
     icon: <BarChartIcon />,
     children: [
-      { segment: 'optimization', title: 'Optimization Data', icon: <DescriptionIcon /> },
-      { segment: 'interest', title: 'Player Insights', icon: <DescriptionIcon /> },
+      {
+        segment: 'optimization',
+        title: 'Optimization Data',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'interest',
+        title: 'Player Insights',
+        icon: <DescriptionIcon />,
+      },
     ],
   },
-  { segment: 'integrations', title: 'Integrations', icon: <LayersIcon /> },
+  {
+    segment: 'integrations',
+    title: 'Integrations',
+    icon: <LayersIcon />,
+  },
 ];
 
 const demoTheme = createTheme({
-  cssVariables: { colorSchemeSelector: 'data-toolpad-color-scheme' },
-  colorSchemes: { light: true, dark: true },
-  breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
+  cssVariables: {
+    colorSchemeSelector: 'data-toolpad-color-scheme',
+  },
+  colorSchemes: { light: true, dark: false },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
 });
+
+function DemoPageContent({ pathname }) {
+  return (
+    <Box
+      sx={{
+        py: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+      }}
+    >
+      {/* <Typography>Dashboard content for {pathname}</Typography> */}
+    </Box>
+  );
+}
+
+DemoPageContent.propTypes = {
+  pathname: PropTypes.string.isRequired,
+};
+
+function ToolbarActionsSearch() {
+  return (
+    <Stack direction="row">
+      <Tooltip title="Search" enterDelay={1000}>
+        <div>
+          <IconButton
+            type="button"
+            aria-label="search"
+            sx={{
+              display: { xs: 'inline', md: 'none' },
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
+        </div>
+      </Tooltip>
+      <TextField
+        label="Search"
+        variant="outlined"
+        size="small"
+        slotProps={{
+          input: {
+            endAdornment: (
+              <IconButton type="button" aria-label="search" size="small">
+                <SearchIcon />
+              </IconButton>
+            ),
+            sx: { pr: 0.5 },
+          },
+        }}
+        sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
+      />
+      {/* <ThemeSwitcher /> */}
+    </Stack>
+  );
+}
 
 function ToolbarActions({ setOpenFilter }) {
   return (
@@ -76,13 +171,7 @@ function ToolbarActions({ setOpenFilter }) {
           </IconButton>
         </div>
       </Tooltip>
-      <TextField
-        label="Search"
-        variant="outlined"
-        size="small"
-        slotProps={{ input: { endAdornment: (<IconButton type="button" aria-label="search" size="small"><SearchIcon /></IconButton>), sx: { pr: 0.5 } } }}
-        sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
-      />
+      <ToolbarActionsSearch />
     </Stack>
   );
 }
@@ -93,31 +182,41 @@ function DashboardLayoutBasic() {
   const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
 
   return (
-    <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme} branding={{
-      logo: (
-        <Box sx={{ display: 'flex', alignItems: 'center', height: 40 }}>
-          <img src="/UE-Icon-2023-Black.svg" alt="Unreal Engine 5 Logo" width={32} height={32} style={{ display: 'block', marginLeft: '10px' }} />
-        </Box>
-      ),
-      title: <span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
-    }}>
-      <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
-        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
-              <CardComponent title="Average FPS"><AverageFPS filter={filter} /></CardComponent>
-              <CardComponent title="Average Player Return"><GaugeChartComp filter={filter} /></CardComponent>
-              <CardComponent title="Average Session Length"><AverageSessionLength filter={filter} /></CardComponent>
-              <CardComponent title="Environment Interaction"><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
-              <CardComponent title="Player Retention"><PlayerRetentionGraph filter={filter} /></CardComponent>
-              <CardComponent title="Average Return Time"><AverageReturnTimeGraph filter={filter} /></CardComponent>
-              <CardComponent title="Item Usage"><BasicPie filter={filter} /></CardComponent>
-              <CardComponent title="Player Session Statistics"><PlayerSessionStats filter={filter} /></CardComponent>
-              <CardComponent title="FPS Performance Scatterplot"><FPSOverTime filter={filter} /></CardComponent>
-              <CardComponent title="Average FPS Timeline"><FPSLineChart filter={filter} /></CardComponent>
-              <CardComponent title="Player Location"><ApexChart filter={filter} /></CardComponent>
-              <CardComponent title="Player Session Length"><SessionLineChart filter={filter} /></CardComponent>
+    <AppProvider 
+        navigation={NAVIGATION} 
+        router={router} 
+        theme={demoTheme}
+        branding={{
+          logo: (
+            <Box sx={{ display: 'flex', alignItems: 'center', height: 40 }}>
+              <img
+                src="/UE-Icon-2023-Black.svg"
+                alt="Unreal Engine 5 Logo"
+                width={32}
+                height={32}
+                style={{ display: 'block', marginLeft: '10px' }}
+              />
             </Box>
+          ),
+          title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
+        }}
+      >
+
+<DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
+            <CardComponent title="Average FPS" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><AverageFPS filter={filter} /></CardComponent>
+            <CardComponent title="Average Player Return" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter} /></Box></CardComponent>
+            <CardComponent title="Average Session Length" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><AverageSessionLength filter={filter} /></CardComponent>
+            <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
+            <CardComponent title="Player Retention" description="Measures return rates based on how many sessions a player has logged in for" centerContent><PlayerRetentionGraph filter={filter} /></CardComponent>
+            <CardComponent title="Item Usage" description="Displays the distribution of player item usage" pieBottom centerContent><BasicPie filter={filter} /></CardComponent>
+            <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" sx={{ width: '53%', height: '13%' }} centerContent><PlayerSessionStats filter={filter} /></CardComponent>
+            <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
+            <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent><FPSLineChart filter={filter} /></CardComponent>
+            <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%' }} centerContent={false}><ApexChart filter={filter} /></CardComponent>
+            <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches" centerContent><SessionLineChart filter={filter} /></CardComponent>
+            <CardComponent title="Average Return Time" description="Measures return rates based on last login timestamps" centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
           </Box>
         </DashboardContent>
       </DashboardLayout>
