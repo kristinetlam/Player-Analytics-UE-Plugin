@@ -58,7 +58,7 @@ const FpsScatterChart = () => {
 
   return (
     <ScatterChart
-      width={700}
+      width={500}
       height={300}
       series={seriesData}
       xAxis={[{ scaleType: 'point', label: 'Date', data: xLabels }]}

@@ -55,7 +55,7 @@ const FPSLineChart = () => {
 
   return (
     <LineChart
-      width={600}
+      width={500}
       height={300}
       xAxis={[{ data: xLabels, scaleType: 'point', label: 'Date' }]}
       series={[{ data: avgFpsPerDay, label: 'Avg FPS' }]}
