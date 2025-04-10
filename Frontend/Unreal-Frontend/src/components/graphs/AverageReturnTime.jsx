@@ -118,7 +118,6 @@ const AverageReturnTimeGraph = ({ filter }) => {
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md max-w-3xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Average Time Between Sessions</h2>
       <Line data={returnGapData} />
     </div>
   );
