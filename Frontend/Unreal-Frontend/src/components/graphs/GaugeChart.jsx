@@ -30,7 +30,7 @@ function GaugePointer() {
   );
 }
 
-export default function GaugeChartComp() { // a
+export default function GaugeChartComp() { // aasdasdds
   return (
     <GaugeContainer
       width={200}

@@ -214,8 +214,8 @@ function DashboardLayoutBasic() {
                   <AverageFPS />
                 </CardComponent> 
                 <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '9.5%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}>
-                  <Box sx={{ mt: '-60px' }}>
-                    <GaugeChartComp /> 
+                  <Box sx={{ mt: '-60px' }}> {/*aa */}
+                    <GaugeChartComp /> {/*aa */}
                   </Box>
                 </CardComponent>
                 <CardComponent title="Average Session Length" sx={{ width: '30%', height: '9.5%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
