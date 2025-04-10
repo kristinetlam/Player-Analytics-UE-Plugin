@@ -35,6 +35,7 @@ import FPSLineChart from '../graphs/AverageFPSOverTime';
 import TuneIcon from '@mui/icons-material/Tune';
 import FilterDrawer from '../FilterComponent';
 import GaugeChart from '../graphs/GaugeChart';
+import PlayerSessionStats from '../graphs/SessionTable';
 
 
 const NAVIGATION = [
@@ -173,6 +174,9 @@ function ToolbarActions() {
   );
 }
 
+const toggleSidebar = () => {
+  setSidebarExpanded(!sidebarExpanded);
+};
 
 function DashboardLayoutBasic() {
     const router = useDemoRouter('/dashboard');
@@ -210,21 +214,22 @@ function DashboardLayoutBasic() {
               </Box> */}
               {/* Put small cards with numbers and small graphs like this at top of dashboard*/}
               <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <CardComponent title="Average FPS" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false}centerContent={true}>{/* <GaugeChartComp /> */}
+                <CardComponent title="Average FPS" sx={{ width: '30%', height: '10%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true} >{/* <GaugeChartComp /> */}
                   <AverageFPS />
                 </CardComponent> 
-                <CardComponent title="Average Player Return" description="over past 30 days" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}>
-                  <Box sx={{ mt: '-60px' }}> 
+                <CardComponent title="Average Player Return" sx={{ width: '30%', height: '10%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}>
+                  <Box sx={{ mt: '-40px' }}> 
                     <GaugeChartComp />
                   </Box>
                 </CardComponent>
-                <CardComponent title="Average Session Length" sx={{ width: '30%', height: '12%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true}><AverageSessionLength /></CardComponent>
-                <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements"><PlayerInteractionsBarGraph /></CardComponent>
-                <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps"><BasicLineChart /></CardComponent>
-                <CardComponent title="Item Usage" description="Displays the distribution of player item usage"><BasicPie /></CardComponent>
-                <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"><SessionLineChart /></CardComponent>
-                <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates"><FPSOverTime /></CardComponent>
-                <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time"><FPSLineChart /></CardComponent>
+                <CardComponent title="Average Session Length" sx={{ width: '30%', height: '10%', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength /></CardComponent>
+                <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent={true} > <PlayerInteractionsBarGraph /></CardComponent>
+                <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps" centerContent={true} ><BasicLineChart /></CardComponent>
+                <CardComponent title="Item Usage" description="Displays the distribution of player item usage" centerContent={true} pieBottom={true} ><BasicPie /></CardComponent>
+                <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" centerContent={true} ><PlayerSessionStats /></CardComponent>
+                <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches"centerContent={true} ><SessionLineChart /></CardComponent>
+                <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates"centerContent={true} ><FPSOverTime /></CardComponent>
+                <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent={true} ><FPSLineChart /></CardComponent>
                 <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%'}} centerContent={false}><ApexChart/></CardComponent>
 
               </Box>   

@@ -1,6 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
+function parseTimestamp(timestampStr) {
+  if (!timestampStr) {
+    return null; // Early return for undefined or null input
+  }
+
+  try {
+    const [datePart, timePart] = timestampStr.split('-');
+    if (!datePart || !timePart) {
+      throw new Error("Timestamp format error");
+    }
+    const formattedDate = datePart.replace(/\./g, '-');
+    const formattedTime = timePart.replace(/\./g, ':');
+    const date = new Date(`${formattedDate}T${formattedTime}`);
+    if (isNaN(date)) {
+      throw new Error("Invalid date constructed");
+    }
+    return date;
+  } catch (error) {
+    console.error("Error parsing timestamp:", timestampStr, error);
+    return null;
+  }
+}
 const SessionLineChart = () => {
   const [xData, setXData] = useState([]);
   const [yData, setYData] = useState([]);
@@ -21,18 +43,23 @@ const SessionLineChart = () => {
         }
 
         const result = await response.json();
+        if (!result.Sessions) {
+          console.error("No sessions data in response:", result);
+          return; // Exit if no sessions data
+        }
+
         const sessionData = result['Sessions'];
+        const validData = sessionData.filter(item => item.TimeStamp && parseTimestamp(item.TimeStamp));
 
-        // Sort and prepare data
-        const sorted = sessionData.sort(
-          (a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)
+        const sorted = validData.sort(
+          (a, b) => parseTimestamp(a.TimeStamp) - parseTimestamp(b.TimeStamp)
         );
 
-        const x = sorted.map(item =>
-          new Date(item.Timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-        );
-
-        const y = sorted.map(item => parseFloat(item.EndTime));
+        const x = sorted.map(item => {
+          const date = parseTimestamp(item.TimeStamp);
+          return date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Invalid Date';
+        });
+        const y = sorted.map(item => item.EndTime ? parseFloat(item.EndTime) : 0);
 
         setXData(x);
         setYData(y);
