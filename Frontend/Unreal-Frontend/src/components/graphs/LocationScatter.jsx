@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
-import { motion } from 'framer-motion';
+//import { motion } from 'framer-motion';
 
 
 const PlayerLocation = () => {
@@ -58,11 +58,11 @@ const PlayerLocation = () => {
   }
 
   return (
-    <motion.div
+    /*<motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-    >
+    >*/
       <ScatterChart
         width={600}
         height={300}
@@ -71,7 +71,7 @@ const PlayerLocation = () => {
         yAxis={[{ label: 'Y Position', dataKey: 'y' }]}
         grid={{ vertical: true, horizontal: true }}
       />
-    </motion.div>
+    /*</motion.div>*/
   );
 };
 
