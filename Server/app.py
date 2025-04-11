@@ -167,19 +167,38 @@ def get_interaction_data():
         print("Error fetching interaction data:", str(e))
         return jsonify({"error": str(e)}), 500
 
-
-
 @app.route("/get-position-data", methods=["GET"])
 def get_position_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        positions = list(positions_local.find({}, {"_id": 0}))
-        return jsonify({"Positions": positions}), 200
+        query = {}
 
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("Avg FPS query:", query)  # Debug line
+        positions = list(positions_local.find(query, {"_id": 0}))
+
+        return jsonify({"Positions": positions}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error fetching Position: ": str(e)}), 500
 
 
 @app.route("/get-avg-fps-data", methods=["GET"])
@@ -265,8 +284,8 @@ def get_session_data():
         return jsonify({"error": str(e)}), 500
 
     
-@app.route("/get-computer-specs", methods=["GET"])
-def get_computer_specs():
+@app.route("/get-computer-specs-raw", methods=["GET"])
+def get_computer_specs_raw():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -407,7 +426,41 @@ def get_game_versions():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/get-gpu-player-groups", methods=["GET"])
+def get_gpu_player_groups():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
 
+    try:
+        # Group by GPUName and count distinct PlayerIDs
+        pipeline = [
+            {"$group": {
+                "_id": "$GPUName",
+                "players": {"$addToSet": "$PlayerID"}
+            }},
+            {"$project": {
+                "name": "$_id",
+                "playerCount": {"$size": "$players"},
+                "_id": 0
+            }}
+        ]
+        result = list(computer_specs_local.aggregate(pipeline))
+        return jsonify({"GPUPlayerGroups": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get-computer-specs", methods=["GET"])
+def get_computer_specs():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        specs = list(computer_specs_local.find({}, {"GPUName": 1, "GPUBrand": 1, "_id": 0}))
+        gpu_names = list({spec["GPUName"] for spec in specs if "GPUName" in spec})
+        gpu_brands = list({spec["GPUBrand"] for spec in specs if "GPUBrand" in spec})
+        return jsonify({"GPUBrands": gpu_brands, "GPUNames": gpu_names}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
