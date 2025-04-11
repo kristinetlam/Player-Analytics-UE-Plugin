@@ -75,6 +75,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           width: 300,
           backgroundColor: 'white',
           position: 'relative',
+          marginLeft: 0
         }}
       >
         <IconButton
@@ -112,10 +113,22 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
         <Select
           fullWidth
           size="small"
-          value={patchVersion}
-          onChange={(e) => setFilter({ ...filter, patchVersion: e.target.value })}
-          sx={{ mb: 2 }}
           displayEmpty
+          value={patchVersion}
+          onChange={(e) => setPatchVersion(e.target.value)}
+          sx={{
+            mb: 2,
+            '& .MuiSelect-select': {
+              textAlign: 'center',
+              paddingRight: '18px !important', // remove icon padding
+            },
+            '& .MuiSelect-icon': {
+              position: 'absolute',
+              right: 8,
+              pointerEvents: 'none',
+            },
+            color: patchVersion === '' ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
+          }}
         >
           <MenuItem value="">All Versions</MenuItem>
           {gameVersions.map((version) => (
@@ -139,7 +152,19 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
               textField: {
                 fullWidth: true,
                 size: 'small',
-                sx: { mb: 2 },
+                placeholder: 'Enter Time',
+                sx: {
+                  '& .MuiInputBase-root': {
+                    justifyContent: 'center',
+                  },
+                  '& .MuiInputBase-input': {
+                    textAlign: 'center',     
+                  },
+                  '& .MuiInputAdornment-root': {
+                    position: 'absolute',
+                    right: 8,
+                  },
+                },
               },
             }}
           />
@@ -151,6 +176,19 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
               textField: {
                 fullWidth: true,
                 size: 'small',
+                placeholder: 'Enter Time',
+                sx: {
+                  '& .MuiInputBase-root': {
+                    justifyContent: 'center',
+                  },
+                  '& .MuiInputBase-input': {
+                    textAlign: 'center',     
+                  },
+                  '& .MuiInputAdornment-root': {
+                    position: 'absolute',
+                    right: 8,
+                  },
+                },
               },
             }}
           />
