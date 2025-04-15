@@ -124,39 +124,6 @@ LyraStarterGame/DerivedDataCache/VT/TEXTURE_7C16439390E24F1F9468894FB4D4BC55_VTC
 LyraStarterGame/Content/Effects/Textures/Flipbooks/SmokeSwirl_3_Flipbook_CHANNELPACK.uasset
 /LyraStarterGame/Saved
 /LyraStarterGame/Saved
-/PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
-
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# amplify
-.amplify
-amplify_outputs*
-amplifyconfiguration*
-/PlayerAnalytics/Plugins/PlayerAnalyticsPlugin/Binaries
 
 # Logs
 logs

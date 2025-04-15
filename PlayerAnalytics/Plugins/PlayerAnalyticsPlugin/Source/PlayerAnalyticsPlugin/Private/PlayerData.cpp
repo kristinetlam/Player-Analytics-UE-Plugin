@@ -24,7 +24,7 @@ FString GetMD5HashedMachineId()
 
 UPlayerData::UPlayerData()
 {
-    playerID = GetMD5HashedMachineId();
+    playerID = FGuid::NewGuid().ToString();
     FGuid SessionID = FGuid::NewGuid();
     sessionID = SessionID.ToString(EGuidFormats::DigitsWithHyphens);
 }
