@@ -283,6 +283,76 @@ def get_session_data():
         print("Error fetching session data:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
+@app.route("/get-cpu-data", methods=["GET"])
+def get_cpu_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        query = {}
+
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("CPU query:", query)  # Debug line
+        cpu_docs = list(cpu_local.find(query, {"_id": 0}))
+
+        return jsonify({"CPU": cpu_docs}), 200
+
+    except Exception as e:
+        print("Error fetching CPU Usage:", str(e))
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-ram-data", methods=["GET"])
+def get_ram_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        query = {}
+
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("ram query:", query)  # Debug line
+        ram_docs = list(ram_local.find(query, {"_id": 0}))
+
+        return jsonify({"ram": ram_docs}), 200
+
+    except Exception as e:
+        print("Error fetching RAM Usage:", str(e))
+        return jsonify({"error": str(e)}), 500
     
 @app.route("/get-computer-specs-raw", methods=["GET"])
 def get_computer_specs_raw():
@@ -307,13 +377,17 @@ def get_interaction_data_by_player(player_id):
         avg_fps = list(avg_fps_local.find({"PlayerID": player_id}, {"_id": 0}))
         sessions = list(sessions_local.find({"PlayerID": player_id}, {"_id": 0}))
         specs = list(computer_specs_local.find({"PlayerID": player_id}, {"_id": 0}))
+        ram = list(ram_local.find({"PlayerID": player_id}, {"_id": 0}))
+        cpu = list(cpu_local.find({"PlayerID": player_id}, {"_id": 0}))
         
         return jsonify({
             "Interactions": interactions, 
             "Positions": positions,
             "AVG FPS": avg_fps,
             "Sessions": sessions,
-            "Computer Specifications": specs
+            "Computer Specifications": specs,
+            "Ram Usage": ram,
+            "CPU Usage": cpu
         }), 200
 
     except Exception as e:
