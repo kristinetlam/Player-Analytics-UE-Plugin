@@ -203,7 +203,7 @@ function DashboardLayoutBasic() {
         }}
       >
 
-<DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+      <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             <CardComponent title="Average FPS"sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
