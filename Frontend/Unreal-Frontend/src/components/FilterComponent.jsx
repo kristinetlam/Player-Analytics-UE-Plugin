@@ -69,7 +69,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
     <Backdrop
       open={open}
       sx={{
-        zIndex: (theme) => theme.zIndex.modal + 10,
+        zIndex: (theme) => theme.zIndex.modal,
         position: 'fixed',
         left: 0,
         top: 0,
