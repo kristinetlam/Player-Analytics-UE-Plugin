@@ -66,8 +66,21 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
   };
 
   return (
-    <Backdrop open={open} sx={{ zIndex: 1200 }}>
-      <Paper
+    <Backdrop
+      open={open}
+      sx={{
+        zIndex: (theme) => theme.zIndex.modal + 10,
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        width: '100vw',
+        height: '100vh',
+        '&.MuiBackdrop-root': {
+          marginLeft: 0,
+        },
+      }}
+    >
+    <Paper
         elevation={3}
         sx={{
           p: 3,

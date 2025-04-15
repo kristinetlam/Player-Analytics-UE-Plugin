@@ -205,10 +205,10 @@ function DashboardLayoutBasic() {
 
 <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
-            <CardComponent title="Average FPS" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><AverageFPS filter={filter} /></CardComponent>
-            <CardComponent title="Average Player Return" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter} /></Box></CardComponent>
-            <CardComponent title="Average Session Length" sx={{ width: '30%', height: '10%' }} centerContent fixed moveTitleUp><AverageSessionLength filter={filter} /></CardComponent>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <CardComponent title="Average FPS"sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
+            <CardComponent title="Average Player Return" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter}/></Box></CardComponent>
+            <CardComponent title="Average Session Length" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength filter={filter} /></CardComponent>
             <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
             <CardComponent title="Player Retention" description="Measures return rates based on how many sessions a player has logged in for" centerContent><PlayerRetentionGraph filter={filter} /></CardComponent>
             <CardComponent title="Item Usage" description="Displays the distribution of player item usage" pieBottom centerContent><BasicPie filter={filter} /></CardComponent>

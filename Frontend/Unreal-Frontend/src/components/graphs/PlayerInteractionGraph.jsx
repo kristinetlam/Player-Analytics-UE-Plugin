@@ -61,7 +61,7 @@ export default function PlayerInteractionsBarGraph({ filter }) {
   return (
     <BarChart
       xAxis={[{ scaleType: 'band', data: data.map(d => d.x), label: 'Interaction Type' }]}
-      series={[{ data: data.map(d => d.y), label: 'Count' }]}
+      series={[{ data: data.map(d => d.y)}]}
       width={500}
       height={300}
     />
