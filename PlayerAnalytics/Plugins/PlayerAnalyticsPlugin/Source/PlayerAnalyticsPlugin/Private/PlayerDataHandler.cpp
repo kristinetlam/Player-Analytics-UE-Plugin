@@ -130,6 +130,18 @@ void UPlayerDataHandler::AddGPUSpecs(FString gpuName) {
     playerData->gpuSpecs.Add(gpuspecs);
 }
 
+void UPlayerDataHandler::AddMoment(FString gameVersion, FVector position, FString CPU, FString RAM) {
+    Fmoment moment;
+    moment.PlayerID = playerData->playerID;
+    moment.Position = position;
+    moment.GameVersion = gameVersion;
+    moment.CPU = CPU;
+    moment.RAM = RAM;
+    moment.SessionID = playerData->sessionID;
+    moment.TimeStamp = FDateTime::Now().ToString();
+    playerData->Moments.Add(moment);
+}
+
 /// <summary>
 /// Saves player data to a JSON file 
 /// </summary>

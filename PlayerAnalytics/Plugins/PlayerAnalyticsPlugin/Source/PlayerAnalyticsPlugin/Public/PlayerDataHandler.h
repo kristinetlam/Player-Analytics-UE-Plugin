@@ -42,10 +42,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddGPUSpecs(FString gpuName);
 
-    
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddMoment(FString gameVersion, FVector position, FString CPU, FString RAM);
 
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;
+
 protected:
 private:
 };

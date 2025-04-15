@@ -197,6 +197,33 @@ struct FgpuSpecs
     FString gpuName;
 };
 
+USTRUCT(BlueprintType)
+struct Fmoment
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString PlayerID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString GameVersion;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString TimeStamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FVector Position;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString CPU;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString RAM;
+};
+
 
 UCLASS(Blueprintable, EditInlineNew)
 class PLAYERANALYTICSPLUGIN_API UPlayerData : public UObject
@@ -235,6 +262,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
     TArray<FgpuSpecs> gpuSpecs;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    TArray<Fmoment> Moments;
 
     // Convert to JSON
     TSharedPtr<FJsonObject, ESPMode::ThreadSafe> ToJson();

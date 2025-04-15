@@ -179,5 +179,27 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
 
+    // Add moment data to JSON
+    TArray<TSharedPtr<FJsonValue>> momentArray;
+    for (int i = 0; i < Moments.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> MomentObject = MakeShared<FJsonObject>();
+        MomentObject->SetStringField("PlayerID", Moments[i].PlayerID);
+        MomentObject->SetStringField("SessionID", Moments[i].SessionID);
+        MomentObject->SetStringField("GameVersion", Moments[i].GameVersion);
+        MomentObject->SetStringField("Timestamp", Moments[i].TimeStamp);
+        TArray<TSharedPtr<FJsonValue>> PositionArray;
+        PositionArray.Add(MakeShared<FJsonValueNumber>(Moments[i].Position.X));
+        PositionArray.Add(MakeShared<FJsonValueNumber>(Moments[i].Position.Y));
+        PositionArray.Add(MakeShared<FJsonValueNumber>(Moments[i].Position.Z));
+        MomentObject->SetArrayField("Position", PositionArray);
+        MomentObject->SetStringField("CPU", Moments[i].CPU);
+        MomentObject->SetStringField("RAM", Moments[i].RAM);
+        MomentObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
+
+        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(MomentObject));
+    }
+    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
+
     return JsonObject;
 }
