@@ -56,10 +56,10 @@ void UMomentTracking::TrackMoment()
         FString CPUUsedString = FString::SanitizeFloat(FPlatformTime::GetCPUTime().CPUTimePct);
 
         //GET FPS
-        double fps = FApp::GetTimecodeFrameRate().AsDecimal();
+        double fps = 1.0 / FApp::GetDeltaTime();
         FString fpsString = FString::SanitizeFloat(fps);
 
-        dataHandler->AddMoment(currentPosition, RAMUsedString, CPUUsedString, fpsString);
+        dataHandler->AddMoment(currentPosition, CPUUsedString, RAMUsedString, fpsString);
 
 
         UE_LOG(LogTemp, Log, TEXT("Player Position Tracked: %s"), *currentPosition.ToString());
