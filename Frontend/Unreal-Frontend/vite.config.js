@@ -12,5 +12,9 @@ export default defineConfig({
     rollupOptions: {
       input: 'index.html',
     },
+    minify: 'terser',
+    terserOptions: {
+      keep_fnames: true // <--- preserve function names like DashboardLayoutBasic
+    }
   },
 });
