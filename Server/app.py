@@ -285,7 +285,7 @@ def get_session_data():
 
 
 @app.route("/get-cpu-data", methods=["GET"])
-def get_avg_fps_data():
+def get_cpu_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -320,7 +320,7 @@ def get_avg_fps_data():
         return jsonify({"error": str(e)}), 500
     
 @app.route("/get-ram-data", methods=["GET"])
-def get_avg_fps_data():
+def get_ram_data():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
