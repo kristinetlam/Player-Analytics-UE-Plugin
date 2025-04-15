@@ -40,7 +40,7 @@ const PlayerLocation = () => {
         // Convert to series array
         const series = Object.entries(grouped).map(([id, points]) => ({
           label: `Player ${id}`,
-          data: points.sort((a, b) => a.time - b.time),
+          data: points.sort((a, b) => new Date(a.time) - new Date(b.time)),
           showMarkLine: true
         }));
 
@@ -70,6 +70,7 @@ const PlayerLocation = () => {
         xAxis={[{ label: 'X Position'}]}
         yAxis={[{ label: 'Y Position'}]}
         grid={{ vertical: true, horizontal: true }}
+        legend={{ hidden: true }}
       />
     /*</motion.div>*/
   );
