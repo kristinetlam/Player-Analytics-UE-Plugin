@@ -122,44 +122,55 @@ DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
 };
 
-function ToolbarActionsSearch() {
-  return (
-    <Stack direction="row">
-      <Tooltip title="Search" enterDelay={1000}>
-        <div>
-          <IconButton
-            type="button"
-            aria-label="search"
-            sx={{
-              display: { xs: 'inline', md: 'none' },
-            }}
-          >
-            <SearchIcon />
-          </IconButton>
-        </div>
-      </Tooltip>
-      <TextField
-        label="Search"
-        variant="outlined"
-        size="small"
-        slotProps={{
-          input: {
-            endAdornment: (
-              <IconButton type="button" aria-label="search" size="small">
-                <SearchIcon />
-              </IconButton>
-            ),
-            sx: { pr: 0.5 },
-          },
-        }}
-        sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
-      />
+function ToolbarActionsSearch({ searchQuery, setSearchQuery }) {
+    const [inputValue, setInputValue] = useState('');
+  
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        setSearchQuery(inputValue.toLowerCase());
+      }
+    };
+  
+    return (
+      <Stack direction="row">
+        <Tooltip title="Search" enterDelay={1000}>
+          <div>
+            <IconButton
+              type="button"
+              aria-label="search"
+              sx={{
+                display: { xs: 'inline', md: 'none' },
+              }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </div>
+        </Tooltip>
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton type="button" aria-label="search" size="small">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              sx: { pr: 0.5 },
+            },
+          }}
+          sx={{ display: { xs: 'none', md: 'inline-block' }, mr: 1 }}
+        />
       {/* <ThemeSwitcher /> */}
     </Stack>
-  );
+    );
 }
 
-function ToolbarActions({ setOpenFilter }) {
+function ToolbarActions({ setOpenFilter, setSearchQuery }) {
   return (
     <Stack direction="row" spacing={2}>
       <IconButton onClick={() => setOpenFilter(true)}>
@@ -172,7 +183,7 @@ function ToolbarActions({ setOpenFilter }) {
           </IconButton>
         </div>
       </Tooltip>
-      <ToolbarActionsSearch />
+      <ToolbarActionsSearch setSearchQuery={setSearchQuery} />
     </Stack>
   );
 }
@@ -181,6 +192,134 @@ function DashboardLayoutBasic() {
   const router = useDemoRouter('/dashboard');
   const [openFilter, setOpenFilter] = useState(false);
   const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const cardConfigs = [
+    {
+      title: "Average FPS",
+      component: <AverageFPS filter={filter} />,
+      sx: {
+        flex: '1 1 300px',
+        maxWidth: '360px',
+        minWidth: '300px',
+        minHeight: '200px',
+        maxHeight: '300px',
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      moveTitleUp: true,
+      marginBottom: false,
+      centerContent: true,
+      fixed: true,
+    },
+    {
+      title: "Average Player Return",
+      component: (
+        <Box sx={{ mt: '-40px' }}>
+          <GaugeChartComp filter={filter} />
+        </Box>
+      ),
+      sx: {
+        flex: '1 1 300px',
+        maxWidth: '360px',
+        minWidth: '300px',
+        maxHeight: '300px',
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      moveTitleUp: true,
+      marginBottom: false,
+      centerContent: true,
+      fixed: true,
+    },
+    {
+      title: "Average Session Length",
+      component: <AverageSessionLength filter={filter} />,
+      sx: {
+        flex: '1 1 300px',
+        maxWidth: '360px',
+        minWidth: '300px',
+        minHeight: '240px',
+        maxHeight: '300px',
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      moveTitleUp: true,
+      marginBottom: false,
+      centerContent: true,
+      fixed: true,
+    },
+    {
+      title: "Environment Interaction",
+      description: "Quantifies player interactions with game elements",
+      component: <PlayerInteractionsBarGraph filter={filter} />,
+      centerContent: true,
+    },
+    {
+      title: "Player Retention",
+      description: "Measures return rates based on how many sessions a player has logged in for",
+      component: <PlayerRetentionGraph filter={filter} />,
+      centerContent: true,
+    },
+    {
+      title: "Item Usage",
+      description: "Displays the distribution of player item usage",
+      component: <BasicPie filter={filter} />,
+      centerContent: true,
+      pieBottom: true,
+    },
+    {
+      title: "Player Session Statistics",
+      description: "Summarizes player session data with key metrics",
+      component: <PlayerSessionStats filter={filter} />,
+      sx: {
+        flex: '1 1 600px',
+        maxWidth: '600px',
+        minWidth: '400px',
+        minHeight: '380px',
+      },
+      centerContent: true,
+    },
+    {
+      title: "FPS Performance Scatterplot",
+      description: "Tracks frame rate patterns across multiple players and dates",
+      component: <FPSOverTime filter={filter} />,
+      centerContent: true,
+    },
+    {
+      title: "Average FPS Timeline",
+      description: "Player FPS averages grouped by day over time",
+      component: <FPSLineChart filter={filter} />,
+      centerContent: true,
+    },
+    {
+      title: "Player Location",
+      description: "Visualizes player movement density across the game map",
+      component: <ApexChart filter={filter} />,
+      sx: { width: '65%' },
+      centerContent: false,
+    },
+    {
+      title: "Player Session Length",
+      description: "Illustrates player session lengths grouped by game version patches",
+      component: <AverageSessionPerDayChart filter={filter} />,
+      centerContent: true,
+    },
+    {
+      title: "Average Return Time",
+      description: "Measures return rates based on last login timestamps",
+      component: <AverageReturnTimeGraph filter={filter} />,
+      sx: {
+        flex: '1 1 300px',
+        maxWidth: '360px',
+        minWidth: '300px',
+        maxHeight: '300px',
+      },
+      centerContent: true,
+    },
+  ];
+  
+  
 
   return (
     <AppProvider 
@@ -203,21 +342,35 @@ function DashboardLayoutBasic() {
         }}
       >
 
-      <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+      <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} setSearchQuery={setSearchQuery} /> }}>
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <CardComponent title="Average FPS"sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
-            <CardComponent title="Average Player Return" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter}/></Box></CardComponent>
-            <CardComponent title="Average Session Length" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength filter={filter} /></CardComponent>
-            <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
-            <CardComponent title="Player Retention" description="Measures return rates based on how many sessions a player has logged in for" centerContent><PlayerRetentionGraph filter={filter} /></CardComponent>
-            <CardComponent title="Item Usage" description="Displays the distribution of player item usage" pieBottom centerContent><BasicPie filter={filter} /></CardComponent>
-            <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics"  sx={{ flex: '1 1 600px', maxWidth: '600px', minWidth: '400px', minHeight: '380px' }} centerContent><PlayerSessionStats filter={filter} /></CardComponent>
-            <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
-            <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent><FPSLineChart filter={filter} /></CardComponent>
-            <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%'}} centerContent={false}><ApexChart filter={filter} /></CardComponent>
-            <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
-            <CardComponent title="Average Return Time" description="Measures return rates based on last login timestamps" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: 2,
+              px: 2,
+            }}
+          >
+            {cardConfigs
+              .filter(({ title, description }) =>
+                title.toLowerCase().includes(searchQuery) ||
+                (description && description.toLowerCase().includes(searchQuery))
+              )
+              .map(({ title, component, description, sx, centerContent, fixed, moveTitleUp }, index) => (
+                <CardComponent
+                  key={index}
+                  title={title}
+                  description={description}
+                  sx={sx}
+                  centerContent={centerContent}
+                  fixed={fixed}
+                  moveTitleUp={moveTitleUp}
+                >
+                  {component}
+                </CardComponent>
+              ))}
           </Box>
         </DashboardContent>
       </DashboardLayout>
