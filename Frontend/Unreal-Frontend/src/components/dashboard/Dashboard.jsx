@@ -180,7 +180,9 @@ const toggleSidebar = () => {
 };
 
 function DashboardLayoutBasic() {
-    const router = useDemoRouter('/dashboard');
+  const router = useDemoRouter('/dashboard');
+  const [openFilter, setOpenFilter] = useState(false);
+  const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
   
     return (
       <AppProvider 
@@ -202,68 +204,33 @@ function DashboardLayoutBasic() {
           title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
         }}
       >
-        <DashboardLayout
-        slots={{
-          toolbarActions: ToolbarActions,
-        }}
-        >
-       
-      {/* <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}> */}
-          <DashboardContent pathname={router.pathname} sx={{backgroundColor: '#f7f7f7'}}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Box sx={{ width: '100%', mb: 4 }}>
-                <Box sx={{ width: '100%', maxWidth: '1200px', mx: 'auto' }}>
-                  <Box sx={{ border: '1px solid #ddd', backgroundColor: '#fff', px: 2, py: 1, borderRadius: 1, width: '100%', mb: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Player Interactions</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  </Box>
-                </Box>
-              </Box>
 
-              <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent={true} > <PlayerInteractionsBarGraph /></CardComponent>
-              <CardComponent title="Item Usage" description="Displays the distribution of player item usage" centerContent={true} pieBottom={true} ><BasicPie /></CardComponent>
-                
-              <Box sx={{ width: '100%', mb: 4 }}>
-                <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
-                  <Box sx={{ border: '1px solid #ddd', backgroundColor: '#fff', px: 2, py: 1, borderRadius: 1, width: '100%', mb: 2 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Session Insights</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
-                    <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" sx={{ flex: '1 1 600px', maxWidth: '630px', minWidth: '400px' }} centerContent={true}><PlayerSessionStats /></CardComponent>
-                    <CardComponent title="Average Session Length" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength /></CardComponent>
-                    <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches" centerContent={true}><SessionLineChart /></CardComponent>
-                      </Box>
-                </Box>
-              </Box>
-              
-                {/* Performance Trends Section */}
-                <Box sx={{ width: '100%', mb: 4 }}>
-                  <Box sx={{ maxWidth: '1200px', mx: 'auto' }}> 
-                    <Box sx={{ border: '1px solid #ddd', backgroundColor: '#fff', px: 2, py: 1, borderRadius: 1, width: '100%', mb: 2 }}> {/* Section title bar */}
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Performance Trends</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}> {/* Card row container */}
-                      <CardComponent title="Average FPS" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS /></CardComponent>
-                      <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates" centerContent={true}><FPSOverTime /></CardComponent>
-                      <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent={true}><FPSLineChart /></CardComponent>
-                    </Box>
-                  </Box>
-                </Box>
-
-                <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%'}} centerContent={false}><ApexChart/></CardComponent>
-                  
-                {/* <CardComponent title="Player Retention" description="Measures return rates based on last login timestamps" centerContent={true}><BasicLineChart /></CardComponent> */}
-                <CardComponent title="Average Player Return" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp /></Box></CardComponent>
-                   
-              </Box>   
-            </Box>
-          </DashboardContent>
-        </DashboardLayout>
-      </AppProvider>
-    );
-  }
+<DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
+            <CardComponent title="Average FPS" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter}/></CardComponent>            
+            <CardComponent title="Average Player Return" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter}/></Box></CardComponent>            
+            <CardComponent title="Average Session Length" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength filter={filter}/></CardComponent>            <CardComponent title="Environment Interaction" description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
+            <CardComponent title="Player Retention" description="Measures return rates based on how many sessions a player has logged in for" centerContent><PlayerRetentionGraph filter={filter} /></CardComponent>
+            <CardComponent title="Item Usage" description="Displays the distribution of player item usage" pieBottom centerContent><BasicPie filter={filter} /></CardComponent>
+            <CardComponent title="Player Session Statistics" description="Summarizes player session data with key metrics" sx={{ width: '53%', height: '13%' }} centerContent><PlayerSessionStats filter={filter} /></CardComponent>
+            <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
+            <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent><FPSLineChart filter={filter} /></CardComponent>
+            <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%' }} centerContent={false}><ApexChart filter={filter} /></CardComponent>
+            <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
+            <CardComponent title="Average Return Time" description="Measures return rates based on last login timestamps" centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
+          </Box>
+        </DashboardContent>
+      </DashboardLayout>
+      <FilterDrawer 
+          open={openFilter} 
+          onClose={() => setOpenFilter(false)} 
+          filter={filter} 
+          setFilter={setFilter} 
+          />
+    </AppProvider>
+  );
+}
 
 // DashboardLayoutBasic.propTypes = {
 //   /**
