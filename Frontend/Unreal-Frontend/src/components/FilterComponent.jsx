@@ -128,7 +128,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           size="small"
           displayEmpty
           value={patchVersion}
-          onChange={(e) => setPatchVersion(e.target.value)}
+          onChange={(e) => setFilter({ ...filter, patchVersion: e.target.value })}
           sx={{
             mb: 2,
             '& .MuiSelect-select': {
