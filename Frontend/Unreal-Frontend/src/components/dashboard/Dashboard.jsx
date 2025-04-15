@@ -343,7 +343,7 @@ function DashboardLayoutBasic() {
       >
 
       <DashboardLayout slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} setSearchQuery={setSearchQuery} /> }}>
-        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
+        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' , minHeight: '100vh' }}>
           <Box
             sx={{
               display: 'flex',
@@ -351,6 +351,7 @@ function DashboardLayoutBasic() {
               justifyContent: 'center',
               gap: 2,
               px: 2,
+              pb: 4,
             }}
           >
             {cardConfigs
