@@ -67,8 +67,8 @@ const PlayerLocation = () => {
         width={600}
         height={300}
         series={locData}
-        xAxis={[{ label: 'X Position', dataKey: 'x' }]}
-        yAxis={[{ label: 'Y Position', dataKey: 'y' }]}
+        xAxis={[{ label: 'X Position'}]}
+        yAxis={[{ label: 'Y Position'}]}
         grid={{ vertical: true, horizontal: true }}
       />
     /*</motion.div>*/
