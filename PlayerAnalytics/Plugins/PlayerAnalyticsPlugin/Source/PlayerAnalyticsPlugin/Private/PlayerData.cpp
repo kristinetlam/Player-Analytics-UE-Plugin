@@ -146,7 +146,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 
         uiInteractionArray.Add(MakeShared<FJsonValueObject>(uiInteractionObject));
     }
-    JsonObject->SetArrayField("Sessions", uiInteractionArray);
+    JsonObject->SetArrayField("UI interacrtions", uiInteractionArray);
 
     // Add UI screen visit data to JSON
     TArray<TSharedPtr<FJsonValue>> ScreenVisitArray;
@@ -161,7 +161,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 
         ScreenVisitArray.Add(MakeShared<FJsonValueObject>(screenVisitObject));
     }
-    JsonObject->SetArrayField("Sessions", ScreenVisitArray);
+    JsonObject->SetArrayField("Screen Visits", ScreenVisitArray);
 
     // Add CPU spec data to JSON
     TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
@@ -197,9 +197,9 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         MomentObject->SetStringField("RAM", Moments[i].RAM);
         MomentObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
 
-        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(MomentObject));
+        momentArray.Add(MakeShared<FJsonValueObject>(MomentObject));
     }
-    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
+    JsonObject->SetArrayField("moments", momentArray);
 
     return JsonObject;
 }
