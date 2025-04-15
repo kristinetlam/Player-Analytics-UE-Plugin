@@ -144,15 +144,16 @@ void UPlayerDataHandler::AddCPUUsage() {
     playerData->CPUPoints.Add(CPUData);
 }
 
-void UPlayerDataHandler::AddMoment(FString gameVersion, FVector position, FString CPU, FString RAM) {
+void UPlayerDataHandler::AddMoment(FVector position, FString CPU, FString RAM, FString FPS) {
     Fmoment moment;
     moment.PlayerID = playerData->playerID;
     moment.Position = position;
-    moment.GameVersion = gameVersion;
+    moment.GameVersion = playerData->gameVersion;
     moment.CPU = CPU;
     moment.RAM = RAM;
     moment.SessionID = playerData->sessionID;
     moment.TimeStamp = FDateTime::Now().ToString();
+    moment.FPS = FPS;
     playerData->Moments.Add(moment);
 }
 

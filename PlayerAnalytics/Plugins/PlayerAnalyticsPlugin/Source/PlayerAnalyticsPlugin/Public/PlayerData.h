@@ -7,8 +7,10 @@
 #include "Serialization/JsonReader.h"
 #include "Dom/JsonObject.h"  
 #include "Templates/SharedPointer.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
+#include "GenericPlatform/GenericPlatformDriver.h"
+#include "GenericPlatform/GenericPlatformMemory.h"
 #include "PlayerData.generated.h"
-
 
 
 USTRUCT(BlueprintType)
@@ -228,6 +230,9 @@ struct Fmoment
 
     UPROPERTY(BlueprintReadWrite, Category = "Moment")
     FString RAM;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Moment")
+    FString FPS;
 };
 
 
@@ -277,6 +282,7 @@ public:
 
     FString playerID;
     FString sessionID;
+    FGPUDriverInfo GPUInfo;
 
     // Basic Game Data
     FString gameTitle = "Default Game Title";

@@ -43,7 +43,7 @@ public:
     void AddCPUUsage();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddMoment(FString gameVersion, FVector position, FString CPU, FString RAM);
+    void AddMoment(FVector position, FString CPU, FString RAM, FString FPS);
 
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;

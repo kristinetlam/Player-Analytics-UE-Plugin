@@ -27,6 +27,7 @@ UPlayerData::UPlayerData()
     playerID = GetMD5HashedMachineId();
     FGuid SessionID = FGuid::NewGuid();
     sessionID = SessionID.ToString(EGuidFormats::DigitsWithHyphens);
+    GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
 }
 
 
@@ -36,7 +37,6 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
 
     // Add game metadata
-
     TArray<TSharedPtr<FJsonValue>> gameDataPoint;
     TSharedPtr<FJsonObject> GameDataObject = MakeShared<FJsonObject>();
     GameDataObject->SetStringField("Game Title", gameTitle);
@@ -230,7 +230,8 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         MomentObject->SetArrayField("Position", PositionArray);
         MomentObject->SetStringField("CPU", Moments[i].CPU);
         MomentObject->SetStringField("RAM", Moments[i].RAM);
-        MomentObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
+        MomentObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
+        MomentObject->SetStringField("FPS", Moments[i].FPS);
 
         momentArray.Add(MakeShared<FJsonValueObject>(MomentObject));
     }
@@ -259,7 +260,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         SpecsObject->SetNumberField("CPUCoreNo", FPlatformMisc::NumberOfCores());
 
         // GPU Specs
-        FGPUDriverInfo GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
+        GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
         SpecsObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
         SpecsObject->SetStringField("GPUDriverVersion", GPUInfo.UserDriverVersion);
         SpecsObject->SetStringField("GPUDriverVersionInternal", GPUInfo.InternalDriverVersion);
