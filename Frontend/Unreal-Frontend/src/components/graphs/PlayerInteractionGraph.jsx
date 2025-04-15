@@ -1,152 +1,69 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from 'react';
+import { BarChart } from '@mui/x-charts/BarChart';
+import dayjs from 'dayjs';
 
-// ORIGINAL HARD CODED BAR CHART
-// export default function BasicBars() {
-//   return (
-//     <BarChart
-//       xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-//       series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
-//       width={500}
-//       height={300}
-//     />
-//   );
-// }
-
-
-export default function PlayerInteractionsBarGraph() {
+export default function PlayerInteractionsBarGraph({ filter }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // Function to fetch data from the Flask API
-    console.log('API Secret Token:', import.meta.env.VITE_API_SECRET_TOKEN);
-    console.log(import.meta.env);
+    if (!filter) return;
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://50.30.211.229:5000/get-interaction-data', {
+        const url = new URL('http://50.30.211.229:5000/get-interaction-data');
+        const { playerId, patchVersion, startDate, endDate } = filter;
+
+        const params = {
+          player_id: playerId,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (value) url.searchParams.append(key, value);
+        });
+
+        const response = await fetch(url.toString(), {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+
+        if (!response.ok) throw new Error('Failed to fetch interaction data');
+
         const result = await response.json();
-        console.log(result)
-        // setData(transformData(result.Interactions)); // Assuming the data needs transformation
         const interactionCounts = countInteractions(result.Interactions);
         setData(interactionCounts);
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch interaction data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [filter]);
 
-  // // Example transformation function
-  // const transformData = (interactions) => {
-  //   // Transform the data into the format required by your chart
-  //   // This is a dummy transformation
-  //   return interactions.map(interaction => ({
-  //     x: interaction.eventType,
-  //     y: interaction.count
-  //   }));
-  // };
   const countInteractions = (interactions) => {
-    // Helper function to normalize description and ignore dynamic parts (numbers)
-    const normalizeDescription = (description) => {
-      // Remove numbers or dynamic parts, assuming the number is after a colon
-      return description.split(':')[0].trim(); // Only take the part before the colon
-    };
-  
-    const interactionMap = interactions.reduce((acc, interaction) => {
-      const description = interaction.InteractionDescription;
-      const normalizedDescription = normalizeDescription(description); // Normalize the description to remove numbers
-  
-      // Increment the count for this normalized description
-      acc[normalizedDescription] = (acc[normalizedDescription] || 0) + 1;
-  
+    const normalizeDescription = (desc) => desc?.split(':')[0]?.trim() || '';
+
+    const map = interactions.reduce((acc, item) => {
+      const key = normalizeDescription(item.InteractionDescription);
+      acc[key] = (acc[key] || 0) + 1;
       return acc;
     }, {});
-  
-    // Convert the map to an array of objects for the chart
-    return Object.entries(interactionMap).map(([description, count]) => ({
-      x: description,  // Normalized interaction description (without numbers)
-      y: count,        // Count of occurrences
-    }));
+
+    return Object.entries(map).map(([x, y]) => ({ x, y }));
   };
-  
-  
-  
 
   return (
     <BarChart
-      xAxis={[{ scaleType: 'band', data: data.map(item => item.x) }]}  // x-axis labels (interaction descriptions)
-      series={[{ data: data.map(item => item.y) }]}  // y-axis values (counts)
+      xAxis={[{ scaleType: 'band', data: data.map(d => d.x), label: 'Interaction Type' }]}
+      series={[{ data: data.map(d => d.y)}]}
       width={500}
       height={300}
     />
   );
 }
-
-
-
-
-// import * as React from 'react';
-// import { BarChart, useDrawingArea, useXScale, useYScale } from '@mui/x-charts';
-// import { styled } from '@mui/material/styles';
-
-// const StyledPath = styled('path')(({ theme, color }) => ({
-//   fill: 'none',
-//   stroke: '#cccccc',
-//   shapeRendering: 'crispEdges',
-//   strokeWidth: 1,
-//   pointerEvents: 'none',
-// }));
-// function CartesianGrid() {
-//   const { left, top, width, height } = useDrawingArea();
-//   const xAxisScale = useXScale();
-//   const yAxisScale = useYScale();
-
-//   // Manually define xTicks for band scale
-//   // const xTicks = xAxisScale.domain(); // This should fetch the categorical domains directly
-//   const yTicks = yAxisScale.ticks(); // This continues to work for numerical y-scales
-
-//   return (
-//     <React.Fragment>
-//       {yTicks.map((value) => (
-//         <StyledPath
-//           key={`y-${value}`}
-//           d={`M ${left} ${yAxisScale(value)} l ${width} 0`}
-//           color="secondary"
-//         />
-//       ))}
-//       {/* {xTicks.map((value, index) => (
-//         <StyledPath
-//           key={`x-${value}`}
-//           d={`M ${xAxisScale(value) + xAxisScale.bandwidth() / 2} ${top} l 0 ${height}`} // Center the line in the band
-//           color="secondary"
-//         />
-//       ))} */}
-//     </React.Fragment>
-//   );
-// }
-
-// export default function BasicBars() {
-//   return (
-//     <BarChart
-//       xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-//       series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
-//       width={500}
-//       height={300}
-//     >
-//       <CartesianGrid />
-//     </BarChart>
-//   );
-// }
-
