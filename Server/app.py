@@ -22,7 +22,7 @@ MONGO_LOCAL_URI = "mongodb://localhost:27017/"
 # Connect to Local MongoDB
 client_local = MongoClient(MONGO_LOCAL_URI)
 db_local = client_local.PlayerAnalytics
-interactions_local = db_local.interactions  
+interactions_local = db_local.interactions
 positions_local = db_local.positions
 avg_fps_local = db_local.avg_fps
 sessions_local = db_local.sessions

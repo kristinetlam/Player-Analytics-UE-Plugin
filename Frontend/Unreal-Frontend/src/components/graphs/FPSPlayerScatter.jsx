@@ -19,7 +19,6 @@ const FpsScatterChart = () => {
         if (!response.ok) throw new Error('Failed to fetch FPS data');
 
         const result = await response.json();
-        console.log(result);
         const fpsData = result['AVG FPS'];
 
         const grouped = {};
