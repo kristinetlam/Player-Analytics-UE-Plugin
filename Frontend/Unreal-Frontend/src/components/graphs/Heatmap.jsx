@@ -9,7 +9,7 @@ import {
 import { styled } from '@mui/system';
 
 
-const Heatmap = () => {
+const Heatmap = ({ filter }) => {
 
   const [binSize, setBin] = React.useState(20);
   const [mapType, setMapType] = React.useState('RAM');
@@ -305,6 +305,7 @@ const Heatmap = () => {
     });
 
     return (
+    <div>
       <div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: "flex-end"}}>
           <div>
@@ -339,7 +340,6 @@ const Heatmap = () => {
         </div>
         <div id="html-dist"></div>
       </div>
-      <div id="html-dist"></div>
     </div>
   );
 };
