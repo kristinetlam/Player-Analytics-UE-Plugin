@@ -5,6 +5,11 @@
 #include "Serialization/JsonWriter.h"
 #include "Serialization/JsonSerializer.h"
 
+//Computer Specification-related includes
+#include "GenericPlatform/GenericPlatformMisc.h"
+#include "GenericPlatform/GenericPlatformDriver.h"
+#include "GenericPlatform/GenericPlatformMemory.h"
+
 FString GetMD5HashedMachineId()
 {
     // Get machine ID
@@ -19,7 +24,7 @@ FString GetMD5HashedMachineId()
 
 UPlayerData::UPlayerData()
 {
-    playerID = FGuid::NewGuid().ToString();
+    playerID = GetMD5HashedMachineId();
     FGuid SessionID = FGuid::NewGuid();
     sessionID = SessionID.ToString(EGuidFormats::DigitsWithHyphens);
 }
@@ -48,7 +53,9 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> InteractionObject = MakeShared<FJsonObject>();
         InteractionObject->SetStringField("PlayerID", interactions[i].PlayerID);
         InteractionObject->SetStringField("SessionID", interactions[i].SessionID);
+        InteractionObject->SetStringField("Game Version", gameVersion);
         InteractionObject->SetStringField("Timestamp", interactions[i].Timestamp);
+        
         InteractionObject->SetStringField("InteractionDescription", interactions[i].InteractionDescription);
 
         // Convert FVector to JSON array
@@ -67,9 +74,13 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     for (int i = 0; i < Inventories.Num(); i++)
     {
         TSharedPtr<FJsonObject> InventoryObject = MakeShared<FJsonObject>();
+        InventoryObject->SetStringField("PlayerID", interactions[i].PlayerID);
+        InventoryObject->SetStringField("SessionID", interactions[i].SessionID);
+        InventoryObject->SetStringField("Game Version", gameVersion);
+        InventoryObject->SetStringField("Timestamp", Inventories[i].Timestamp);
+        
         InventoryObject->SetNumberField("Size", Inventories[i].Size);
         InventoryObject->SetNumberField("Capacity", Inventories[i].Capacity);
-        InventoryObject->SetStringField("Timestamp", Inventories[i].Timestamp);
 
         // Convert TArray to JSON array
         TArray<TSharedPtr<FJsonValue>> ItemsArray;
@@ -90,6 +101,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> PositionObject = MakeShared<FJsonObject>();
         PositionObject->SetStringField("PlayerID", positions[i].PlayerID);
         PositionObject->SetStringField("SessionID", positions[i].SessionID);
+        PositionObject->SetStringField("Game Version", gameVersion);
         PositionObject->SetStringField("Timestamp", positions[i].Timestamp);
 
         // Convert FVector to JSON array
@@ -109,8 +121,10 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     {
         TSharedPtr<FJsonObject> FPSObject = MakeShared<FJsonObject>();
         FPSObject->SetStringField("PlayerID", AvgFPSPoints[i].PlayerID);
-        FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
         FPSObject->SetStringField("SessionID", AvgFPSPoints[i].SessionID);
+        FPSObject->SetStringField("Game Version", gameVersion);
+        FPSObject->SetStringField("Timestamp", AvgFPSPoints[i].Timestamp);
+        
         FPSObject->SetNumberField("AverageFPS", AvgFPSPoints[i].AverageFPS);
 
         FPSAveragesArray.Add(MakeShared<FJsonValueObject>(FPSObject));
@@ -124,9 +138,12 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         TSharedPtr<FJsonObject> SessionObject = MakeShared<FJsonObject>();
         SessionObject->SetStringField("PlayerID", Sessions[i].PlayerID);
         SessionObject->SetStringField("SessionID", Sessions[i].SessionID);
-        SessionObject->SetStringField("TimeStamp", Sessions[i].TimeStamp);
+        SessionObject->SetStringField("Game Version", gameVersion);
+        SessionObject->SetStringField("Timestamp", Sessions[i].TimeStamp);
+
         SessionObject->SetStringField("StartTime", Sessions[i].StartTime);
         SessionObject->SetStringField("EndTime", Sessions[i].EndTime);
+
         SessionObject->SetStringField("EndType", Sessions[i].EndType);
 
         SessionArray.Add(MakeShared<FJsonValueObject>(SessionObject));
@@ -163,21 +180,39 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
     }
     JsonObject->SetArrayField("Screen Visits", ScreenVisitArray);
 
-    // Add CPU spec data to JSON
-    TArray<TSharedPtr<FJsonValue>> cpuSpecsArray;
-    for (int i = 0; i < cpuSpecs.Num(); i++)
+    // Add RAM data to JSON
+    TArray<TSharedPtr<FJsonValue>> RAMArray;
+    for (int i = 0; i < MemoryPoints.Num(); i++)
+    {
+        TSharedPtr<FJsonObject> RAMObject = MakeShared<FJsonObject>();
+        RAMObject->SetStringField("PlayerID", MemoryPoints[i].PlayerID);
+        RAMObject->SetStringField("SessionID", MemoryPoints[i].SessionID);
+        RAMObject->SetStringField("Game Version", gameVersion);
+        RAMObject->SetStringField("Timestamp", MemoryPoints[i].Timestamp);
+        
+
+        RAMObject->SetNumberField("MemoryMB", MemoryPoints[i].RAMUsed);
+
+        RAMArray.Add(MakeShared<FJsonValueObject>(RAMObject));
+    }
+    JsonObject->SetArrayField("RAM Usage", RAMArray);
+
+
+    // Add CPU data to JSON
+    TArray<TSharedPtr<FJsonValue>> CPUArray;
+    for (int i = 0; i < CPUPoints.Num(); i++)
     {
         TSharedPtr<FJsonObject> CPUObject = MakeShared<FJsonObject>();
-        CPUObject->SetStringField("PlayerID", cpuSpecs[i].PlayerID);
-        CPUObject->SetStringField("CPUName", cpuSpecs[i].cpuName);
-        CPUObject->SetStringField("CPUBrand", cpuSpecs[i].cpuBrand);
-        CPUObject->SetNumberField("CPUCoreNo", cpuSpecs[i].cpuCores);
+        CPUObject->SetStringField("PlayerID", CPUPoints[i].PlayerID);
+        CPUObject->SetStringField("SessionID", CPUPoints[i].SessionID);
+        CPUObject->SetStringField("Game Version", gameVersion);
+        CPUObject->SetStringField("Timestamp", CPUPoints[i].Timestamp);
 
-        CPUObject->SetStringField("GPUName", gpuSpecs[i].gpuName);
+        CPUObject->SetNumberField("CPU%Used", CPUPoints[i].CPUUsed);
 
-        cpuSpecsArray.Add(MakeShared<FJsonValueObject>(CPUObject));
+        CPUArray.Add(MakeShared<FJsonValueObject>(CPUObject));
     }
-    JsonObject->SetArrayField("Computer Specifications", cpuSpecsArray);
+    JsonObject->SetArrayField("CPU Usage", CPUArray);
 
     // Add moment data to JSON
     TArray<TSharedPtr<FJsonValue>> momentArray;
@@ -200,6 +235,39 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         momentArray.Add(MakeShared<FJsonValueObject>(MomentObject));
     }
     JsonObject->SetArrayField("moments", momentArray);
+
+
+
+    // Add Computer Specs data to JSON
+    TArray<TSharedPtr<FJsonValue>> SpecsArray;
+
+        TSharedPtr<FJsonObject> SpecsObject = MakeShared<FJsonObject>();
+        SpecsObject->SetStringField("PlayerID", playerID);
+        SpecsObject->SetStringField("SessionID", sessionID);
+        SpecsObject->SetStringField("Game Version", gameVersion);
+
+        // Operating System Version (numeric OS version)
+        SpecsObject->SetStringField("OSLabel", FPlatformMisc::GetOSVersion());
+
+        // RAM Maximum available for UE5 to use
+        SpecsObject->SetNumberField("RAMPhysMaxMB", static_cast<double>(FPlatformMemory::GetStats().AvailablePhysical) / (1024 * 1024));
+        SpecsObject->SetNumberField("RAMVirtMaxMB", static_cast<double>(FPlatformMemory::GetStats().AvailableVirtual) / (1024 * 1024));
+        
+        // CPU Specs
+        SpecsObject->SetStringField("CPUName", FPlatformMisc::GetCPUBrand());
+        SpecsObject->SetStringField("CPUBrand", FPlatformMisc::GetCPUVendor());
+        SpecsObject->SetNumberField("CPUCoreNo", FPlatformMisc::NumberOfCores());
+
+        // GPU Specs
+        FGPUDriverInfo GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
+        SpecsObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
+        SpecsObject->SetStringField("GPUDriverVersion", GPUInfo.UserDriverVersion);
+        SpecsObject->SetStringField("GPUDriverVersionInternal", GPUInfo.InternalDriverVersion);
+        SpecsObject->SetStringField("GPUDriverDate", GPUInfo.DriverDate);
+
+        SpecsArray.Add(MakeShared<FJsonValueObject>(SpecsObject));
+
+    JsonObject->SetArrayField("Computer Specifications", SpecsArray);
 
     return JsonObject;
 }

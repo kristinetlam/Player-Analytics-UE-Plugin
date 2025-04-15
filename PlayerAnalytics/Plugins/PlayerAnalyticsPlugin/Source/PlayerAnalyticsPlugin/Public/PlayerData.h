@@ -168,33 +168,39 @@ struct FuiScreenVisitData
 };
 
 USTRUCT(BlueprintType)
-struct FcpuSpecs 
+struct FmemoryUsage 
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    FString cpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    FString cpuBrand;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    int32 cpuCores;
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float RAMUsed;
 };
 
 USTRUCT(BlueprintType)
-struct FgpuSpecs 
+struct FCPUUsage 
 {
     GENERATED_BODY()
 
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
     FString PlayerID;
 
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
-    FString gpuName;
+    UPROPERTY(BlueprintReadWrite, Category = "Interaction")
+    FString SessionID;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    FString Timestamp;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Frames Per Second")
+    float CPUUsed;
 };
 
 USTRUCT(BlueprintType)
@@ -251,17 +257,17 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "Inventory")
     TArray<FinventoryData> Inventories;
 
+    UPROPERTY(BlueprintReadWrite, Category = "Memory Usage")
+    TArray<FmemoryUsage> MemoryPoints;
     UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
     TArray<FuiInteractionData> uiInteractions;
 
     UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
     TArray<FuiScreenVisitData> screenVisits;
 
-    UPROPERTY(BlueprintReadWrite, Category = "CPU Specs")
-    TArray<FcpuSpecs> cpuSpecs;
 
-    UPROPERTY(BlueprintReadWrite, Category = "GPU Specs")
-    TArray<FgpuSpecs> gpuSpecs;
+    UPROPERTY(BlueprintReadWrite, Category = "CPU Usage")
+    TArray<FCPUUsage> CPUPoints;
 
     UPROPERTY(BlueprintReadWrite, Category = "Moment")
     TArray<Fmoment> Moments;

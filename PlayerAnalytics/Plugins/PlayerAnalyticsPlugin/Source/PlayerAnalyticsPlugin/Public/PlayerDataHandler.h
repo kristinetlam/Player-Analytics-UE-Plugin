@@ -37,10 +37,10 @@ public:
     void AddScreenVisit(FString screenName, float duration);
     
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddCPUSpecs(FString cpuName, FString cpuBrand, int32 cpuCores);
+    void AddMemory();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
-    void AddGPUSpecs(FString gpuName);
+    void AddCPUUsage();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddMoment(FString gameVersion, FVector position, FString CPU, FString RAM);
