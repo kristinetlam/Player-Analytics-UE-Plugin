@@ -303,13 +303,13 @@ function DashboardLayoutBasic() {
       },
       centerContent: false,
     },
-    {
-      title: "Player Location",
-      description: "Visualizes player movement density across the game map",
-      component: <ApexChart filter={filter} />,
-      sx: { width: '65%' },
-      centerContent: false,
-    },
+    // {
+    //   title: "Player Location",
+    //   description: "Visualizes player movement density across the game map",
+    //   component: <Heatmap filter={filter} />,
+    //   sx: { width: '65%' },
+    //   centerContent: false,
+    // },
     {
       title: "Player Session Length",
       description: "Illustrates player session lengths grouped by game version patches",
