@@ -30,6 +30,7 @@ ram_local = db_local.ram
 cpu_local = db_local.cpu
 sessions_local = db_local.sessions
 computer_specs_local = db_local.computer_specs
+moments_local = db_local.moments
 
 def verify_token():
     """Checks if the request has a valid token."""
@@ -104,6 +105,15 @@ def add_data():
         # Insert Computer Specifications
         if "Computer Specifications" in data:
             computer_specs_local.insert_many(data["Computer Specifications"])
+            
+        # Insert Moments
+        if "moments" in data:
+            try:
+                moments_local.insert_many(data["moments"])
+                print("Inserted Moments successfully.")
+            except Exception as e:
+                print("Error inserting Moments:", str(e))
+
 
         return jsonify({"message": "Data added successfully"}), 201
 
@@ -283,6 +293,76 @@ def get_session_data():
         print("Error fetching session data:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
+@app.route("/get-cpu-data", methods=["GET"])
+def get_cpu_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        query = {}
+
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("CPU query:", query)  # Debug line
+        cpu_docs = list(cpu_local.find(query, {"_id": 0}))
+
+        return jsonify({"CPU": cpu_docs}), 200
+
+    except Exception as e:
+        print("Error fetching CPU Usage:", str(e))
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-ram-data", methods=["GET"])
+def get_ram_data():
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        query = {}
+
+        player_id = request.args.get("player_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+
+        if player_id:
+            query["PlayerID"] = player_id
+
+        if game_version:
+            query["Game Version"] = game_version
+
+        if start_time and end_time:
+            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        print("ram query:", query)  # Debug line
+        ram_docs = list(ram_local.find(query, {"_id": 0}))
+
+        return jsonify({"ram": ram_docs}), 200
+
+    except Exception as e:
+        print("Error fetching RAM Usage:", str(e))
+        return jsonify({"error": str(e)}), 500
     
 @app.route("/get-computer-specs-raw", methods=["GET"])
 def get_computer_specs_raw():
@@ -307,13 +387,17 @@ def get_interaction_data_by_player(player_id):
         avg_fps = list(avg_fps_local.find({"PlayerID": player_id}, {"_id": 0}))
         sessions = list(sessions_local.find({"PlayerID": player_id}, {"_id": 0}))
         specs = list(computer_specs_local.find({"PlayerID": player_id}, {"_id": 0}))
+        ram = list(ram_local.find({"PlayerID": player_id}, {"_id": 0}))
+        cpu = list(cpu_local.find({"PlayerID": player_id}, {"_id": 0}))
         
         return jsonify({
             "Interactions": interactions, 
             "Positions": positions,
             "AVG FPS": avg_fps,
             "Sessions": sessions,
-            "Computer Specifications": specs
+            "Computer Specifications": specs,
+            "Ram Usage": ram,
+            "CPU Usage": cpu
         }), 200
 
     except Exception as e:
@@ -461,6 +545,86 @@ def get_computer_specs():
         return jsonify({"GPUBrands": gpu_brands, "GPUNames": gpu_names}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+from pymongo import ASCENDING, DESCENDING
+
+@app.route("/get-moment-data", methods=["GET"])
+def get_moment_data():
+    """
+    Endpoint: /get-moment-data
+    Method: GET
+
+    Description:
+    Returns filtered 'moment' data entries from the MongoDB 'moments' collection based on optional query parameters.
+
+    Query Parameters:
+    - player_id:      Filter by a specific PlayerID
+    - session_id:     Filter by a specific SessionID
+    - game_version:   Filter by a specific game version
+    - start_time:     Inclusive start date in YYYY-MM-DD (used for Timestamp filtering)
+    - end_time:       Inclusive end date in YYYY-MM-DD (used for Timestamp filtering)
+    - fields:         Multiple fields to include in projection (e.g., fields=Position&fields=FPS)
+    - sort_by:        Field name to sort by (e.g., Timestamp, FPS)
+    - sort_order:     Either 'asc' (default) or 'desc' for sort direction
+
+    Returns:
+    - JSON array of matched documents under the "Moments" key, with optional projections and sorting applied.
+    """
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        query = {}
+        projection = {"_id": 0}
+
+        # Filters
+        player_id = request.args.get("player_id")
+        session_id = request.args.get("session_id")
+        game_version = request.args.get("game_version")
+        start_time = request.args.get("start_time")
+        end_time = request.args.get("end_time")
+        fields = request.args.getlist("fields")
+
+        # Sorting
+        sort_by = request.args.get("sort_by")  # e.g., "Timestamp"
+        sort_order = request.args.get("sort_order", "asc").lower()  # "asc" or "desc"
+        sort_direction = ASCENDING if sort_order == "asc" else DESCENDING
+
+        if player_id:
+            query["PlayerID"] = player_id
+        if session_id:
+            query["SessionID"] = session_id
+        if game_version:
+            query["GameVersion"] = game_version
+        if start_time and end_time:
+            query["Timestamp"] = {
+                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
+                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+            }
+
+        if fields:
+            for field in fields:
+                projection[field] = 1
+            projection["Timestamp"] = 1  # Always include timestamp with field-based queries
+
+        print("[DEBUG] Moment Query:", json.dumps(query, indent=2))
+        print("[DEBUG] Projection:", projection)
+        print("[DEBUG] Sorting:", sort_by, sort_order)
+
+        cursor = db_local.moments.find(query, projection)
+
+        if sort_by:
+            cursor = cursor.sort(sort_by, sort_direction)
+
+        moments = list(cursor)
+        return jsonify({"Moments": moments}), 200
+
+    except Exception as e:
+        print("[ERROR] Failed to fetch moment data:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

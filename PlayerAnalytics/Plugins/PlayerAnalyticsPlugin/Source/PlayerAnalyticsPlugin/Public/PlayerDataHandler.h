@@ -31,13 +31,23 @@ public:
     void AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType);
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddUiInteraction(FString elementName, FString actionType);
+
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddScreenVisit(FString screenName, float duration);
+    
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddMemory();
 
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddCPUUsage();
 
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void AddMoment(FVector position, FString CPU, FString RAM, FString FPS);
+
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;
+
 protected:
 private:
 };
