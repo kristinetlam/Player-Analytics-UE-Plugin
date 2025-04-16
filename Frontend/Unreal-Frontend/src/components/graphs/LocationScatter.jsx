@@ -3,7 +3,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 
 const PlayerLocation = () => {
-  const [data, setData] = useState([]);
+  const [seriesData, setSeriesData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,15 +18,30 @@ const PlayerLocation = () => {
 
         const data = await response.json();
         console.log('Fetched data:', data);
-
-        console.log("Example position object:", data.Positions[0]);
         
         if (data.Positions) {
-          const mappedData = data.Positions.map(pos => ({
-            x: pos.Position[0],
-            y: pos.Position[1],
+          const grouped = {};
+
+          data.Positions.forEach((pos) => {
+            const { PlayerID, Position, Timestamp } = pos;
+            if (!grouped[PlayerID]) grouped[PlayerID] = [];
+
+            grouped[PlayerID].push({
+              x: Position[0],
+              y: Position[1],
+              timestamp: Timestamp,
+            });
+          });
+
+          const mappedSeries = Object.entries(grouped).map(([playerId, points]) => ({
+            label: `Player ${playerId.slice(0, 4)}...`, // short label
+            data: points
+              .sort((a, b) => new Date(a.timestamp.replaceAll('.', '-')) - new Date(b.timestamp.replaceAll('.', '-')))
+              .map(({ x, y }) => ({ x, y })),
+            showLine: true,
           }));
-          setData(mappedData);
+
+          setSeriesData(mappedSeries);
         } else {
           console.warn("No position data received");
         }
@@ -38,10 +53,10 @@ const PlayerLocation = () => {
     fetchData();
   }, []);
 
-  if (data === null) {
+  if (seriesData === null) {
     return <Typography>Loading...</Typography>; // Show loading text while fetching
   }
-  if (data.length === 0) {
+  if (seriesData.length === 0) {
     return <Typography>No player data available.</Typography>;
   }
 
@@ -49,9 +64,10 @@ const PlayerLocation = () => {
     <ScatterChart
       xAxis={[{ label: 'X Axis' }]}
       yAxis={[{ label: 'Y Axis' }]}
-      series={[{ data }]}
+      series={ seriesData }
       width={600}
       height={500}
+      legend={{ hidden: true }}
     />
   );
 }
