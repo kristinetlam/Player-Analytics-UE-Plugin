@@ -270,7 +270,6 @@ public:
     UPROPERTY(BlueprintReadWrite, Category = "UI_UX")
     TArray<FuiScreenVisitData> screenVisits;
 
-
     UPROPERTY(BlueprintReadWrite, Category = "CPU Usage")
     TArray<FCPUUsage> CPUPoints;
 
@@ -283,11 +282,12 @@ public:
     FString playerID;
     FString sessionID;
     FGPUDriverInfo GPUInfo;
+    
 
     // Basic Game Data
     FString gameTitle = "Default Game Title";
     FString gameVersion = "0.0.0";
-
+    int playerHealth = 100;
 
     // UFUNCTION(BlueprintCallable, Category = "PlayerData")
     //static void AddInteraction(UPlayerData* NewInteraction);
