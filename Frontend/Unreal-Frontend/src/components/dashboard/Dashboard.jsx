@@ -39,6 +39,7 @@ import FPSLineChart from '../graphs/AverageFPSOverTime';
 import ApexChart from '../graphs/Heatmap';
 import SessionLineChart from '../graphs/PlayerSessionLineGraph';
 import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
+import LocationScatterplot from '../graphs/LocationScatter';
 
 const NAVIGATION = [
   {
@@ -216,6 +217,7 @@ function DashboardLayoutBasic() {
             <CardComponent title="FPS Performance Scatterplot" description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
             <CardComponent title="Average FPS Timeline" description="Player FPS averages grouped by day over time" centerContent><FPSLineChart filter={filter} /></CardComponent>
             <CardComponent title="Player Location" description="Visualizes player movement density across the game map" sx={{ width: '65%'}} centerContent={false}><ApexChart filter={filter} /></CardComponent>
+            <CardComponent title="Player Location" description="Visualizes player location across the game map" sx={{ width: '65%'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
             <CardComponent title="Player Session Length" description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
             <CardComponent title="Average Return Time" description="Measures return rates based on last login timestamps" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
           </Box>

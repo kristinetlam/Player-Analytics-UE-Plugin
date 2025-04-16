@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
-//import { motion } from 'framer-motion';
-
 
 const PlayerLocation = () => {
-  const [locData, setLocData] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchLocData = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch('http://50.30.211.229:5000/get-position-data', {
           method: 'GET',
@@ -18,62 +16,44 @@ const PlayerLocation = () => {
           },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch player location data');
-        }
-
         const data = await response.json();
+        console.log('Fetched data:', data);
 
-        // Group by ID
-        const grouped = {};
-        data.Positions.forEach(pos => {
-          if (!grouped[pos.PlayerID]) {
-            grouped[pos.PlayerID] = [];
-          }
-          grouped[pos.PlayerID].push({
-            x: pos.x,
-            y: pos.y,
-            time: pos.Timestamp
-          });
-        });
-
-        // Convert to series array
-        const series = Object.entries(grouped).map(([id, points]) => ({
-          label: `Player ${id}`,
-          data: points.sort((a, b) => new Date(a.time) - new Date(b.time)),
-          showMarkLine: true
-        }));
-
-        setLocData(series); // Set the location data
+        console.log("Example position object:", data.Positions[0]);
+        
+        if (data.Positions) {
+          const mappedData = data.Positions.map(pos => ({
+            x: pos.Position[0],
+            y: pos.Position[1],
+          }));
+          setData(mappedData);
+        } else {
+          console.warn("No position data received");
+        }
       } catch (error) {
-        console.error('Error fetching player location data:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchLocData();
+    fetchData();
   }, []);
 
-  if (locData === null) {
+  if (data === null) {
     return <Typography>Loading...</Typography>; // Show loading text while fetching
+  }
+  if (data.length === 0) {
+    return <Typography>No player data available.</Typography>;
   }
 
   return (
-    /*<motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >*/
-      <ScatterChart
-        width={600}
-        height={300}
-        series={locData}
-        xAxis={[{ label: 'X Position'}]}
-        yAxis={[{ label: 'Y Position'}]}
-        grid={{ vertical: true, horizontal: true }}
-        legend={{ hidden: true }}
-      />
-    /*</motion.div>*/
+    <ScatterChart
+      xAxis={[{ label: 'X Axis' }]}
+      yAxis={[{ label: 'Y Axis' }]}
+      series={[{ data }]}
+      width={600}
+      height={500}
+    />
   );
-};
+}
 
 export default PlayerLocation;
