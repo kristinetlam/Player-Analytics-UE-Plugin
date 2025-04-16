@@ -98,6 +98,24 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     playerData->Sessions.Add(session);
 }
 
+void  UPlayerDataHandler::AddUiInteraction(FString elementName, FString actionType) {
+    FuiInteractionData interaction;
+    interaction.PlayerID = playerData->playerID;
+    interaction.SessionID = playerData->sessionID;
+    interaction.UIElementName = elementName;
+    interaction.ActionType = actionType;
+    playerData->uiInteractions.Add(interaction);
+}
+
+void  UPlayerDataHandler::AddScreenVisit(FString screenName, float duration) {
+    FuiScreenVisitData visit;
+    visit.PlayerID = playerData->playerID;
+    visit.SessionID = playerData->sessionID;
+    visit.ScreenName = screenName;
+    visit.Duration = duration;
+    playerData->screenVisits.Add(visit);
+}
+
 /// <summary>
 /// Adds a RAM usage data point to the playerData object
 /// </summary>
@@ -124,6 +142,19 @@ void UPlayerDataHandler::AddCPUUsage() {
     CPUData.CPUUsed = FPlatformTime::GetCPUTime().CPUTimePct;
     CPUData.Timestamp = FDateTime::Now().ToString();
     playerData->CPUPoints.Add(CPUData);
+}
+
+void UPlayerDataHandler::AddMoment(FVector position, FString CPU, FString RAM, FString FPS) {
+    Fmoment moment;
+    moment.PlayerID = playerData->playerID;
+    moment.Position = position;
+    moment.GameVersion = playerData->gameVersion;
+    moment.CPU = CPU;
+    moment.RAM = RAM;
+    moment.SessionID = playerData->sessionID;
+    moment.TimeStamp = FDateTime::Now().ToString();
+    moment.FPS = FPS;
+    playerData->Moments.Add(moment);
 }
 
 /// <summary>
