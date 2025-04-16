@@ -36,9 +36,9 @@ import BasicPie from '../graphs/PieChart';
 import PlayerSessionStats from '../graphs/SessionTable';
 import FPSOverTime from '../graphs/FPSPlayerScatter';
 import FPSLineChart from '../graphs/AverageFPSOverTime';
-import ApexChart from '../graphs/Heatmap';
 import SessionLineChart from '../graphs/PlayerSessionLineGraph';
 import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
+import Heatmap from '../graphs/Heatmap';
 
 const NAVIGATION = [
   {
@@ -291,6 +291,17 @@ function DashboardLayoutBasic() {
       description: "Player FPS averages grouped by day over time",
       component: <FPSLineChart filter={filter} />,
       centerContent: true,
+    },
+    {
+      title: "Computer Usage Heatmap",
+      description:"Visualizes average RAM/CPU usage across the game map",
+      component: <Heatmap filter={filter} />,
+      sx:{
+        flex: '1 1 600px', 
+        maxWidth: '700px', 
+        minWidth: '400px', minHeight: '380px'
+      },
+      centerContent: false,
     },
     {
       title: "Player Location",
