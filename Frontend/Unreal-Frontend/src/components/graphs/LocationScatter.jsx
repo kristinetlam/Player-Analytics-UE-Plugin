@@ -18,32 +18,28 @@ const PlayerLocation = () => {
 
         const data = await response.json();
         console.log('Fetched data:', data);
-        
+
         if (data.Positions) {
           const grouped = {};
 
-          data.Positions.forEach((pos) => {
-            const { PlayerID, Position, Timestamp } = pos;
+          data.Positions.forEach(({ PlayerID, Position }) => {
             if (!grouped[PlayerID]) grouped[PlayerID] = [];
 
             grouped[PlayerID].push({
               x: Position[0],
               y: Position[1],
-              timestamp: Timestamp,
             });
           });
 
           const mappedSeries = Object.entries(grouped).map(([playerId, points]) => ({
-            label: `Player ${playerId.slice(0, 4)}...`, // short label
-            data: points
-              .sort((a, b) => new Date(a.timestamp.replaceAll('.', '-')) - new Date(b.timestamp.replaceAll('.', '-')))
-              .map(({ x, y }) => ({ x, y })),
-            showLine: true,
+            id: playerId, // required by MUI to distinguish series
+            label: `Player ${playerId.slice(0, 4)}...`,
+            data: points,
           }));
 
           setSeriesData(mappedSeries);
         } else {
-          console.warn("No position data received");
+          console.warn('No position data received');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -53,9 +49,6 @@ const PlayerLocation = () => {
     fetchData();
   }, []);
 
-  if (seriesData === null) {
-    return <Typography>Loading...</Typography>; // Show loading text while fetching
-  }
   if (seriesData.length === 0) {
     return <Typography>No player data available.</Typography>;
   }
@@ -64,12 +57,13 @@ const PlayerLocation = () => {
     <ScatterChart
       xAxis={[{ label: 'X Axis' }]}
       yAxis={[{ label: 'Y Axis' }]}
-      series={ seriesData }
+      series={seriesData}
       width={600}
       height={500}
       legend={{ hidden: true }}
     />
   );
-}
+};
 
 export default PlayerLocation;
+

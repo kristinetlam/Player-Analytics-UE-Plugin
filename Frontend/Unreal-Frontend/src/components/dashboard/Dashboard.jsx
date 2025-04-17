@@ -42,6 +42,7 @@ import LocationScatterplot from '../graphs/LocationScatter';
 import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
 
+
 const NAVIGATION = [
   {
     kind: 'header',
@@ -221,7 +222,7 @@ function DashboardLayoutBasic() {
             <CardComponent title="Average Return Time" infoContent="sadsd" description="Measures return rates based on last login timestamps" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
             <CardComponent title="Computer Usage Heatmap" description="Visualizes average RAM/CPU usage across the game map"  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
             <CardComponent title="Player Location" description="Visualizes player location across the game map" sx={{ width: '65%'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
-            <CardComponent title="Player Traversal" description="Visualizes player traversal across the game map" sx={{ width: '65%'}} centerContent={true}><LocationLine filter={filter} /></CardComponent>
+            <CardComponent title="Player Traversal" description="Visualizes player traversal across the game map" sx={{ width: '65%'}} centerContent={true}><LocationLine/></CardComponent>
           </Box>
         </DashboardContent>
       </DashboardLayout>

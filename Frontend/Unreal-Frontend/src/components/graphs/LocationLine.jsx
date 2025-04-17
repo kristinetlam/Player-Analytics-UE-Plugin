@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { Typography } from '@mui/material';
 
-const PlayerPathLineChart = () => {
+const LocationLine = () => {
   const [seriesData, setSeriesData] = useState([]);
 
   useEffect(() => {
@@ -17,40 +17,55 @@ const PlayerPathLineChart = () => {
         });
 
         const data = await response.json();
+        console.log('Fetched data:', data);
+
         if (data.Positions) {
           const grouped = {};
 
+          // Group the positions by PlayerID
           data.Positions.forEach((pos) => {
             const { PlayerID, Position, Timestamp } = pos;
             if (!grouped[PlayerID]) grouped[PlayerID] = [];
 
             grouped[PlayerID].push({
-              x: Position[0],
-              y: Position[1],
+              x: Position[0], // X-coordinate
+              y: Position[1], // Y-coordinate
               timestamp: Timestamp,
             });
           });
 
-          // Choose one player (for now) or loop through all later
-          const playerId = Object.keys(grouped)[0]; // Just first player
-          const sortedPoints = grouped[playerId].sort(
-            (a, b) => new Date(a.timestamp.replaceAll('.', '-')) - new Date(b.timestamp.replaceAll('.', '-'))
-          );
+          // Create the line segments for each player
+          const allSegments = [];
+          Object.entries(grouped).forEach(([playerId, points]) => {
+            const sortedPoints = points
+              .sort((a, b) => new Date(a.timestamp.replaceAll('.', '-')) - new Date(b.timestamp.replaceAll('.', '-')))
+              .map(({ x, y }) => ({ x, y }));
 
-          const segments = [];
-          for (let i = 0; i < sortedPoints.length - 1; i++) {
-            segments.push({
-              data: [
-                { x: sortedPoints[i].x, y: sortedPoints[i].y },
-                { x: sortedPoints[i + 1].x, y: sortedPoints[i + 1].y },
-              ],
-              showMark: false,
-              color: '#007bff', // Optional per-player color
-              label: `Segment ${i}`,
-            });
-          }
+            // Ensure unique X values by adjusting any duplicates slightly
+            for (let i = 0; i < sortedPoints.length - 1; i++) {
+              let x1 = sortedPoints[i].x;
+              let y1 = sortedPoints[i].y;
+              let x2 = sortedPoints[i + 1].x;
+              let y2 = sortedPoints[i + 1].y;
 
-          setSeriesData(segments);
+              // If consecutive X values are equal, nudge the second point slightly
+              if (x1 === x2) {
+                x2 += 0.0001; // Adjust by a small value
+              }
+
+              const segment = {
+                id: `${playerId}-${i}`, // Unique key per segment
+                label: `Player ${playerId.slice(0, 4)}...`,
+                data: [
+                  { x: x1, y: y1 },
+                  { x: x2, y: y2 },
+                ],
+              };
+              allSegments.push(segment);
+            }
+          });
+
+          setSeriesData(allSegments);
         } else {
           console.warn('No position data received');
         }
@@ -68,8 +83,8 @@ const PlayerPathLineChart = () => {
 
   return (
     <LineChart
-      xAxis={[{ label: 'X Axis', type: 'linear' }]}
-      yAxis={[{ label: 'Y Axis', type: 'linear' }]}
+      xAxis={[{ label: 'X Axis' }]}
+      yAxis={[{ label: 'Y Axis' }]}
       series={seriesData}
       width={600}
       height={500}
@@ -78,4 +93,4 @@ const PlayerPathLineChart = () => {
   );
 };
 
-export default PlayerPathLineChart;
+export default LocationLine;
