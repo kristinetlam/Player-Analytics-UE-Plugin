@@ -153,19 +153,32 @@ def get_interaction_data():
 
     try:
         query = {}
+
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
+
+
         if game_version:
             query["Game Version"] = game_version
+
         if start_time and end_time:
+            start_key = start_time.replace('-', '.').strip()
+            end_key = end_time.replace('-', '.').strip()
+
             query["Timestamp"] = {
-                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
-                "$lte": f"{end_time.replace('-', '.')}-23.59.59"
+                "$gte": f"{start_key}-00.00.00",
+                "$lte": f"{end_key}-23.59.59",
             }
 
         print("Interaction Query:", query)
@@ -186,21 +199,30 @@ def get_position_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
+
 
         if game_version:
             query["Game Version"] = game_version
 
         if start_time and end_time:
-            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            start_key = start_time.replace('-', '.').strip()
+            end_key = end_time.replace('-', '.').strip()
+
             query["Timestamp"] = {
-                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
-                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+                "$gte": f"{start_key}-00.00.00",
+                "$lte": f"{end_key}-23.59.59",
             }
 
         print("Avg FPS query:", query)  # Debug line
@@ -220,18 +242,23 @@ def get_avg_fps_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
 
         if game_version:
             query["Game Version"] = game_version
 
         if start_time and end_time:
-            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
             query["Timestamp"] = {
                 "$gte": f"{start_time.replace('-', '.')}-00.00.00",
                 "$lte": f"{end_time.replace('-', '.')}-23.59.59",
@@ -255,21 +282,20 @@ def get_session_data():
     try:
         query = {}
 
-        # Log all query parameters for debugging
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        print("Received parameters:", {
-            "player_id": player_id,
-            "game_version": game_version,
-            "start_time": start_time,
-            "end_time": end_time,
-        })
-
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
+
 
         if game_version:
             query["Game Version"] = game_version
@@ -303,13 +329,19 @@ def get_cpu_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
-
+        
         if game_version:
             query["Game Version"] = game_version
 
@@ -338,15 +370,18 @@ def get_ram_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
-
-        if game_version:
-            query["Game Version"] = game_version
 
         if start_time and end_time:
             # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
@@ -373,107 +408,6 @@ def get_computer_specs_raw():
         specs = list(computer_specs_local.find({}, {"_id": 0}))
         return jsonify({"Computer Specifications": specs}), 200
     
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-@app.route("/get-data/player/<player_id>", methods=["GET"])
-def get_interaction_data_by_player(player_id):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        positions = list(positions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"PlayerID": player_id}, {"_id": 0}))
-        sessions = list(sessions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"PlayerID": player_id}, {"_id": 0}))
-        ram = list(ram_local.find({"PlayerID": player_id}, {"_id": 0}))
-        cpu = list(cpu_local.find({"PlayerID": player_id}, {"_id": 0}))
-        
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs,
-            "Ram Usage": ram,
-            "CPU Usage": cpu
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/get-data/session-version/<session_id>", methods=["GET"])
-def get_session_data_by_session(session_id):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"SessionID": session_id}, {"_id": 0}))
-        positions = list(positions_local.find({"SessionID": session_id}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"SessionID": session_id}, {"_id": 0}))
-        sessions = list(sessions_local.find({"SessionID": session_id}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"SessionID": session_id}, {"_id": 0}))
-        
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/get-data/game-version/<game_version>", methods=["GET"])
-def get_session_data_by_game_version(game_version):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"Game Version": game_version}, {"_id": 0}))
-        positions = list(positions_local.find({"Game Version": game_version}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"Game Version": game_version}, {"_id": 0}))
-        sessions = list(sessions_local.find({"Game Version": game_version}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"Game Version": game_version}, {"_id": 0}))
-
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-@app.route("/get-data/timeframe", methods=["GET"])
-def get_data_by_timeframe():
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        start_time = request.args.get("start_time")
-        end_time = request.args.get("end_time")
-
-        query = {"Timestamp": {"$gte": start_time, "$lte": end_time}}
-
-        interactions = list(interactions_local.find(query, {"_id": 0}))
-        positions = list(positions_local.find(query, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find(query, {"_id": 0}))
-        sessions = list(sessions_local.find(query, {"_id": 0}))
-        specs = list(computer_specs_local.find(query, {"_id": 0}))
-
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -510,28 +444,42 @@ def get_game_versions():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/get-gpu-player-groups", methods=["GET"])
-def get_gpu_player_groups():
+@app.route("/get-gpu-groups", methods=["GET"])
+def get_gpu_groups():
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Group by GPUName and count distinct PlayerIDs
+        # Group by GPUName and collect associated PlayerIDs
         pipeline = [
             {"$group": {
                 "_id": "$GPUName",
-                "players": {"$addToSet": "$PlayerID"}
+                "playerIds": {"$addToSet": "$PlayerID"},
+                "count": {"$sum": 1}
             }},
             {"$project": {
-                "name": "$_id",
-                "playerCount": {"$size": "$players"},
+                "gpuName": "$_id",
+                "playerIds": 1,
+                "count": 1,
                 "_id": 0
-            }}
+            }},
+            {"$sort": {"count": -1}}  # Sort by popularity
         ]
+        
         result = list(computer_specs_local.aggregate(pipeline))
-        return jsonify({"GPUPlayerGroups": result}), 200
+        return jsonify({"GPUGroups": result}), 200
     except Exception as e:
+        print("Error fetching GPU groups:", str(e))
         return jsonify({"error": str(e)}), 500
+
+def get_player_ids_by_gpu(gpu_name):
+    """Helper function to get player IDs associated with a specific GPU"""
+    try:
+        players = list(computer_specs_local.find({"GPUName": gpu_name}, {"PlayerID": 1, "_id": 0}))
+        return [p["PlayerID"] for p in players]
+    except Exception as e:
+        print(f"Error getting player IDs for GPU {gpu_name}: {str(e)}")
+        return []
 
 @app.route("/get-computer-specs", methods=["GET"])
 def get_computer_specs():
@@ -575,14 +523,23 @@ def get_moment_data():
 
     try:
         query = {}
-        projection = {"_id": 0}
 
-        # Filters
         player_id = request.args.get("player_id")
-        session_id = request.args.get("session_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
+        session_id = request.args.get("player_id")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
+
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
+            query["PlayerID"] = player_id
+        projection = {"_id": 0}
+
         fields = request.args.getlist("fields")
 
         # Sorting
@@ -590,8 +547,6 @@ def get_moment_data():
         sort_order = request.args.get("sort_order", "asc").lower()  # "asc" or "desc"
         sort_direction = ASCENDING if sort_order == "asc" else DESCENDING
 
-        if player_id:
-            query["PlayerID"] = player_id
         if session_id:
             query["SessionID"] = session_id
         if game_version:

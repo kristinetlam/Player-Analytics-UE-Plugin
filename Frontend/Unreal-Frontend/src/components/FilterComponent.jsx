@@ -17,12 +17,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 
 export default function FilterDrawer({ open, onClose, filter, setFilter }) {
-  const { playerId, patchVersion, startDate, endDate } = filter;
+  const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
   const [playerIds, setPlayerIds] = useState([]);
   const [gameVersions, setGameVersions] = useState([]);
+  const [gpuGroups, setGpuGroups] = useState([]);
 
-  // Fetch player IDs and patch versions from backend
+  // Fetch player IDs, patch versions, and GPU groups from backend
   useEffect(() => {
     const fetchPlayerIds = async () => {
       try {
@@ -51,18 +52,45 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
         console.error('Failed to fetch game versions:', err);
       }
     };
+    
+    const fetchGpuGroups = async () => {
+      try {
+        const res = await fetch('http://50.30.211.229:5000/get-gpu-groups', {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
+          },
+        });
+        const data = await res.json();
+        if (data.GPUGroups) setGpuGroups(data.GPUGroups);
+      } catch (err) {
+        console.error('Failed to fetch GPU groups:', err);
+      }
+    };
 
     fetchPlayerIds();
     fetchGameVersions();
+    fetchGpuGroups();
   }, []);
 
   const handleReset = () => {
     setFilter({
       playerId: '',
       patchVersion: '',
+      gpuGroup: '',
       startDate: null,
       endDate: null,
     });
+  };
+
+  // Handle player ID or GPU group change
+  const handlePlayerChange = (e) => {
+    // Clear GPU group when specific player is selected
+    setFilter({ ...filter, playerId: e.target.value, gpuGroup: '' });
+  };
+
+  const handleGpuChange = (e) => {
+    // Clear player ID when GPU group is selected
+    setFilter({ ...filter, gpuGroup: e.target.value, playerId: '' });
   };
 
   return (
@@ -109,14 +137,34 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           fullWidth
           size="small"
           value={playerId}
-          onChange={(e) => setFilter({ ...filter, playerId: e.target.value })}
+          onChange={handlePlayerChange}
           sx={{ mb: 2 }}
           displayEmpty
+          disabled={!!gpuGroup} // Disable if GPU group is selected
         >
           <MenuItem value="">All Players</MenuItem>
           {playerIds.map((id) => (
             <MenuItem key={id} value={id}>
               {id}
+            </MenuItem>
+          ))}
+        </Select>
+        
+        {/* GPU Group Dropdown */}
+        <Typography variant="body2">GPU Group</Typography>
+        <Select
+          fullWidth
+          size="small"
+          value={gpuGroup}
+          onChange={handleGpuChange}
+          sx={{ mb: 2 }}
+          displayEmpty
+          disabled={!!playerId} // Disable if player ID is selected
+        >
+          <MenuItem value="">All GPUs</MenuItem>
+          {gpuGroups.map((group) => (
+            <MenuItem key={group.gpuName} value={group.gpuName}>
+              {group.gpuName} ({group.count} players)
             </MenuItem>
           ))}
         </Select>

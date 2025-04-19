@@ -8,13 +8,16 @@ const PlayerLocation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://50.30.211.229:5000/get-position-data', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const url = new URL('http://50.30.211.229:5000/get-position-data');
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
+
+        const params = {
+          player_id: playerId,
+          gpu_group: gpuGroup,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
 
         const data = await response.json();
         console.log('Fetched data:', data);

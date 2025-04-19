@@ -11,15 +11,16 @@ const AverageSessionLength = ({ filter }) => {
     const fetchSessionData = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
+          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
-
+        
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
