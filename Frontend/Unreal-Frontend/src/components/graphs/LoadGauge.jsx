@@ -4,7 +4,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import dayjs from 'dayjs';
 
-const GaugeChartComp = ({ filter }) => {
+const LoadGauge = ({ filter }) => {
 
   const [mapType, setMapType] = React.useState('CPU');
   const [gaugeValue, setGauge] = React.useState(0.0);
@@ -130,4 +130,4 @@ const GaugeChartComp = ({ filter }) => {
   );
 };
 
-export default GaugeChartComp;
+export default LoadGauge;
