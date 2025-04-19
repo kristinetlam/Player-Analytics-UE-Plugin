@@ -125,7 +125,7 @@ const AverageSessionPerDayChart = ({ filter }) => {
     <LineChart
       xAxis={[{ data: labels, scaleType: 'point', label: 'Date' }]}
       series={series}
-      width={800}
+      width={650}
       height={400}
     />
   ) : (
