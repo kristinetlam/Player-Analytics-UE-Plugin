@@ -23,34 +23,21 @@ function GaugePointer({ color, strokeWidth = 3 }) {
   return (
     <g>
       <circle cx={cx} cy={cy} r={5} fill={color} />
-      <path
-        d={`M ${cx} ${cy} L ${tx} ${ty}`}
-        stroke={color}
-        strokeWidth={strokeWidth}
-      />
+      <path d={`M ${cx} ${cy} L ${tx} ${ty}`} stroke={color} strokeWidth={strokeWidth} />
     </g>
   );
 }
 
 // Tick marks & labels
 function GaugeTicks({ ticks = [30, 50, 70] }) {
-  const {
-    startAngle,
-    endAngle,
-    minValue,
-    maxValue,
-    outerRadius,
-    cx,
-    cy,
-  } = useGaugeState();
+  const { startAngle, endAngle, minValue, maxValue, outerRadius, cx, cy } = useGaugeState();
 
   return (
     <g>
       {ticks.map((tv) => {
         const angleDeg =
           startAngle +
-          ((tv - minValue) / (maxValue - minValue)) *
-            (endAngle - startAngle);
+          ((tv - minValue) / (maxValue - minValue)) * (endAngle - startAngle);
         const rad = (angleDeg * Math.PI) / 180;
         const r1 = outerRadius + 4;
         const r2 = outerRadius + 14;
@@ -63,14 +50,14 @@ function GaugeTicks({ ticks = [30, 50, 70] }) {
 
         return (
           <g key={tv}>
-            <line
-              x1={x1} y1={y1} x2={x2} y2={y2}
-              stroke="#666" strokeWidth={2}
-            />
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#666" strokeWidth={2} />
             <text
-              x={lx} y={ly}
-              fill="#333" fontSize={12}
-              textAnchor="middle" alignmentBaseline="middle"
+              x={lx}
+              y={ly}
+              fill="#333"
+              fontSize={12}
+              textAnchor="middle"
+              alignmentBaseline="middle"
             >
               {tv}
             </text>
@@ -81,18 +68,22 @@ function GaugeTicks({ ticks = [30, 50, 70] }) {
   );
 }
 
-// Main gauge component, fetches backend data
+// Main gauge component, fetches backend data and respects the filter
 export default function GaugeWithTicks({ filter }) {
   const [percentReturn, setPercentReturn] = useState(0);
 
   useEffect(() => {
-    const end = filter?.endDate ? dayjs(filter.endDate) : dayjs();
-    const start = filter?.startDate
-      ? dayjs(filter.startDate)
-      : end.subtract(7, 'day');
+    if (!filter) return;
+
+    const { playerId, patchVersion, startDate, endDate } = filter;
+    const end = endDate ? dayjs(endDate) : dayjs();
+    const start = startDate ? dayjs(startDate) : end.subtract(7, 'day');
 
     async function fetchReturnRate() {
       const url = new URL('http://50.30.211.229:5000/get-session-data');
+      // apply filter params
+      if (playerId)      url.searchParams.append('player_id', playerId);
+      if (patchVersion)  url.searchParams.append('game_version', patchVersion);
       url.searchParams.append('start_time', start.format('YYYY-MM-DD'));
       url.searchParams.append('end_time',   end.format('YYYY-MM-DD'));
 
@@ -103,12 +94,13 @@ export default function GaugeWithTicks({ filter }) {
         if (!res.ok) throw new Error('Fetch failed');
         const { Sessions = [] } = await res.json();
 
+        // count sessions per player
         const counts = Sessions.reduce((acc, s) => {
           acc[s.PlayerID] = (acc[s.PlayerID] || 0) + 1;
           return acc;
         }, {});
-        const totalPlayers   = Object.keys(counts).length;
-        const returningCount = Object.values(counts).filter(c => c > 1).length;
+        const totalPlayers = Object.keys(counts).length;
+        const returningCount = Object.values(counts).filter((c) => c > 1).length;
         setPercentReturn(
           totalPlayers ? Math.round((returningCount / totalPlayers) * 100) : 0
         );
@@ -116,14 +108,15 @@ export default function GaugeWithTicks({ filter }) {
         console.error(err);
       }
     }
+
     fetchReturnRate();
   }, [filter]);
 
+  // threshold‐based fill color
   const fillColor =
     percentReturn > 70  ? '#4caf50' :
     percentReturn >= 40 ? '#ffeb3b' :
                            '#f44336';
-
   const strokeWidth = 12;
 
   return (
@@ -137,14 +130,10 @@ export default function GaugeWithTicks({ filter }) {
         minValue={0}
         maxValue={100}
       >
-        {/* full grey background arc */}
-        <GaugeReferenceArc
-          style={{ stroke: '#eee', strokeWidth }}
-        />
+        {/* grey full background */}
+        <GaugeReferenceArc />
         {/* colored fill up to current percent */}
-        <GaugeValueArc
-          style={{ fill: fillColor }}
-        />
+        <GaugeValueArc style={{ fill: fillColor }} />
         {/* ticks at 30/50/70 */}
         <GaugeTicks ticks={[30, 50, 70]} />
         {/* red pointer */}
