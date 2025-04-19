@@ -259,6 +259,11 @@ const Heatmap = ({ filter }) => {
           data: Array(binSize).fill(0)
         }));
 
+        const validDataPoints = yCategories.slice(0, -1).map((yBin, i) => ({
+          name: yBin.toFixed(2),
+          data: Array(binSize).fill(0)
+        }));
+
         const categories = xCategories.slice(0, -1).map(x => x.toFixed(2));
 
         positionData.forEach(item => {
@@ -268,20 +273,24 @@ const Heatmap = ({ filter }) => {
               for (let j = 1; j < binSize + 1; j++) {
                 if (x < xCategories[j] && x >= xCategories[j - 1]) {
 
-                  let dataPoints = posData[i - 1].data[j - 1];
-                  FPSData[i - 1].data[j - 1] *= dataPoints;
-                  CPUData[i - 1].data[j - 1] *= dataPoints;
-                  RAMData[i - 1].data[j - 1] *= dataPoints;
+                  FPSData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
+                  CPUData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
+                  RAMData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
                   
                   posData[i - 1].data[j - 1]++;
-                  FPSData[i - 1].data[j - 1] += item.FPS;
-                  CPUData[i - 1].data[j - 1] += item.CPU;
-                  RAMData[i - 1].data[j - 1] += item.RAM;
 
-                  let newPoints = posData[i - 1].data[j - 1];
-                  FPSData[i - 1].data[j - 1] /= newPoints;
-                  CPUData[i - 1].data[j - 1] /= newPoints;
-                  RAMData[i - 1].data[j - 1] /= newPoints;
+                  if(item.FPS.length > 0){
+                    validDataPoints[i - 1].data[j - 1]++;
+                    FPSData[i - 1].data[j - 1] += parseFloat(item.FPS);
+                    CPUData[i - 1].data[j - 1] += Math.min(parseFloat(item.CPU),100.0);
+                    RAMData[i - 1].data[j - 1] += parseFloat(item.RAM);
+                  }
+                  
+                  if(validDataPoints[i - 1].data[j - 1] > 0){
+                    FPSData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                    CPUData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                    RAMData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                  }
                 }
               }
             }
@@ -317,7 +326,7 @@ const Heatmap = ({ filter }) => {
               series: CPUData,
               options: {
                 ...prev.options,
-                colors: ['#8FFB00'],
+                colors: ['#3FCB00'],
                 xaxis: { ...prev.options.xaxis, categories }
               }
             }));

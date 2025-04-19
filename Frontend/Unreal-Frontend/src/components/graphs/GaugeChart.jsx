@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import dayjs from 'dayjs';
 
 const GaugeChartComp = ({ filter }) => {
 
@@ -51,20 +52,22 @@ const GaugeChartComp = ({ filter }) => {
         const momentData = result['Moments'];
 
         momentData.forEach(item => {
-          CPUSum += parseFloat(item.CPU);
-          RAMSum += parseFloat(item.RAM);
+          if(item.CPU.length > 0){
+            CPUSum += Math.min(parseFloat(item.CPU),100.0);
+            RAMSum += parseFloat(item.RAM);
+          }
         });
 
         if(mapType === 'CPU'){
-          setGauge(CPUSum/momentData.length);
+          setGauge((CPUSum/momentData.length).toFixed(2));
           setGaugeMax(100);
-          setGaugeText(CPUSum/momentData.length + "%");
+          setGaugeText((CPUSum/momentData.length).toFixed(2) + "%");
         }
           
         else{
-          setGauge(RAMSum/momentData.length);
+          setGauge((RAMSum/momentData.length).toFixed(0));
           setGaugeMax(MAX_RAM);
-          setGaugeText(RAMSum/momentData.length + " MB");
+          setGaugeText((RAMSum/momentData.length).toFixed(0) + " MB");
         }
           
 
@@ -86,7 +89,7 @@ const GaugeChartComp = ({ filter }) => {
 
   return (
     <div>
-      <div style={{ "padding-top": "15px", "padding-bottom": "5px"}}>
+      <div style={{ paddingTop: "15px", paddingBottom: "5px"}}>
       <Gauge
         {...settings}
         value={gaugeValue}
