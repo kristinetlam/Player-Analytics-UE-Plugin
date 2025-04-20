@@ -45,6 +45,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "DataSaving")
     void AddMoment(FVector position, FString CPU, FString RAM, FString FPS);
 
+    UFUNCTION(BlueprintCallable, Category = "DataSaving")
+    void UpdatePlayerHealth(int newHealth);
+
     UPROPERTY(BlueprintReadWrite, Category = "DataSaving")
     UPlayerData* playerData;
 
