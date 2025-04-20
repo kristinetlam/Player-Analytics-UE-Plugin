@@ -228,10 +228,13 @@ function DashboardLayoutBasic() {
                 description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
             <CardComponent title="Average FPS Timeline" infoContent="Displays the average FPS per day aggregated across all player sessions. Useful for spotting trends or fluctuations in frame rate performance."
                 description="Player FPS averages grouped by day over time" sx={{ flex: '1 1 600px', maxWidth: '600px', minWidth: '400px', minHeight: '330px', maxHeight: '500px' }} centerContent><FPSLineChart filter={filter} /></CardComponent>
-            <CardComponent title="Player Session Length" infoContent="sadsd" description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
-            <CardComponent title="Average Return Time" infoContent="sadsd" description="Measures return rates based on last login timestamps" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
-            <CardComponent title="Computer Usage Heatmap" description="Visualizes average RAM/CPU usage across the game map"  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
-            <CardComponent title="Player Location" description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
+            <CardComponent title="Player Session Length" infoContent="Displays average session lengths over time, segmented by game version. Each line represents a different patch version and shows how long players stayed in-game on each day. This helps identify trends or anomalies related to specific updates."
+                description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
+            <CardComponent title="Average Return Time" infoContent="Shows the average amount of time players take to return between each session, identifying player re-engagement speed or gaps in activity across consecutive logins."
+               description="Measures the average time between sessions" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
+            <CardComponent title="Computer Usage Heatmap" infoContent="TBD" description="Visualizes average RAM/CPU usage across the game map"  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
+            <CardComponent title="Player Location" infoContent="Plots the X and Y coordinates of player positions during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
+                description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
           </Box>
         </DashboardContent>
       </DashboardLayout>
