@@ -183,7 +183,7 @@ function ToolbarActions({ setOpenFilter }) {
 function DashboardLayoutBasic() {
   const router = useDemoRouter('/dashboard');
   const [openFilter, setOpenFilter] = useState(false);
-  const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
+  const [filter, setFilter] = useState({ playerId: '', patchVersion: '', gpuGroup: '', startDate: null, endDate: null });
 
   return (
     <AppProvider 
