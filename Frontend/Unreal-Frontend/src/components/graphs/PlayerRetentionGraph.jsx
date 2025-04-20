@@ -104,7 +104,10 @@ const PlayerRetentionGraph = ({ filter }) => {
 
   return (
     <div style={{ width: '100%' }}>
-      <Line data={retentionData} />
+      <Line 
+        data={retentionData} 
+        legend={{ hidden: true }}
+      />
     </div>
   );
 };
