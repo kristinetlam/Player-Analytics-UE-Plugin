@@ -32,7 +32,7 @@ const PlayerLocation = () => {
           });
 
           const mappedSeries = Object.entries(grouped).map(([playerId, points]) => ({
-            id: playerId, // required by MUI to distinguish series
+            id: playerId, 
             label: `Player ${playerId.slice(0, 4)}...`,
             data: points,
           }));
