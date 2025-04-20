@@ -87,23 +87,22 @@ export default function AverageSessionsGauge({ filter }) {
     avgSessions >= 1 ? '#ffeb3b' :
                        '#f44336';
 
-  // Gauge max: at least 3, or one above the ceiling
-  const maxValue = Math.max(3, Math.ceil(avgSessions) + 1);
+  const maxValue = 60;
   const strokeWidth = 12;
 
   return (
 <WhiteTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
-<GaugeContainer
-        width={200}
-        height={200}
-        startAngle={-110}
-        endAngle={110}
-        value={avgSessions}
-        minValue={0}
-        maxValue={maxValue}
-      >
+    <GaugeContainer
+      width={200}
+      height={200}
+      startAngle={-110}
+      endAngle={110}
+      value={avgSessions}
+      minValue={0}
+      valueMax={50}
+    >
         {/* grey background track */}
-        <GaugeReferenceArc />
+        <GaugeReferenceArc/>
         {/* colored fill up to avgSessions */}
         <GaugeValueArc style={{ fill: fillColor }} />
         {/* red pointer */}
