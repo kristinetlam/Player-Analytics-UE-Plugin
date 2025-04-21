@@ -7,12 +7,13 @@ import {
   numberInputClasses,
 } from '@mui/base/Unstable_NumberInput';
 import { styled } from '@mui/system';
+import dayjs from 'dayjs';
 
 
 const Heatmap = ({ filter }) => {
 
   const [binSize, setBin] = React.useState(20);
-  const [mapType, setMapType] = React.useState('RAM');
+  const [mapType, setMapType] = React.useState('Position');
 
   const handleMapType = (event, newMapType) => {
     setMapType(newMapType);
@@ -186,8 +187,8 @@ const Heatmap = ({ filter }) => {
 
     const fetchPositionData = async () => {
       try {
-        const url = new URL('http://50.30.211.229:5000/get-position-data');
-        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
+        const url = new URL('http://50.30.211.229:5000/get-moment-data');
+        const { playerId, patchVersion, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
@@ -215,7 +216,7 @@ const Heatmap = ({ filter }) => {
 
         console.log(result);
 
-        const positionData = result['Positions'];
+        const positionData = result['Moments'];
 
         let minX = Infinity, maxX = -Infinity;
         let minY = Infinity, maxY = -Infinity;
@@ -239,7 +240,27 @@ const Heatmap = ({ filter }) => {
         const xCategories = createIntervals(minX, maxX, binSize);
         const yCategories = createIntervals(minY, maxY, binSize);
 
-        const data = yCategories.slice(0, -1).map((yBin, i) => ({
+        const posData = yCategories.slice(0, -1).map((yBin, i) => ({
+          name: yBin.toFixed(2),
+          data: Array(binSize).fill(0)
+        }));
+
+        const FPSData = yCategories.slice(0, -1).map((yBin, i) => ({
+          name: yBin.toFixed(2),
+          data: Array(binSize).fill(0)
+        }));
+
+        const CPUData = yCategories.slice(0, -1).map((yBin, i) => ({
+          name: yBin.toFixed(2),
+          data: Array(binSize).fill(0)
+        }));
+
+        const RAMData = yCategories.slice(0, -1).map((yBin, i) => ({
+          name: yBin.toFixed(2),
+          data: Array(binSize).fill(0)
+        }));
+
+        const validDataPoints = yCategories.slice(0, -1).map((yBin, i) => ({
           name: yBin.toFixed(2),
           data: Array(binSize).fill(0)
         }));
@@ -252,24 +273,88 @@ const Heatmap = ({ filter }) => {
             if (y < yCategories[i] && y >= yCategories[i - 1]) {
               for (let j = 1; j < binSize + 1; j++) {
                 if (x < xCategories[j] && x >= xCategories[j - 1]) {
-                  data[i - 1].data[j - 1]++;
+
+                  FPSData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
+                  CPUData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
+                  RAMData[i - 1].data[j - 1] *= validDataPoints[i - 1].data[j - 1];
+                  
+                  posData[i - 1].data[j - 1]++;
+
+                  if(item.FPS.length > 0){
+                    validDataPoints[i - 1].data[j - 1]++;
+                    FPSData[i - 1].data[j - 1] += parseFloat(item.FPS);
+                    CPUData[i - 1].data[j - 1] += Math.min(parseFloat(item.CPU),100.0);
+                    RAMData[i - 1].data[j - 1] += parseFloat(item.RAM);
+                  }
+                  
+                  if(validDataPoints[i - 1].data[j - 1] > 0){
+                    FPSData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                    CPUData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                    RAMData[i - 1].data[j - 1] /= validDataPoints[i - 1].data[j - 1];
+                  }
                 }
               }
             }
           }
         });
 
-        setState(prev => ({
-          ...prev,
-          series: data,
-          options: {
-            ...prev.options,
-            xaxis: { ...prev.options.xaxis, categories }
-          }
-        }));
+        switch (mapType) {
+          case 'Position':
+            setState(prev => ({
+              ...prev,
+              series: posData,
+              options: {
+                ...prev.options,
+                colors: ['#008FFB'],
+                xaxis: { ...prev.options.xaxis, categories }
+              }
+            }));
+            break;
+          case 'FPS':
+            setState(prev => ({
+              ...prev,
+              series: FPSData,
+              options: {
+                ...prev.options,
+                colors: ['#FB8F00'],
+                xaxis: { ...prev.options.xaxis, categories }
+              }
+            }));
+            break;
+          case 'CPU':
+            setState(prev => ({
+              ...prev,
+              series: CPUData,
+              options: {
+                ...prev.options,
+                colors: ['#3FCB00'],
+                xaxis: { ...prev.options.xaxis, categories }
+              }
+            }));
+            break;
+          case 'RAM':
+            setState(prev => ({
+              ...prev,
+              series: RAMData,
+              options: {
+                ...prev.options,
+                colors: ['#FB08BB'],
+                xaxis: { ...prev.options.xaxis, categories }
+              }
+            }));
+            break;
+        }
 
-      // console.log(data);
-      // console.log(categories);
+        // setState(prev => ({
+        //   ...prev,
+        //   series: data,
+        //   colors: colors,
+        //   options: {
+        //     ...prev.options,
+        //     xaxis: { ...prev.options.xaxis, categories }
+        //   }
+        // }));
+
 
       } catch (error) {
         console.error('Error fetching Position data:', error);
@@ -278,7 +363,7 @@ const Heatmap = ({ filter }) => {
 
     fetchPositionData();
     
-  }, [binSize, mapType]);
+  }, [filter, binSize, mapType]);
 
     const colors = ['#008FFB'];
 
@@ -316,11 +401,17 @@ const Heatmap = ({ filter }) => {
               onChange={handleMapType}
               aria-label="Heatmap Type"
             >
-              <ToggleButton value="RAM" aria-label="RAM Usage Heatmap">
-                <span>RAM</span>
+              <ToggleButton value="Position" aria-label="RAM Usage Heatmap">
+                <span>Position</span>
+              </ToggleButton>
+              <ToggleButton value="FPS" aria-label="Average FPS Heatmap">
+                <span>FPS</span>
               </ToggleButton>
               <ToggleButton value="CPU" aria-label="CPU Usage Heatmap">
                 <span>CPU</span>
+              </ToggleButton>
+              <ToggleButton value="RAM" aria-label="RAM Usage Heatmap">
+                <span>RAM</span>
               </ToggleButton>
             </ToggleButtonGroup>
           </div>
