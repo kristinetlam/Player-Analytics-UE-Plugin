@@ -43,6 +43,7 @@ import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
 import LocationScatterplot from '../graphs/LocationScatter';
 import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
+import InteractionScatter from '../graphs/InteractionScatter';
 
 const NAVIGATION = [
   {
@@ -240,6 +241,8 @@ function DashboardLayoutBasic() {
                 description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
             <CardComponent title="Player Traversal" infoContent="Plots the paths players take during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
                 description="Visualizes player routes across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationLine filter={filter} /></CardComponent>
+            <CardComponent title="Interactions Scatterplot" infoContent="Plots the interactions where they occured on the game map."
+                description="Visualizes interactions across the game map" sx={{ minWidth:'700px'}} centerContent={true}><InteractionScatter filter={filter} /></CardComponent>
           </Box>
         </DashboardContent>
       </DashboardLayout>

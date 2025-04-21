@@ -3,7 +3,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
-const PlayerLocation = ({ filter }) => {
+const PlayerTraversal = ({ filter }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -120,4 +120,4 @@ const PlayerLocation = ({ filter }) => {
   );
 };
 
-export default PlayerLocation;
+export default PlayerTraversal;

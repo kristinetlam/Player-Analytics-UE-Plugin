@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
@@ -57,11 +56,13 @@ export default function PlayerInteractionsScatterChart({ filter }) {
   }, [filter]);
 
   const mapInteractionData = (interactions) => {
-    return interactions.map((interaction) => ({
-      x: interaction.Position[0], // x position
-      y: interaction.Position[1], // y position
-      description: interaction.InteractionDescription.split(':')[0]?.trim() || '',
-    }));
+    return interactions
+      .filter((interaction) => Array.isArray(interaction.InteractionLocation) && interaction.InteractionLocation.length >= 2)
+      .map((interaction) => ({
+        x: interaction.InteractionLocation[0], // x position
+        y: interaction.InteractionLocation[1], // y position
+        label: interaction.InteractionDescription?.split(':')[0]?.trim() || 'No description available',
+      }));
   };
 
   if (loading) {
@@ -76,9 +77,13 @@ export default function PlayerInteractionsScatterChart({ filter }) {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position' }]}
-      series={[{ data }]}
+      series={[{ data }]} // Here, the data passed to the series contains 'label' for each point
       width={600}
       height={500}
+      tooltip={({ data }) => (
+        <div>{data.label}</div> // This will show the description stored in 'label'
+      )}
     />
   );
 }
+
