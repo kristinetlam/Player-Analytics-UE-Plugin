@@ -133,7 +133,7 @@ const AverageReturnTimeGraph = ({ filter }) => {
   if (!returnGapData) return <p>No data to display.</p>;
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-5xl mx-auto" style={{ height: "550px" }}>
+    <div className="p-6 bg-white rounded-lg shadow-md w-full max-w-5xl mx-auto" style={{ height: "450px" }}>
       <div className="flex justify-end mb-2">
         <label className="mr-2 font-semibold">Time Unit:</label>
         <select
@@ -186,13 +186,6 @@ const AverageReturnTimeGraph = ({ filter }) => {
               ticks: {
                 font: {
                   size: 13,
-                },
-              },
-              title: {
-                display: true,
-                text: "Session Gap",
-                font: {
-                  size: 16,
                 },
               },
             },
