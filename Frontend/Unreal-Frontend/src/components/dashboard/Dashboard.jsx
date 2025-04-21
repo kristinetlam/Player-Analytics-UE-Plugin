@@ -40,6 +40,7 @@ import FPSLineChart from '../graphs/AverageFPSOverTime';
 import SessionLineChart from '../graphs/PlayerSessionLineGraph';
 import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
 import LocationScatterplot from '../graphs/LocationScatter';
+import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
 
 const NAVIGATION = [
@@ -235,6 +236,8 @@ function DashboardLayoutBasic() {
             <CardComponent title="Computer Usage Heatmap" infoContent="TBD" description="Visualizes average RAM/CPU usage across the game map"  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
             <CardComponent title="Player Location" infoContent="Plots the X and Y coordinates of player positions during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
                 description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
+            <CardComponent title="Player Traversal" infoContent="Plots the paths players take during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
+                description="Visualizes player routes across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationLine filter={filter} /></CardComponent>
           </Box>
         </DashboardContent>
       </DashboardLayout>

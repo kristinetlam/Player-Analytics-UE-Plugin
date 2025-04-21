@@ -12,13 +12,13 @@ const PlayerLocation = ({ filter }) => {
       setLoading(false);
       return;
     }
-   
+
     const fetchData = async () => {
       try {
         setLoading(true);
         const url = new URL('http://50.30.211.229:5000/get-moment-data');
         const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
-        
+
         // Configure the parameters for the moment endpoint
         const params = {
           player_id: playerId,
@@ -27,15 +27,15 @@ const PlayerLocation = ({ filter }) => {
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
-        
+
         // Add fields parameter to get Position data
         url.searchParams.append('fields', 'Position');
-        
+
         // Add all other parameters
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
-        
+
         const response = await fetch(url.toString(), {
           method: 'GET',
           headers: {
@@ -43,23 +43,31 @@ const PlayerLocation = ({ filter }) => {
             'Content-Type': 'application/json',
           },
         });
-        
+
         if (!response.ok) throw new Error('Failed to fetch Moment data');
-        
+
         const responseData = await response.json();
-        console.log('Fetched moment data:', responseData);
         
         if (responseData.Moments && responseData.Moments.length > 0) {
-          console.log("Example moment object:", responseData.Moments[0]);
-          
           // Map the moment data to get position coordinates
           const mappedData = responseData.Moments
-            .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2)
-            .map(moment => ({
-              x: moment.Position[0],
-              y: moment.Position[1],
-            }));
-          
+            .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2 && moment.Timestamp)
+            .map(moment => {
+              const timestamp = dayjs(moment.Timestamp, 'YYYY.MM.DD-HH.mm.ss').valueOf();
+              return {
+                x: moment.Position[0],
+                y: moment.Position[1],
+                timestamp,
+              };
+            })
+            .sort((a, b) => a.timestamp - b.timestamp);
+
+          // Guard clause in case no data after filtering
+          if (mappedData.length === 0) {
+            setData([]);
+            return;
+          }
+
           setData(mappedData);
         } else {
           console.warn("No moment data received or no position information in moments");
@@ -72,18 +80,18 @@ const PlayerLocation = ({ filter }) => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [filter]);
-  
+
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
-  
+
   if (data.length === 0) {
     return <Typography>No player position data available.</Typography>;
   }
-  
+
   return (
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
@@ -91,6 +99,7 @@ const PlayerLocation = ({ filter }) => {
       series={[{ data }]}
       width={600}
       height={500}
+      margin={{ top: 30, right: 30, bottom: 50, left: 70 }}
     />
   );
 };

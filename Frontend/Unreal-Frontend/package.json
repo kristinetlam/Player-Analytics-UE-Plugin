@@ -30,7 +30,8 @@
     "react-chartjs-2": "^5.3.0",
     "react-datepicker": "^8.2.1",
     "react-dom": "^18.3.1",
-    "react-select": "^5.10.1"
+    "react-select": "^5.10.1",
+    "recharts": "^2.15.3"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.14.3",
