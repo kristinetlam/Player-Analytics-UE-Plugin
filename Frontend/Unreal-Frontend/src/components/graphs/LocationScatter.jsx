@@ -12,13 +12,13 @@ const PlayerLocation = ({ filter }) => {
       setLoading(false);
       return;
     }
-
+   
     const fetchData = async () => {
       try {
         setLoading(true);
         const url = new URL('http://50.30.211.229:5000/get-moment-data');
         const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
-
+        
         // Configure the parameters for the moment endpoint
         const params = {
           player_id: playerId,
@@ -27,15 +27,15 @@ const PlayerLocation = ({ filter }) => {
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
-
+        
         // Add fields parameter to get Position data
         url.searchParams.append('fields', 'Position');
-
+        
         // Add all other parameters
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
-
+        
         const response = await fetch(url.toString(), {
           method: 'GET',
           headers: {
@@ -43,9 +43,9 @@ const PlayerLocation = ({ filter }) => {
             'Content-Type': 'application/json',
           },
         });
-
+        
         if (!response.ok) throw new Error('Failed to fetch Moment data');
-
+        
         const responseData = await response.json();
         
         if (responseData.Moments && responseData.Moments.length > 0) {
@@ -80,23 +80,39 @@ const PlayerLocation = ({ filter }) => {
         setLoading(false);
       }
     };
-
+    
     fetchData();
   }, [filter]);
-
+  
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
-
+  
   if (data.length === 0) {
     return <Typography>No player position data available.</Typography>;
   }
-
+  
   return (
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position' }]}
-      series={[{ data }]}
+      series={[
+        {
+          data,
+          renderPoint: ({ x, y, id, dataIndex }) => {
+            const point = data[dataIndex];
+            return (
+              <circle
+                key={id}
+                cx={x}
+                cy={y}
+                r={4}
+                fill={point.color ?? 'blue'}
+              />
+            );
+          },
+        },
+      ]}
       width={600}
       height={500}
       margin={{ top: 30, right: 30, bottom: 50, left: 70 }}

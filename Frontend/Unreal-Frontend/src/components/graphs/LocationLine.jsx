@@ -46,17 +46,21 @@ const PlayerLocation = ({ filter }) => {
     }
 
     const fetchData = async () => {
-      setLoading(true);
       try {
-        const url = new URL('http://50.30.211.229:5000/get-position-data');
-        const { patchVersion, gpuGroup, startDate, endDate } = filter;
+        setLoading(true);
+        const url = new URL('http://50.30.211.229:5000/get-moment-data');
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
+          player_id: playerId,
           gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
+
+        // Add fields parameter to get Position data
+        url.searchParams.append('fields', 'Position');
 
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
@@ -73,11 +77,11 @@ const PlayerLocation = ({ filter }) => {
         if (!response.ok) throw new Error('Failed to fetch position data');
 
         // Expecting a JSON response that includes a "Positions" array.
-        const { Positions } = await response.json();
+        const responseData = await response.json();
         const grouped = {};
 
         // Group the position objects by player id.
-        Positions.forEach((pos) => {
+        responseData.Moments.forEach((pos) => {
           // Ensure we have valid Position data and a Timestamp.
           if (!pos.Position || pos.Position.length < 2 || !pos.Timestamp) return;
           const playerId = pos.PlayerID;
@@ -100,7 +104,7 @@ const PlayerLocation = ({ filter }) => {
 
         setSeriesData(series);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching moment data:', err);
         setSeriesData([]);
       } finally {
         setLoading(false);
