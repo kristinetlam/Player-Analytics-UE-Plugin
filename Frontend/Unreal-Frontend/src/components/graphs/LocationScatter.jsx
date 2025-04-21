@@ -3,7 +3,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
-const PlayerLocation = ({ filter }) => {
+const PlayerTraversal = ({ filter }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,19 +47,27 @@ const PlayerLocation = ({ filter }) => {
         if (!response.ok) throw new Error('Failed to fetch Moment data');
         
         const responseData = await response.json();
-        console.log('Fetched moment data:', responseData);
         
         if (responseData.Moments && responseData.Moments.length > 0) {
-          console.log("Example moment object:", responseData.Moments[0]);
-          
           // Map the moment data to get position coordinates
           const mappedData = responseData.Moments
-            .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2)
-            .map(moment => ({
-              x: moment.Position[0],
-              y: moment.Position[1],
-            }));
-          
+            .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2 && moment.Timestamp)
+            .map(moment => {
+              const timestamp = dayjs(moment.Timestamp, 'YYYY.MM.DD-HH.mm.ss').valueOf();
+              return {
+                x: moment.Position[0],
+                y: moment.Position[1],
+                timestamp,
+              };
+            })
+            .sort((a, b) => a.timestamp - b.timestamp);
+
+          // Guard clause in case no data after filtering
+          if (mappedData.length === 0) {
+            setData([]);
+            return;
+          }
+
           setData(mappedData);
         } else {
           console.warn("No moment data received or no position information in moments");
@@ -88,11 +96,28 @@ const PlayerLocation = ({ filter }) => {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position' }]}
-      series={[{ data }]}
+      series={[
+        {
+          data,
+          renderPoint: ({ x, y, id, dataIndex }) => {
+            const point = data[dataIndex];
+            return (
+              <circle
+                key={id}
+                cx={x}
+                cy={y}
+                r={4}
+                fill={point.color ?? 'blue'}
+              />
+            );
+          },
+        },
+      ]}
       width={600}
       height={500}
+      margin={{ top: 30, right: 30, bottom: 50, left: 70 }}
     />
   );
 };
 
-export default PlayerLocation;
+export default PlayerTraversal;

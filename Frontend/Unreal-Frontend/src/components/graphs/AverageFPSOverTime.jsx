@@ -86,10 +86,11 @@ const FPSLineChart = ({ filter }) => {
 
   return (
     <LineChart
-      width={500}
-      height={300}
+      width={580}
+      height={350}
       xAxis={[{ data: xLabels, scaleType: 'point', label: 'Date' }]}
-      series={[{ data: avgFpsPerDay, label: 'Avg FPS' }]}
+      series={[{ data: avgFpsPerDay, label: 'Avg FPS', area: true, color: '#e57373' }]}
+      grid={{ vertical: true, horizontal: true }}
       yAxis={[{ label: 'FPS' }]}
       legend={{ hidden: true }}
     />

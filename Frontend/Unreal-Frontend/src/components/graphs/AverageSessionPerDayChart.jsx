@@ -142,7 +142,7 @@ const AverageSessionPerDayChart = ({ filter }) => {
         label: 'Average Session Duration (seconds)'
       }]}
       series={series}
-      width={800}
+      width={650}
       height={400}
     />
   ) : (
