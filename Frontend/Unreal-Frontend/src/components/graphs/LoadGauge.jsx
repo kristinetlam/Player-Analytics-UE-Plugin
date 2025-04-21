@@ -59,13 +59,13 @@ const LoadGauge = ({ filter }) => {
         });
 
         if(mapType === 'CPU'){
-          setGauge((CPUSum/momentData.length).toFixed(2));
+          setGauge(parseFloat(CPUSum/momentData.length).toFixed(2));
           setGaugeMax(100);
           setGaugeText((CPUSum/momentData.length).toFixed(2) + "%");
         }
           
         else{
-          setGauge((RAMSum/momentData.length).toFixed(0));
+          setGauge(parseFloat(RAMSum/momentData.length).toFixed(0));
           setGaugeMax(MAX_RAM);
           setGaugeText((RAMSum/momentData.length).toFixed(0) + " MB");
         }
@@ -92,7 +92,7 @@ const LoadGauge = ({ filter }) => {
       <div style={{ paddingTop: "15px", paddingBottom: "5px"}}>
       <Gauge
         {...settings}
-        value={gaugeValue}
+        value={parseFloat(gaugeValue)}
         valueMax={gaugeMax}
         cornerRadius="50%"
         sx={(theme) => ({

@@ -10,7 +10,7 @@ import { styled } from '@mui/system';
 import dayjs from 'dayjs';
 
 
-const Heatmap = ({ filter }) => {
+const Heatmap = ({ filter, gpuGroup }) => {
 
   const [binSize, setBin] = React.useState(20);
   const [mapType, setMapType] = React.useState('Position');
