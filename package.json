@@ -2,6 +2,9 @@
   "dependencies": {
     "@mui/x-date-pickers": "^7.28.3",
     "react-datepicker": "^8.2.1",
+    "react-draggable": "^4.4.6",
+    "react-grid-layout": "^1.5.1",
+    "react-resizable": "^3.0.5",
     "react-select": "^5.10.1",
     "recharts": "^2.15.3"
   }

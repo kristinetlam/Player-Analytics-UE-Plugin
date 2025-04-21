@@ -19,7 +19,13 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import TuneIcon from '@mui/icons-material/Tune';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
+import RGL, { WidthProvider, Responsive } from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
+
 
 // Components
 import CardComponent from '../CardComponent';
@@ -184,11 +190,11 @@ function DashboardLayoutBasic() {
   const [openFilter, setOpenFilter] = useState(false);
   const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
 
-  useEffect(() => {
-    // MUI collapse menu button has this aria-label
-    const collapseBtn = document.querySelector('[aria-label="collapse menu"]');
-    if (collapseBtn) collapseBtn.click();
-  }, []);
+  // useEffect(() => {
+  //   // MUI collapse menu button has this aria-label
+  //   const collapseBtn = document.querySelector('[aria-label="collapse menu"]');
+  //   if (collapseBtn) collapseBtn.click();
+  // }, []);
 
   return (
     <AppProvider 
@@ -214,28 +220,64 @@ function DashboardLayoutBasic() {
 
       <DashboardLayout defaultSidebarCollapsed slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <CardComponent title="Average FPS" infoContent="A calcuation showing the average FPS across all player sessions over the past 30 days. Each player’s FPS is averaged per session, then aggregated into an overall average." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
-            <CardComponent title="Average Return Rate" infoContent="Represents the average number of return sessions per player after their first session, indicating how often players come back to play again. Calculated as (total sessions - total unique players) ÷ total players. If a specific player is selected, it shows how many times that player returned. This defaults to the past 30 days unless a date range is selected." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter}/></Box></CardComponent>
-            <CardComponent title="Average Session Length" infoContent="A calcuation showing the average session length across all player sessions over the past 30 days. Each player’s session length is recorded when a session ends." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength filter={filter} /></CardComponent>
-            <CardComponent title="Environment Interaction" infoContent="A bar graph showing each player interaction logged within the game system and their respective counts." description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
+        {/* <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}> */}
+        <ResponsiveGridLayout
+            className="layout"
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480 }}
+            cols={{ lg: 12, md: 10, sm: 6, xs: 2 }}
+            rowHeight={180}
+            margin={[16, 16]}
+            isDraggable
+            isResizable
+            useCSSTransforms
+            style={{ width: '100%' }}
+          >
+            <div key="avgFPS" data-grid={{ x: 0, y: 0, w: 4, h: 1.5 }}>
+              <CardComponent title="Average FPS" infoContent="A calcuation showing the average FPS across all player sessions over the past 30 days. Each player’s FPS is averaged per session, then aggregated into an overall average." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
+            </div>
+            <div key="returnRate" data-grid={{ x: 4, y: 0, w: 4, h: 1.5 }}>
+              <CardComponent title="Average Return Rate" infoContent="Represents the average number of return sessions per player after their first session, indicating how often players come back to play again. Calculated as (total sessions - total unique players) ÷ total players. If a specific player is selected, it shows how many times that player returned. This defaults to the past 30 days unless a date range is selected." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><Box sx={{ mt: '-40px' }}><GaugeChartComp filter={filter}/></Box></CardComponent>
+            </div>
+            <div key="avgSessionLength" data-grid={{ x: 8, y: 0, w: 4, h: 1.5 }}>
+              <CardComponent title="Average Session Length" infoContent="A calcuation showing the average session length across all player sessions over the past 30 days. Each player’s session length is recorded when a session ends." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '240px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageSessionLength filter={filter} /></CardComponent>
+            </div>
+            <div key="envInteraction" data-grid={{ x: 0, y: 6, w: 6, h: 8 }}>
+              <CardComponent title="Environment Interaction" infoContent="A bar graph showing each player interaction logged within the game system and their respective counts." description="Quantifies player interactions with game elements" centerContent><PlayerInteractionsBarGraph filter={filter} /></CardComponent>
+            </div>
+            <div key="retention" data-grid={{ x: 6, y: 6, w: 6, h: 8 }}>
             <CardComponent title="Player Retention" infoContent="Shows the percentage of players who returned for additional sessions within the selected time range. Each point represents the share of players who reached that session number (e.g., Session 3 means players who logged in at least three times)."
                 description="Measures return rates based on how many sessions a player has logged in for" centerContent><PlayerRetentionGraph filter={filter} /></CardComponent>
+            </div>
             {/* <CardComponent title="Item Usage" infoContent="sadsd" description="Displays the distribution of player item usage" pieBottom centerContent><BasicPie filter={filter} /></CardComponent> */}
-            <CardComponent title="Player Session Statistics" infoContent="Displays summary statistics for all player session lengths within the selected time range. Includes the average (mean), median, and full range (shortest to longest session). If a player ID is selected, the stats reflect only that player's session data."
+            <div key="sessionStats" data-grid={{ x: 0, y: 14, w: 12, h: 8 }}>
+                <CardComponent title="Player Session Statistics" infoContent="Displays summary statistics for all player session lengths within the selected time range. Includes the average (mean), median, and full range (shortest to longest session). If a player ID is selected, the stats reflect only that player's session data."
                 description="Summarizes player session data with key metrics"  sx={{ flex: '1 1 600px', maxWidth: '600px', minWidth: '400px', minHeight: '330px', maxHeight: '400px' }} centerContent><PlayerSessionStats filter={filter} /></CardComponent>
-            <CardComponent title="FPS Performance Scatterplot" infoContent="Displays FPS values recorded per player session across time. Each dot represents a session's average FPS, helping visualize performance variations by date."
+            </div>
+            <div key="fpsScatter" data-grid={{ x: 0, y: 22, w: 6, h: 8 }}>
+                <CardComponent title="FPS Performance Scatterplot" infoContent="Displays FPS values recorded per player session across time. Each dot represents a session's average FPS, helping visualize performance variations by date."
                 description="Tracks frame rate patterns across multiple players and dates" centerContent><FPSOverTime filter={filter} /></CardComponent>
-            <CardComponent title="Average FPS Timeline" infoContent="Displays the average FPS per day aggregated across all player sessions. Useful for spotting trends or fluctuations in frame rate performance."
+            </div>
+            <div key="fpsLine" data-grid={{ x: 6, y: 22, w: 6, h: 8 }}>
+                <CardComponent title="Average FPS Timeline" infoContent="Displays the average FPS per day aggregated across all player sessions. Useful for spotting trends or fluctuations in frame rate performance."
                 description="Player FPS averages grouped by day over time" sx={{ flex: '1 1 600px', maxWidth: '600px', minWidth: '400px', minHeight: '330px', maxHeight: '500px' }} centerContent><FPSLineChart filter={filter} /></CardComponent>
-            <CardComponent title="Player Session Length" infoContent="Displays average session lengths over time, segmented by game version. Each line represents a different patch version and shows how long players stayed in-game on each day. This helps identify trends or anomalies related to specific updates."
+            </div>
+            <div key="sessionLengthLine" data-grid={{ x: 0, y: 30, w: 6, h: 8 }}>
+              <CardComponent title="Player Session Length" infoContent="Displays average session lengths over time, segmented by game version. Each line represents a different patch version and shows how long players stayed in-game on each day. This helps identify trends or anomalies related to specific updates."
                 description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
-            <CardComponent title="Average Return Time" infoContent="Shows the average amount of time players take to return between each session, identifying player re-engagement speed or gaps in activity across consecutive logins."
+            </div>
+            <div key="returnTime" data-grid={{ x: 6, y: 30, w: 3, h: 6 }}>
+              <CardComponent title="Average Return Time" infoContent="Shows the average amount of time players take to return between each session, identifying player re-engagement speed or gaps in activity across consecutive logins."
                description="Measures the average time between sessions" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
+            </div>
+            <div key="heatmap" data-grid={{ x: 0, y: 38, w: 12, h: 10 }}>
             <CardComponent title="Computer Usage Heatmap" infoContent="TBD" description="Visualizes average RAM/CPU usage across the game map"  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
-            <CardComponent title="Player Location" infoContent="Plots the X and Y coordinates of player positions during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
+            </div>
+            <div key="playerLocation" data-grid={{ x: 0, y: 48, w: 12, h: 10 }}>
+              <CardComponent title="Player Location" infoContent="Plots the X and Y coordinates of player positions during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
                 description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>
-          </Box>
+            </div>
+          </ResponsiveGridLayout>
+                {/* </Box> */}
         </DashboardContent>
       </DashboardLayout>
       <FilterDrawer 
@@ -247,13 +289,6 @@ function DashboardLayoutBasic() {
     </AppProvider>
   );
 
-  // DashboardLayoutBasic.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * Remove this when copying and pasting into your project.
-//    */
-//   window: PropTypes.func,
-// };
 }
 
 export default DashboardLayoutBasic;
