@@ -232,6 +232,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         MomentObject->SetStringField("RAM", Moments[i].RAM);
         MomentObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
         MomentObject->SetStringField("FPS", Moments[i].FPS);
+        MomentObject->SetNumberField("PlayerHealth", playerHealth);
 
         momentArray.Add(MakeShared<FJsonValueObject>(MomentObject));
     }
