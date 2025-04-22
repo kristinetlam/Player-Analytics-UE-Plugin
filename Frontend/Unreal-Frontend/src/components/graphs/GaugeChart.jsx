@@ -53,7 +53,7 @@ export default function AverageSessionsGauge({ filter }) {
 
   useEffect(() => {
     if (!filter) return;
-    const { playerId, patchVersion, startDate, endDate } = filter;
+    const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
     const end = endDate ? dayjs(endDate) : dayjs();
     const start = startDate ? dayjs(startDate) : end.subtract(30, 'day');
 
@@ -65,11 +65,27 @@ export default function AverageSessionsGauge({ filter }) {
       url.searchParams.append('end_time',   end.format('YYYY-MM-DD'));
 
       try {
-        const res = await fetch(url.toString(), {
-          headers: { Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}` },
+        const params = {
+          player_id: playerId,
+          gpu_group: gpuGroup,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
+
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (value) url.searchParams.append(key, value);
         });
-        if (!res.ok) throw new Error('Fetch failed');
-        const { Sessions = [] } = await res.json();
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const { Sessions = [] } = await response.json();
 
         const totalSessions  = Sessions.length;
         const uniquePlayers  = new Set(Sessions.map(s => s.PlayerID)).size;
