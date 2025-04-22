@@ -87,7 +87,7 @@ const PlayerSessionStats = ({ filter }) => {
 
   return (
     <Box>
-      <Grid container spacing={4} justifyContent="center" alignItems="center" mt={4}>
+      <Grid container spacing={4} justifyContent="center" alignItems="center" mt={1}>
         {statData.map((item, index) => (
           <Grid item key={index}>
             <Box display="flex" flexDirection="column" alignItems="center" gap={0.5} sx={{ minWidth: 100 }}>
