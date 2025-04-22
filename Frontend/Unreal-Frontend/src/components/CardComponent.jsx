@@ -34,7 +34,7 @@ const CardComponent = ({ title, description, children, moveTitleUp, marginBottom
         {infoContent && (
           <Tooltip 
               title={
-                <Typography sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
+                <Typography sx={{ fontSize: '0.8rem', fontWeight: 500,  }}>
                   {infoContent}
                 </Typography>
               }
