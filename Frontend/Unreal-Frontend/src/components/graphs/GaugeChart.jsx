@@ -53,7 +53,7 @@ export default function AverageSessionsGauge({ filter }) {
 
   useEffect(() => {
     if (!filter) return;
-    const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
+    const { playerId, patchVersion, startDate, endDate } = filter;
     const end = endDate ? dayjs(endDate) : dayjs();
     const start = startDate ? dayjs(startDate) : end.subtract(30, 'day');
 
@@ -65,27 +65,11 @@ export default function AverageSessionsGauge({ filter }) {
       url.searchParams.append('end_time',   end.format('YYYY-MM-DD'));
 
       try {
-        const params = {
-          player_id: playerId,
-          gpu_group: gpuGroup,
-          game_version: patchVersion,
-          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
-          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
-        };
-
-
-        Object.entries(params).forEach(([key, value]) => {
-          if (value) url.searchParams.append(key, value);
+        const res = await fetch(url.toString(), {
+          headers: { Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}` },
         });
-
-        const response = await fetch(url.toString(), {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const { Sessions = [] } = await response.json();
+        if (!res.ok) throw new Error('Fetch failed');
+        const { Sessions = [] } = await res.json();
 
         const totalSessions  = Sessions.length;
         const uniquePlayers  = new Set(Sessions.map(s => s.PlayerID)).size;
@@ -97,33 +81,45 @@ export default function AverageSessionsGauge({ filter }) {
     })();
   }, [filter]);
 
-  // Color bands: green ≥2, yellow ≥1, red <1
   const fillColor =
-    avgSessions >= 2 ? '#4caf50' :
-    avgSessions >= 1 ? '#ffeb3b' :
-                       '#f44336';
+    avgSessions >= 20 ? '#4caf50' :      // green
+    avgSessions >= 10 ? '#ffeb3b' :      // yellow
+                       '#f44336';        // red
 
-  const maxValue = 60;
-  const strokeWidth = 12;
 
+  const StyledTooltip = styled(({ className, ...props }) => (
+    <Tooltip arrow placement="left" classes={{ popper: className }} {...props} />
+      ))(({ theme }) => ({
+        [`& .MuiTooltip-tooltip`]: {
+          backgroundColor: '#333',
+          color: '#fff',
+          fontSize: theme.typography.pxToRem(12),
+          boxShadow: theme.shadows[2],
+        },
+        [`& .MuiTooltip-arrow`]: {
+          color: '#333',
+        },
+      }));
+
+  
   return (
-<WhiteTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
-    <GaugeContainer
-      width={200}
-      height={200}
-      startAngle={-110}
-      endAngle={110}
-      value={avgSessions}
-      minValue={0}
-      valueMax={50}
-    >
-        {/* grey background track */}
-        <GaugeReferenceArc/>
-        {/* colored fill up to avgSessions */}
-        <GaugeValueArc style={{ fill: fillColor }} />
-        {/* red pointer */}
-        <GaugePointer strokeWidth={3} />
-      </GaugeContainer>
-    </WhiteTooltip>
-  );
-}
+    <StyledTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
+      <GaugeContainer
+        width={200}
+        height={200}
+        startAngle={-110}
+        endAngle={110}
+        value={avgSessions}
+        minValue={0}
+        valueMax={30}
+      >
+          {/* grey background track */}
+          <GaugeReferenceArc/>
+          {/* colored fill up to avgSessions */}
+          <GaugeValueArc style={{ fill: fillColor }} />
+          {/* red pointer */}
+          <GaugePointer strokeWidth={3} />
+        </GaugeContainer>
+      </StyledTooltip>
+    );
+  }
