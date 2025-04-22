@@ -85,8 +85,8 @@ const LoadGauge = ({ filter }) => {
   }, [filter, mapType]);
 
   const settings = {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   };
 
   return (
@@ -99,7 +99,7 @@ const LoadGauge = ({ filter }) => {
         cornerRadius="50%"
         sx={(theme) => ({
           [`& .${gaugeClasses.valueText}`]: {
-            fontSize: 30,
+            fontSize: 22,
           },
           [`& .${gaugeClasses.valueArc}`]: {
             fill: '#008FFB',
@@ -111,7 +111,7 @@ const LoadGauge = ({ filter }) => {
         text={gaugeText}
       />
       </div>
-      <div>
+      <div style={{ paddingBottom: "15px"}}>
         <ToggleButtonGroup
           value={mapType}
           exclusive
