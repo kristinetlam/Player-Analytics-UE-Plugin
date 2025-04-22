@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 const Heatmap = ({ filter, gpuGroup }) => {
 
   const [binSize, setBin] = React.useState(20);
-  const [mapType, setMapType] = React.useState('Position');
+  const [mapType, setMapType] = React.useState('CPU');
 
   const handleMapType = (event, newMapType) => {
     setMapType(newMapType);
