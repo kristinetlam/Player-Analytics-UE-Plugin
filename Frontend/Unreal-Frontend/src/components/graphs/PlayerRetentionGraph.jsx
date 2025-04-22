@@ -25,11 +25,10 @@ const PlayerRetentionGraph = ({ filter }) => {
       setLoading(true);
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
-        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
+        const { playerId, patchVersion, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
-          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
@@ -105,7 +104,10 @@ const PlayerRetentionGraph = ({ filter }) => {
 
   return (
     <div style={{ width: '100%' }}>
-      <Line data={retentionData} />
+      <Line 
+        data={retentionData} 
+        legend={{ hidden: true }}
+      />
     </div>
   );
 };

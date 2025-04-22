@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import Box from '@mui/material/Box';
 import {
   Chart,
   CategoryScale,
@@ -25,6 +26,16 @@ Chart.register(
 const AverageReturnTimeGraph = ({ filter }) => {
   const [returnGapData, setReturnGapData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeUnit, setTimeUnit] = useState("hours"); // "seconds", "minutes", "hours", "days"
+
+  const convertTime = (seconds) => {
+    switch (timeUnit) {
+      case "minutes": return seconds / 60;
+      case "hours": return seconds / 3600;
+      case "days": return seconds / 86400;
+      default: return seconds;
+    }
+  };
 
   useEffect(() => {
     if (!filter) return;
@@ -38,8 +49,8 @@ const AverageReturnTimeGraph = ({ filter }) => {
           player_id: playerId,
           gpu_group: gpuGroup,
           game_version: patchVersion,
-          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
-          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+          start_time: startDate ? dayjs(startDate).format("YYYY-MM-DD") : null,
+          end_time: endDate ? dayjs(endDate).format("YYYY-MM-DD") : null,
         };
 
         Object.entries(params).forEach(([key, value]) => {
@@ -54,31 +65,26 @@ const AverageReturnTimeGraph = ({ filter }) => {
           },
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch session data");
-        }
+        if (!response.ok) throw new Error("Failed to fetch session data");
 
         const result = await response.json();
         const sessions = result.Sessions;
         const playerSessions = {};
 
-        // Group sessions by PlayerID using EndTime
         sessions.forEach((session) => {
           const playerId = session.PlayerID;
-          const endTime = parseFloat(session.EndTime);
+          const timestamp = dayjs(session.Timestamp, "YYYY.MM.DD-HH.mm.ss").valueOf();
           if (!playerSessions[playerId]) playerSessions[playerId] = [];
-          playerSessions[playerId].push(endTime);
+          playerSessions[playerId].push(timestamp);
         });
 
-        // Sort session times
         Object.values(playerSessions).forEach((list) => list.sort((a, b) => a - b));
 
         const gaps = {};
-
         Object.values(playerSessions).forEach((sessionTimes) => {
           for (let i = 1; i < sessionTimes.length; i++) {
-            const gap = sessionTimes[i] - sessionTimes[i - 1];
-            const key = `${i}`; // gap between i and i+1 sessions
+            const gap = (sessionTimes[i] - sessionTimes[i - 1]) / 1000;
+            const key = `${i}`;
             if (!gaps[key]) gaps[key] = [];
             gaps[key].push(gap);
           }
@@ -87,18 +93,21 @@ const AverageReturnTimeGraph = ({ filter }) => {
         const labels = Object.keys(gaps).map((k) => `Session ${k}→${parseInt(k) + 1}`);
         const data = Object.values(gaps).map((gapList) => {
           const sum = gapList.reduce((a, b) => a + b, 0);
-          return parseFloat((sum / gapList.length).toFixed(2));
+          return parseFloat(convertTime(sum / gapList.length).toFixed(2));
         });
 
         setReturnGapData({
           labels,
           datasets: [
             {
-              label: "Avg Time Between Sessions (seconds)",
+              label: `Avg Time Between Sessions (${timeUnit})`,
               data,
               fill: false,
-              borderColor: "rgba(255,99,132,1)",
+              borderColor: "rgb(223, 79, 79)",
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
               tension: 0.3,
+              pointRadius: 5,
+              pointHoverRadius: 8,
             },
           ],
         });
@@ -112,15 +121,67 @@ const AverageReturnTimeGraph = ({ filter }) => {
     };
 
     fetchSessions();
-  }, [filter]);
+  }, [filter, timeUnit]);
 
   if (loading) return <p>Loading return time graph...</p>;
   if (!returnGapData) return <p>No data to display.</p>;
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md max-w-3xl mx-auto">
-      <Line data={returnGapData} />
-    </div>
+    <Box sx={{ width: '100%', height: '100%', p: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+        <label style={{ marginRight: '8px', fontWeight: '600' }}>Time Unit:</label>
+        <select
+          value={timeUnit}
+          onChange={(e) => setTimeUnit(e.target.value)}
+          style={{
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '4px 8px',
+          }}
+        >
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+      </Box>
+      <Box sx={{ height: '500px', width: '100%' }}>
+        <Line
+          data={returnGapData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Average Time Between Sessions",
+                font: { size: 20 },
+                padding: { top: 10, bottom: 30 },
+              },
+              legend: {
+                labels: { font: { size: 14 } },
+              },
+              tooltip: {
+                bodyFont: { size: 14 },
+                titleFont: { size: 16 },
+                padding: 10,
+              },
+            },
+            scales: {
+              x: { ticks: { font: { size: 13 } } },
+              y: {
+                ticks: { font: { size: 13 } },
+                title: {
+                  display: true,
+                  text: `Time (${timeUnit})`,
+                  font: { size: 16 },
+                },
+              },
+            },
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 

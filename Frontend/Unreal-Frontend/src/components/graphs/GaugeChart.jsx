@@ -1,47 +1,129 @@
-import * as React from 'react';
+// File: AverageSessionsGauge.jsx
+
+import React, { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Tooltip from '@mui/material/Tooltip';
 import {
   GaugeContainer,
   GaugeValueArc,
   GaugeReferenceArc,
   useGaugeState,
 } from '@mui/x-charts/Gauge';
+import dayjs from 'dayjs';
 
-function GaugePointer() {
+// A white tooltip with arrow
+const WhiteTooltip = styled(({ className, ...props }) => (
+  <Tooltip arrow classes={{ popper: className }} {...props} />
+))(({ theme }) => ({
+  [`& .MuiTooltip-tooltip`]: {
+    backgroundColor: '#fff',
+    color: '#000',
+    boxShadow: theme.shadows[1],
+    fontSize: theme.typography.pxToRem(12),
+  },
+  [`& .MuiTooltip-arrow`]: {
+    color: '#fff',
+  },
+}));
+
+// Red pointer component
+function GaugePointer({ color = 'red', strokeWidth = 3 }) {
   const { valueAngle, outerRadius, cx, cy } = useGaugeState();
+  if (valueAngle == null) return null;
 
-  if (valueAngle === null) {
-    // No value to display
-    return null;
-  }
+  // shorten pointer so it ends at the middle of the arc stroke
+  const r = outerRadius - strokeWidth / 2;
+  const tx = cx + r * Math.sin(valueAngle);
+  const ty = cy - r * Math.cos(valueAngle);
 
-  const target = {
-    x: cx + outerRadius * Math.sin(valueAngle),
-    y: cy - outerRadius * Math.cos(valueAngle),
-  };
   return (
     <g>
-      <circle cx={cx} cy={cy} r={5} fill="red" />
+      <circle cx={cx} cy={cy} r={5} fill={color} />
       <path
-        d={`M ${cx} ${cy} L ${target.x} ${target.y}`}
-        stroke="red"
-        strokeWidth={3}
+        d={`M ${cx} ${cy} L ${tx} ${ty}`}
+        stroke={color}
+        strokeWidth={strokeWidth}
       />
     </g>
   );
 }
 
-export default function GaugeChartComp() { 
+export default function AverageSessionsGauge({ filter }) {
+  const [avgSessions, setAvgSessions] = useState(0);
+
+  useEffect(() => {
+    if (!filter) return;
+    const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
+    const end = endDate ? dayjs(endDate) : dayjs();
+    const start = startDate ? dayjs(startDate) : end.subtract(30, 'day');
+
+    (async () => {
+      const url = new URL('http://50.30.211.229:5000/get-session-data');
+      if (playerId)     url.searchParams.append('player_id', playerId);
+      if (patchVersion) url.searchParams.append('game_version', patchVersion);
+      url.searchParams.append('start_time', start.format('YYYY-MM-DD'));
+      url.searchParams.append('end_time',   end.format('YYYY-MM-DD'));
+
+      try {
+        const params = {
+          player_id: playerId,
+          gpu_group: gpuGroup,
+          game_version: patchVersion,
+          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
+          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+        };
+
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (value) url.searchParams.append(key, value);
+        });
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_API_SECRET_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const { Sessions = [] } = await response.json();
+
+        const totalSessions  = Sessions.length;
+        const uniquePlayers  = new Set(Sessions.map(s => s.PlayerID)).size;
+        const avg = uniquePlayers ? (totalSessions - uniquePlayers) / uniquePlayers : 0;
+        setAvgSessions(avg);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [filter]);
+
+  // Color bands: green ≥2, yellow ≥1, red <1
+  const fillColor =
+    avgSessions >= 2 ? '#4caf50' :
+    avgSessions >= 1 ? '#ffeb3b' :
+                       '#f44336';
+
+  const maxValue = 60;
+  const strokeWidth = 12;
+
   return (
+<WhiteTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
     <GaugeContainer
       width={200}
       height={200}
       startAngle={-110}
       endAngle={110}
-      value={30}
+      value={avgSessions}
+      minValue={0}
+      valueMax={50}
     >
-      <GaugeReferenceArc />
-      <GaugeValueArc />
-      <GaugePointer />
-    </GaugeContainer>
+        {/* grey background track */}
+        <GaugeReferenceArc/>
+        {/* colored fill up to avgSessions */}
+        <GaugeValueArc style={{ fill: fillColor }} />
+        {/* red pointer */}
+        <GaugePointer strokeWidth={3} />
+      </GaugeContainer>
+    </WhiteTooltip>
   );
 }

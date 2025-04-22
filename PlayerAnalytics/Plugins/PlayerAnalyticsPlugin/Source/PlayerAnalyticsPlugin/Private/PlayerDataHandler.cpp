@@ -157,6 +157,10 @@ void UPlayerDataHandler::AddMoment(FVector position, FString CPU, FString RAM, F
     playerData->Moments.Add(moment);
 }
 
+void UPlayerDataHandler::UpdatePlayerHealth(int newHealth) {
+    playerData->playerHealth = newHealth;
+} 
+
 /// <summary>
 /// Saves player data to a JSON file 
 /// </summary>
