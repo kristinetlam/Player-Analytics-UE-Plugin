@@ -97,33 +97,45 @@ export default function AverageSessionsGauge({ filter }) {
     })();
   }, [filter]);
 
-  // Color bands: green ≥2, yellow ≥1, red <1
   const fillColor =
-    avgSessions >= 2 ? '#4caf50' :
-    avgSessions >= 1 ? '#ffeb3b' :
-                       '#f44336';
+    avgSessions >= 20 ? '#4caf50' :      // green
+    avgSessions >= 10 ? '#ffeb3b' :      // yellow
+                       '#f44336';        // red
 
-  const maxValue = 60;
-  const strokeWidth = 12;
 
+  const StyledTooltip = styled(({ className, ...props }) => (
+    <Tooltip arrow placement="left" classes={{ popper: className }} {...props} />
+      ))(({ theme }) => ({
+        [`& .MuiTooltip-tooltip`]: {
+          backgroundColor: '#333',
+          color: '#fff',
+          fontSize: theme.typography.pxToRem(12),
+          boxShadow: theme.shadows[2],
+        },
+        [`& .MuiTooltip-arrow`]: {
+          color: '#333',
+        },
+      }));
+
+  
   return (
-<WhiteTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
-    <GaugeContainer
-      width={200}
-      height={200}
-      startAngle={-110}
-      endAngle={110}
-      value={avgSessions}
-      minValue={0}
-      valueMax={50}
-    >
-        {/* grey background track */}
-        <GaugeReferenceArc/>
-        {/* colored fill up to avgSessions */}
-        <GaugeValueArc style={{ fill: fillColor }} />
-        {/* red pointer */}
-        <GaugePointer strokeWidth={3} />
-      </GaugeContainer>
-    </WhiteTooltip>
-  );
-}
+    <StyledTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
+      <GaugeContainer
+        width={200}
+        height={200}
+        startAngle={-110}
+        endAngle={110}
+        value={avgSessions}
+        minValue={0}
+        valueMax={30}
+      >
+          {/* grey background track */}
+          <GaugeReferenceArc/>
+          {/* colored fill up to avgSessions */}
+          <GaugeValueArc style={{ fill: fillColor }} />
+          {/* red pointer */}
+          <GaugePointer strokeWidth={3} />
+        </GaugeContainer>
+      </StyledTooltip>
+    );
+  }
