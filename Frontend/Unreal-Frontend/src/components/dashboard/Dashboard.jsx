@@ -46,51 +46,52 @@ import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
 import InteractionScatter from '../graphs/InteractionScatter';
 
-// const NAVIGATION = [
-//   {
-//     kind: 'header',
-//     title: 'Main items',
-//   },
-//   {
-//     segment: 'dashboard',
-//     title: 'Dashboard',
-//     icon: <DashboardIcon />,
-//   },
-//   {
-//     segment: 'library',
-//     title: 'UE5 Fab Library',
-//     icon: <ShoppingCartIcon />,
-//   },
-//   {
-//     kind: 'divider',
-//   },
-//   {
-//     kind: 'header',
-//     title: 'Analytics',
-//   },
-//   {
-//     segment: 'reports',
-//     title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
-//     icon: <BarChartIcon />,
-//     children: [
-//       {
-//         segment: 'optimization',
-//         title: 'Optimization Data',
-//         icon: <DescriptionIcon />,
-//       },
-//       {
-//         segment: 'interest',
-//         title: 'Player Insights',
-//         icon: <DescriptionIcon />,
-//       },
-//     ],
-//   },
-//   {
-//     segment: 'integrations',
-//     title: 'Integrations',
-//     icon: <LayersIcon />,
-//   },
-// ];
+const NAVIGATION = [
+  {
+    kind: 'header',
+    title: 'Main items',
+  },
+  {
+    segment: 'dashboard',
+    title: 'Dashboard',
+    icon: <DashboardIcon />,
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    segment: 'library',
+    title: 'UE5 Fab Library',
+    icon: <ShoppingCartIcon />,
+  },
+ 
+  // {
+  //   kind: 'header',
+  //   title: 'Analytics',
+  // },
+  // {
+  //   segment: 'reports',
+  //   title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: 'optimization',
+  //       title: 'Optimization Data',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //     {
+  //       segment: 'interest',
+  //       title: 'Player Insights',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   segment: 'integrations',
+  //   title: 'Integrations',
+  //   icon: <LayersIcon />,
+  // },
+];
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -196,7 +197,7 @@ function DashboardLayoutBasic() {
 
   return (
     <AppProvider 
-        // navigation={NAVIGATION} 
+        navigation={NAVIGATION} 
         router={router} 
         theme={demoTheme}
         defaultOpen={false}
@@ -217,14 +218,14 @@ function DashboardLayoutBasic() {
       >
       <GlobalStyles
         styles={{
-          '.MuiDrawer-root': {
-            display: 'none !important',
-          },
-          '.MuiDrawer-docked': {
-            flex: '0 0 auto !important',
-            width: '0 !important',
-            overflowX: 'hidden !important',
-          },
+          // '.MuiDrawer-root': {
+          //   display: 'none !important',
+          // },
+          // '.MuiDrawer-docked': {
+          //   flex: '0 0 auto !important',
+          //   width: '0 !important',
+          //   overflowX: 'hidden !important',
+          // },
           '[aria-label="Expand navigation menu"]': {
             display: 'none !important',
           },
