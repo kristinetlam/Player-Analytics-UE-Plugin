@@ -209,7 +209,7 @@ function DashboardLayoutBasic() {
                 alt="Unreal Engine 5 Logo"
                 width={32}
                 height={32}
-                style={{ display: 'block', marginLeft: '10px' }}
+                style={{ display: 'block', marginLeft: '5px' }}
               />
             </Box>
           ),
