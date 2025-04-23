@@ -20,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useEffect } from 'react';
+import { GlobalStyles } from '@mui/material';
 
 // Components
 import CardComponent from '../CardComponent';
@@ -45,51 +46,51 @@ import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
 import InteractionScatter from '../graphs/InteractionScatter';
 
-const NAVIGATION = [
-  {
-    kind: 'header',
-    title: 'Main items',
-  },
-  {
-    segment: 'dashboard',
-    title: 'Dashboard',
-    icon: <DashboardIcon />,
-  },
-  {
-    segment: 'library',
-    title: 'UE5 Fab Library',
-    icon: <ShoppingCartIcon />,
-  },
-  {
-    kind: 'divider',
-  },
-  {
-    kind: 'header',
-    title: 'Analytics',
-  },
-  {
-    segment: 'reports',
-    title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: 'optimization',
-        title: 'Optimization Data',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'interest',
-        title: 'Player Insights',
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: 'integrations',
-    title: 'Integrations',
-    icon: <LayersIcon />,
-  },
-];
+// const NAVIGATION = [
+//   {
+//     kind: 'header',
+//     title: 'Main items',
+//   },
+//   {
+//     segment: 'dashboard',
+//     title: 'Dashboard',
+//     icon: <DashboardIcon />,
+//   },
+//   {
+//     segment: 'library',
+//     title: 'UE5 Fab Library',
+//     icon: <ShoppingCartIcon />,
+//   },
+//   {
+//     kind: 'divider',
+//   },
+//   {
+//     kind: 'header',
+//     title: 'Analytics',
+//   },
+//   {
+//     segment: 'reports',
+//     title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
+//     icon: <BarChartIcon />,
+//     children: [
+//       {
+//         segment: 'optimization',
+//         title: 'Optimization Data',
+//         icon: <DescriptionIcon />,
+//       },
+//       {
+//         segment: 'interest',
+//         title: 'Player Insights',
+//         icon: <DescriptionIcon />,
+//       },
+//     ],
+//   },
+//   {
+//     segment: 'integrations',
+//     title: 'Integrations',
+//     icon: <LayersIcon />,
+//   },
+// ];
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -195,7 +196,7 @@ function DashboardLayoutBasic() {
 
   return (
     <AppProvider 
-        navigation={NAVIGATION} 
+        // navigation={NAVIGATION} 
         router={router} 
         theme={demoTheme}
         defaultOpen={false}
@@ -214,8 +215,26 @@ function DashboardLayoutBasic() {
           title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
         }}
       >
-
-      <DashboardLayout defaultSidebarCollapsed slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+      <GlobalStyles
+        styles={{
+          '.MuiDrawer-root': {
+            display: 'none !important',
+          },
+          '.MuiDrawer-docked': {
+            flex: '0 0 auto !important',
+            width: '0 !important',
+            overflowX: 'hidden !important',
+          },
+          '[aria-label="Expand navigation menu"]': {
+            display: 'none !important',
+          },
+        }}
+      />
+      <DashboardLayout 
+        navigation={undefined}
+        defaultSidebarCollapsed 
+        slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}
+      >
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             <CardComponent title="Average FPS" infoContent="A calcuation showing the average FPS across all player sessions over the past 30 days. Each player’s FPS is averaged per session, then aggregated into an overall average." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
