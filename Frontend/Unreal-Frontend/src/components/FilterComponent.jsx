@@ -221,6 +221,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
                 fullWidth: true,
                 size: 'small',
                 sx: {
+                  mb: 1.2,
                   '& .MuiInputBase-root': {
                     justifyContent: 'center',
                   },
