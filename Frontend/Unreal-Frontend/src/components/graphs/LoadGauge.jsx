@@ -23,14 +23,16 @@ const LoadGauge = ({ filter }) => {
     const fetchUsageData = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-moment-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
+          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
+
 
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
@@ -83,8 +85,8 @@ const LoadGauge = ({ filter }) => {
   }, [filter, mapType]);
 
   const settings = {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
   };
 
   return (
@@ -97,7 +99,7 @@ const LoadGauge = ({ filter }) => {
         cornerRadius="50%"
         sx={(theme) => ({
           [`& .${gaugeClasses.valueText}`]: {
-            fontSize: 30,
+            fontSize: 22,
           },
           [`& .${gaugeClasses.valueArc}`]: {
             fill: '#008FFB',
@@ -109,7 +111,7 @@ const LoadGauge = ({ filter }) => {
         text={gaugeText}
       />
       </div>
-      <div>
+      <div style={{ paddingBottom: "15px"}}>
         <ToggleButtonGroup
           value={mapType}
           exclusive

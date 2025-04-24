@@ -20,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useEffect } from 'react';
+import { GlobalStyles } from '@mui/material';
 
 // Components
 import CardComponent from '../CardComponent';
@@ -57,39 +58,40 @@ const NAVIGATION = [
     icon: <DashboardIcon />,
   },
   {
+    kind: 'divider',
+  },
+  {
     segment: 'library',
     title: 'UE5 Fab Library',
     icon: <ShoppingCartIcon />,
   },
-  {
-    kind: 'divider',
-  },
-  {
-    kind: 'header',
-    title: 'Analytics',
-  },
-  {
-    segment: 'reports',
-    title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: 'optimization',
-        title: 'Optimization Data',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'interest',
-        title: 'Player Insights',
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: 'integrations',
-    title: 'Integrations',
-    icon: <LayersIcon />,
-  },
+ 
+  // {
+  //   kind: 'header',
+  //   title: 'Analytics',
+  // },
+  // {
+  //   segment: 'reports',
+  //   title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: 'optimization',
+  //       title: 'Optimization Data',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //     {
+  //       segment: 'interest',
+  //       title: 'Player Insights',
+  //       icon: <DescriptionIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   segment: 'integrations',
+  //   title: 'Integrations',
+  //   icon: <LayersIcon />,
+  // },
 ];
 
 const demoTheme = createTheme({
@@ -208,15 +210,33 @@ function DashboardLayoutBasic() {
                 alt="Unreal Engine 5 Logo"
                 width={32}
                 height={32}
-                style={{ display: 'block', marginLeft: '10px' }}
+                style={{ display: 'block', marginLeft: '5px' }}
               />
             </Box>
           ),
           title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
         }}
       >
-
-      <DashboardLayout defaultSidebarCollapsed slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}>
+      <GlobalStyles
+        styles={{
+          // '.MuiDrawer-root': {
+          //   display: 'none !important',
+          // },
+          // '.MuiDrawer-docked': {
+          //   flex: '0 0 auto !important',
+          //   width: '0 !important',
+          //   overflowX: 'hidden !important',
+          // },
+          '[aria-label="Expand navigation menu"]': {
+            display: 'none !important',
+          },
+        }}
+      />
+      <DashboardLayout 
+        navigation={undefined}
+        defaultSidebarCollapsed 
+        slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} /> }}
+      >
         <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             <CardComponent title="Average FPS" infoContent="A calcuation showing the average FPS across all player sessions over the past 30 days. Each player’s FPS is averaged per session, then aggregated into an overall average." sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', minHeight: '200px', maxHeight: '300px', display: 'flex', flexDirection: 'column' }} moveTitleUp={true} marginBottom={false} centerContent={true} fixed={true}><AverageFPS filter={filter} /></CardComponent>
@@ -236,7 +256,7 @@ function DashboardLayoutBasic() {
             <CardComponent title="Player Session Length" infoContent="Displays average session lengths over time, segmented by game version. Each line represents a different patch version and shows how long players stayed in-game on each day. This helps identify trends or anomalies related to specific updates."
                 description="Illustrates player session lengths grouped by game version patches" centerContent><AverageSessionPerDayChart filter={filter} /></CardComponent>
             <CardComponent title="Average Return Time" infoContent="Shows the average amount of time players take to return between each session, identifying player re-engagement speed or gaps in activity across consecutive logins."
-               description="Measures the average time between sessions" sx={{ flex: '1 1 300px', maxWidth: '360px', minWidth: '300px', maxHeight: '300px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
+               description="Measures the average time between sessions" sx={{ flex: '1 1 500px', maxWidth: '500px', minWidth: '300px', maxHeight: '700px', minHeight: '500px'}}  centerContent><AverageReturnTimeGraph filter={filter} /></CardComponent>
             <CardComponent title="Heatmap" description="Visualizes selected values averaged across the game map."  sx={{ flex: '1 1 600px', maxWidth: '700px', minWidth: '400px', minHeight: '380px'}} centerContent={false}><Heatmap filter={filter} /></CardComponent>
             <CardComponent title="Player Location" infoContent="Plots the X and Y coordinates of player positions during gameplay. This can help identify hotspots, player movement patterns, or underutilized areas of the map."
                 description="Visualizes player location across the game map" sx={{ minWidth:'700px'}} centerContent={true}><LocationScatterplot filter={filter} /></CardComponent>

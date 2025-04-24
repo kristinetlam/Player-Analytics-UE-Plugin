@@ -32,6 +32,13 @@ function parseTimestampToDate(timestampStr) {
   }
 }
 
+// Format date as MM/DD
+function formatDateToMMDD(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
 const AverageSessionPerDayChart = ({ filter }) => {
   const [series, setSeries] = useState([]);
   const [labels, setLabels] = useState([]);
@@ -94,7 +101,9 @@ const AverageSessionPerDayChart = ({ filter }) => {
         console.log('[GROUPED DATA] Version map:', versionMap);
 
         const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
-        setLabels(sortedDates);
+        // Keep original dates for data linking but format for display
+        const formattedDates = sortedDates.map(date => formatDateToMMDD(date));
+        setLabels(formattedDates);
 
         const formattedSeries = Object.entries(versionMap).map(([version, dateMap]) => {
           const data = sortedDates.map((date) => {
@@ -124,7 +133,14 @@ const AverageSessionPerDayChart = ({ filter }) => {
 
   return series.length && labels.length ? (
     <LineChart
-      xAxis={[{ data: labels, scaleType: 'point', label: 'Date' }]}
+      xAxis={[{ 
+        data: labels, 
+        scaleType: 'point', 
+        label: 'Date'
+      }]}
+      yAxis={[{
+        label: 'Average Session Duration (seconds)'
+      }]}
       series={series}
       width={650}
       height={400}

@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 const Heatmap = ({ filter, gpuGroup }) => {
 
   const [binSize, setBin] = React.useState(20);
-  const [mapType, setMapType] = React.useState('Position');
+  const [mapType, setMapType] = React.useState('CPU');
 
   const handleMapType = (event, newMapType) => {
     setMapType(newMapType);
@@ -188,7 +188,7 @@ const Heatmap = ({ filter, gpuGroup }) => {
     const fetchPositionData = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-moment-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
