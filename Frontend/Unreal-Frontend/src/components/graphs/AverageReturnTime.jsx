@@ -118,9 +118,67 @@ const AverageReturnTimeGraph = ({ filter }) => {
   if (!returnGapData) return <p>No data to display.</p>;
 
   return (
+<<<<<<< Updated upstream
     <div className="p-4 bg-white rounded-lg shadow-md max-w-3xl mx-auto">
       <Line data={returnGapData} />
     </div>
+=======
+    <Box sx={{ width: '600px', height: '100%', p: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+        <label style={{ marginRight: '8px', fontWeight: '600' }}>Time Unit:</label>
+        <select
+          value={timeUnit}
+          onChange={(e) => setTimeUnit(e.target.value)}
+          style={{
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '4px 8px',
+          }}
+        >
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+      </Box>
+      <Box sx={{ height: '500px', width: '100%' }}>
+        <Line
+          data={returnGapData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Average Time Between Sessions",
+                font: { size: 20 },
+                padding: { top: 10, bottom: 30 },
+              },
+              legend: {
+                labels: { font: { size: 14 } },
+              },
+              tooltip: {
+                bodyFont: { size: 14 },
+                titleFont: { size: 16 },
+                padding: 10,
+              },
+            },
+            scales: {
+              x: { ticks: { font: { size: 13 } } },
+              y: {
+                ticks: { font: { size: 13 } },
+                title: {
+                  display: true,
+                  text: `Time (${timeUnit})`,
+                  font: { size: 16 },
+                },
+              },
+            },
+          }}
+        />
+      </Box>
+    </Box>
+>>>>>>> Stashed changes
   );
 };
 

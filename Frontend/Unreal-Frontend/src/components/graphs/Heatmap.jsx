@@ -394,7 +394,7 @@ const Heatmap = ({ filter, gpuGroup }) => {
     <div>
       <div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: "flex-end"}}>
-          <div>
+          <div style={{paddingTop: "15px"}}>
             <ToggleButtonGroup
               value={mapType}
               exclusive
@@ -416,7 +416,7 @@ const Heatmap = ({ filter, gpuGroup }) => {
             </ToggleButtonGroup>
           </div>
 
-          <div>
+          <div style={{paddingTop: "15px", paddingBottom: "15px"}}>
             <NumberInput
               aria-label="Bin Size Input"
               placeholder="Set a bin size..."
