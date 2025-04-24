@@ -164,7 +164,7 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
               right: 8,
               pointerEvents: 'none',
             },
-            color: gpuGroup === '' ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
+              color: !gpuGroup ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
           }}
           displayEmpty
           disabled={!!playerId}
