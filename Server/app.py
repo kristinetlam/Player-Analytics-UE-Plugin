@@ -1,6 +1,6 @@
 import json
 from flask import Flask, request, jsonify
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING, DESCENDING
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -11,7 +11,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://main.d30w2b6tekn5z0.amplifyapp.com"]}})
-
 
 # Secret token (store securely in an environment variable)
 SECRET_TOKEN = os.getenv("API_SECRET_TOKEN", "your_secure_token_here")
@@ -33,12 +32,39 @@ computer_specs_local = db_local.computer_specs
 moments_local = db_local.moments
 
 def verify_token():
-    """Checks if the request has a valid token."""
+    """
+    Checks if the request has a valid authentication token.
+    
+    Returns:
+        bool: True if the token is valid, False otherwise
+    """
     token = request.headers.get("Authorization")
     return token == f"Bearer {SECRET_TOKEN}"
 
 @app.route("/add-data", methods=["POST"])
 def add_data():
+    """
+    Endpoint to add various types of game analytics data to the database.
+    
+    Expected JSON data structure should contain one or more of these keys:
+    - Interactions: List of player interaction events
+    - Inventories: List of player inventory snapshots
+    - Positions: List of player position data points
+    - FPS (Frames Per Second): List of FPS measurements
+    - RAM Usage: List of RAM usage measurements
+    - CPU Usage: List of CPU usage measurements
+    - Sessions: List of player session data
+    - Computer Specifications: List of player computer specs
+    - moments: List of gameplay moment data
+    
+    Returns:
+        JSON response with success message or error details
+        
+    Status codes:
+        201: Data added successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -104,7 +130,11 @@ def add_data():
                 
         # Insert Computer Specifications
         if "Computer Specifications" in data:
-            computer_specs_local.insert_many(data["Computer Specifications"])
+            try:
+                computer_specs_local.insert_many(data["Computer Specifications"])
+                print("Inserted Computer Specifications successfully.")
+            except Exception as e:
+                print("Error inserting Computer Specifications:", str(e))
             
         # Insert Moments
         if "moments" in data:
@@ -113,7 +143,6 @@ def add_data():
                 print("Inserted Moments successfully.")
             except Exception as e:
                 print("Error inserting Moments:", str(e))
-
 
         return jsonify({"message": "Data added successfully"}), 201
 
@@ -124,6 +153,22 @@ def add_data():
 
 @app.route("/get-data", methods=["GET"])
 def get_data():
+    """
+    Endpoint to retrieve comprehensive analytics data from all collections.
+    
+    Returns:
+        JSON containing data from multiple collections:
+        - Interactions: Player interaction events
+        - Positions: Player position data
+        - AVG FPS: Performance metrics
+        - Sessions: Session information
+        - Computer Specifications: Hardware information
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -148,24 +193,54 @@ def get_data():
     
 @app.route("/get-interaction-data", methods=["GET"])
 def get_interaction_data():
+    """
+    Endpoint to retrieve filtered player interaction data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered interaction data under "Interactions" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
         query = {}
+
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
+
         if game_version:
             query["Game Version"] = game_version
+
         if start_time and end_time:
+            start_key = start_time.replace('-', '.').strip()
+            end_key = end_time.replace('-', '.').strip()
+
             query["Timestamp"] = {
-                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
-                "$lte": f"{end_time.replace('-', '.')}-23.59.59"
+                "$gte": f"{start_key}-00.00.00",
+                "$lte": f"{end_key}-23.59.59",
             }
 
         print("Interaction Query:", query)
@@ -179,6 +254,24 @@ def get_interaction_data():
 
 @app.route("/get-position-data", methods=["GET"])
 def get_position_data():
+    """
+    Endpoint to retrieve filtered player position data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered position data under "Positions" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -186,24 +279,32 @@ def get_position_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
 
         if game_version:
             query["Game Version"] = game_version
 
         if start_time and end_time:
-            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
+            start_key = start_time.replace('-', '.').strip()
+            end_key = end_time.replace('-', '.').strip()
+
             query["Timestamp"] = {
-                "$gte": f"{start_time.replace('-', '.')}-00.00.00",
-                "$lte": f"{end_time.replace('-', '.')}-23.59.59",
+                "$gte": f"{start_key}-00.00.00",
+                "$lte": f"{end_key}-23.59.59",
             }
 
-        print("Avg FPS query:", query)  # Debug line
+        print("Position query:", query)  # Debug line
         positions = list(positions_local.find(query, {"_id": 0}))
 
         return jsonify({"Positions": positions}), 200
@@ -213,6 +314,24 @@ def get_position_data():
 
 @app.route("/get-avg-fps-data", methods=["GET"])
 def get_avg_fps_data():
+    """
+    Endpoint to retrieve filtered FPS (Frames Per Second) data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered FPS data under "AVG FPS" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -220,18 +339,23 @@ def get_avg_fps_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
 
         if game_version:
             query["Game Version"] = game_version
 
         if start_time and end_time:
-            # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
             query["Timestamp"] = {
                 "$gte": f"{start_time.replace('-', '.')}-00.00.00",
                 "$lte": f"{end_time.replace('-', '.')}-23.59.59",
@@ -249,26 +373,42 @@ def get_avg_fps_data():
 
 @app.route("/get-session-data", methods=["GET"])
 def get_session_data():
+    """
+    Endpoint to retrieve filtered player session data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered session data under "Sessions" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
         query = {}
 
-        # Log all query parameters for debugging
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        print("Received parameters:", {
-            "player_id": player_id,
-            "game_version": game_version,
-            "start_time": start_time,
-            "end_time": end_time,
-        })
-
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
 
         if game_version:
@@ -296,6 +436,24 @@ def get_session_data():
 
 @app.route("/get-cpu-data", methods=["GET"])
 def get_cpu_data():
+    """
+    Endpoint to retrieve filtered CPU usage data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered CPU usage data under "CPU" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -303,13 +461,19 @@ def get_cpu_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
-
+        
         if game_version:
             query["Game Version"] = game_version
 
@@ -331,6 +495,24 @@ def get_cpu_data():
     
 @app.route("/get-ram-data", methods=["GET"])
 def get_ram_data():
+    """
+    Endpoint to retrieve filtered RAM usage data.
+    
+    Query Parameters:
+        player_id (str, optional): Filter by specific player ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+    
+    Returns:
+        JSON with filtered RAM usage data under "ram" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -338,15 +520,18 @@ def get_ram_data():
         query = {}
 
         player_id = request.args.get("player_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
 
-        if player_id:
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
             query["PlayerID"] = player_id
-
-        if game_version:
-            query["Game Version"] = game_version
 
         if start_time and end_time:
             # Adjust if your Timestamp format is not ISO (example: "2025.03.20-12.00.00")
@@ -366,6 +551,17 @@ def get_ram_data():
     
 @app.route("/get-computer-specs-raw", methods=["GET"])
 def get_computer_specs_raw():
+    """
+    Endpoint to retrieve raw computer specification data without filtering.
+    
+    Returns:
+        JSON with all computer specification data under "Computer Specifications" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -375,132 +571,55 @@ def get_computer_specs_raw():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-@app.route("/get-data/player/<player_id>", methods=["GET"])
-def get_interaction_data_by_player(player_id):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        positions = list(positions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"PlayerID": player_id}, {"_id": 0}))
-        sessions = list(sessions_local.find({"PlayerID": player_id}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"PlayerID": player_id}, {"_id": 0}))
-        ram = list(ram_local.find({"PlayerID": player_id}, {"_id": 0}))
-        cpu = list(cpu_local.find({"PlayerID": player_id}, {"_id": 0}))
-        
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs,
-            "Ram Usage": ram,
-            "CPU Usage": cpu
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/get-data/session-version/<session_id>", methods=["GET"])
-def get_session_data_by_session(session_id):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"SessionID": session_id}, {"_id": 0}))
-        positions = list(positions_local.find({"SessionID": session_id}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"SessionID": session_id}, {"_id": 0}))
-        sessions = list(sessions_local.find({"SessionID": session_id}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"SessionID": session_id}, {"_id": 0}))
-        
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/get-data/game-version/<game_version>", methods=["GET"])
-def get_session_data_by_game_version(game_version):
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        interactions = list(interactions_local.find({"Game Version": game_version}, {"_id": 0}))
-        positions = list(positions_local.find({"Game Version": game_version}, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find({"Game Version": game_version}, {"_id": 0}))
-        sessions = list(sessions_local.find({"Game Version": game_version}, {"_id": 0}))
-        specs = list(computer_specs_local.find({"Game Version": game_version}, {"_id": 0}))
-
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-@app.route("/get-data/timeframe", methods=["GET"])
-def get_data_by_timeframe():
-    if not verify_token():
-        return jsonify({"error": "Unauthorized"}), 401
-
-    try:
-        start_time = request.args.get("start_time")
-        end_time = request.args.get("end_time")
-
-        query = {"Timestamp": {"$gte": start_time, "$lte": end_time}}
-
-        interactions = list(interactions_local.find(query, {"_id": 0}))
-        positions = list(positions_local.find(query, {"_id": 0}))
-        avg_fps = list(avg_fps_local.find(query, {"_id": 0}))
-        sessions = list(sessions_local.find(query, {"_id": 0}))
-        specs = list(computer_specs_local.find(query, {"_id": 0}))
-
-        return jsonify({
-            "Interactions": interactions, 
-            "Positions": positions,
-            "AVG FPS": avg_fps,
-            "Sessions": sessions,
-            "Computer Specifications": specs
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route("/get-player-ids", methods=["GET"])
 def get_player_ids():
     """
     Endpoint to retrieve all unique PlayerIDs from the database.
+    
+    Returns:
+        JSON with a list of unique player IDs under "PlayerIDs" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token) - implicit from other code paths
+        500: Server error - implicit from other code paths
     """
-    # Query the collections for PlayerID
-    player_ids = set()
+    if not verify_token():
+        return jsonify({"error": "Unauthorized"}), 401
+        
+    try:
+        # Query the collections for PlayerID
+        player_ids = set()
 
-    # Extract PlayerIDs from interactions
-    interactions = interactions_local.find({}, {"PlayerID": 1})
-    for interaction in interactions:
-        player_ids.add(interaction.get("PlayerID"))
+        # Extract PlayerIDs from interactions
+        interactions = interactions_local.find({}, {"PlayerID": 1})
+        for interaction in interactions:
+            player_ids.add(interaction.get("PlayerID"))
 
-    # Extract PlayerIDs from sessions
-    sessions = sessions_local.find({}, {"PlayerID": 1})
-    for session in sessions:
-        player_ids.add(session.get("PlayerID"))
+        # Extract PlayerIDs from sessions
+        sessions = sessions_local.find({}, {"PlayerID": 1})
+        for session in sessions:
+            player_ids.add(session.get("PlayerID"))
 
-    # Return the unique PlayerIDs as a JSON response
-    return jsonify({"PlayerIDs": list(player_ids)}), 200
+        # Return the unique PlayerIDs as a JSON response
+        return jsonify({"PlayerIDs": list(player_ids)}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/get-game-versions", methods=["GET"])
 def get_game_versions():
-    """Retrieve all unique Game Versions from the sessions collection."""
+    """
+    Endpoint to retrieve all unique Game Versions from the sessions collection.
+    
+    Returns:
+        JSON with a list of unique game versions under "GameVersions" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -510,31 +629,80 @@ def get_game_versions():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/get-gpu-player-groups", methods=["GET"])
-def get_gpu_player_groups():
+@app.route("/get-gpu-groups", methods=["GET"])
+def get_gpu_groups():
+    """
+    Endpoint to retrieve GPU information grouped by GPU name with associated player IDs.
+    
+    Returns:
+        JSON with GPU groups data under "GPUGroups" key, including:
+        - gpuName: The name of the GPU
+        - playerIds: List of player IDs using this GPU
+        - count: Number of players using this GPU
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Group by GPUName and count distinct PlayerIDs
+        # Group by GPUName and collect associated PlayerIDs
         pipeline = [
             {"$group": {
                 "_id": "$GPUName",
-                "players": {"$addToSet": "$PlayerID"}
+                "playerIds": {"$addToSet": "$PlayerID"},
+                "count": {"$sum": 1}
             }},
             {"$project": {
-                "name": "$_id",
-                "playerCount": {"$size": "$players"},
+                "gpuName": "$_id",
+                "playerIds": 1,
+                "count": 1,
                 "_id": 0
-            }}
+            }},
+            {"$sort": {"count": -1}}  # Sort by popularity
         ]
+        
         result = list(computer_specs_local.aggregate(pipeline))
-        return jsonify({"GPUPlayerGroups": result}), 200
+        return jsonify({"GPUGroups": result}), 200
     except Exception as e:
+        print("Error fetching GPU groups:", str(e))
         return jsonify({"error": str(e)}), 500
+
+def get_player_ids_by_gpu(gpu_name):
+    """
+    Helper function to get player IDs associated with a specific GPU.
+    
+    Args:
+        gpu_name (str): The name of the GPU to filter by
+        
+    Returns:
+        list: List of player IDs that use the specified GPU
+    """
+    try:
+        players = list(computer_specs_local.find({"GPUName": gpu_name}, {"PlayerID": 1, "_id": 0}))
+        return [p["PlayerID"] for p in players]
+    except Exception as e:
+        print(f"Error getting player IDs for GPU {gpu_name}: {str(e)}")
+        return []
 
 @app.route("/get-computer-specs", methods=["GET"])
 def get_computer_specs():
+    """
+    Endpoint to retrieve unique GPU names and brands from computer specifications.
+    
+    Returns:
+        JSON with two lists:
+        - GPUBrands: List of unique GPU brands
+        - GPUNames: List of unique GPU names
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
+    """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -546,43 +714,52 @@ def get_computer_specs():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-from pymongo import ASCENDING, DESCENDING
-
 @app.route("/get-moment-data", methods=["GET"])
 def get_moment_data():
     """
-    Endpoint: /get-moment-data
-    Method: GET
-
-    Description:
-    Returns filtered 'moment' data entries from the MongoDB 'moments' collection based on optional query parameters.
-
+    Endpoint to retrieve filtered gameplay moment data with flexible query options.
+    
     Query Parameters:
-    - player_id:      Filter by a specific PlayerID
-    - session_id:     Filter by a specific SessionID
-    - game_version:   Filter by a specific game version
-    - start_time:     Inclusive start date in YYYY-MM-DD (used for Timestamp filtering)
-    - end_time:       Inclusive end date in YYYY-MM-DD (used for Timestamp filtering)
-    - fields:         Multiple fields to include in projection (e.g., fields=Position&fields=FPS)
-    - sort_by:        Field name to sort by (e.g., Timestamp, FPS)
-    - sort_order:     Either 'asc' (default) or 'desc' for sort direction
-
+        player_id (str, optional): Filter by specific player ID
+        session_id (str, optional): Filter by specific session ID
+        gpu_group (str, optional): Filter by GPU group/name
+        game_version (str, optional): Filter by game version
+        start_time (str, optional): Start timestamp (YYYY-MM-DD format)
+        end_time (str, optional): End timestamp (YYYY-MM-DD format)
+        fields (list, optional): Multiple fields to include in projection
+        sort_by (str, optional): Field name to sort by (e.g., Timestamp, FPS)
+        sort_order (str, optional): Either 'asc' (default) or 'desc' for sort direction
+    
     Returns:
-    - JSON array of matched documents under the "Moments" key, with optional projections and sorting applied.
+        JSON with filtered moment data under "Moments" key
+        
+    Status codes:
+        200: Data retrieved successfully
+        401: Unauthorized (invalid token)
+        500: Server error
     """
     if not verify_token():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
         query = {}
-        projection = {"_id": 0}
 
-        # Filters
         player_id = request.args.get("player_id")
-        session_id = request.args.get("session_id")
+        gpu_group = request.args.get("gpu_group")
         game_version = request.args.get("game_version")
+        session_id = request.args.get("session_id")  # Fixed: was using player_id again
         start_time = request.args.get("start_time")
         end_time = request.args.get("end_time")
+
+        # If GPU group is specified, get associated player IDs
+        if gpu_group and not player_id:  # Only use GPU filtering if no specific player is selected
+            player_ids = get_player_ids_by_gpu(gpu_group)
+            if player_ids:
+                query["PlayerID"] = {"$in": player_ids}
+        elif player_id:
+            query["PlayerID"] = player_id
+        projection = {"_id": 0}
+
         fields = request.args.getlist("fields")
 
         # Sorting
@@ -590,8 +767,6 @@ def get_moment_data():
         sort_order = request.args.get("sort_order", "asc").lower()  # "asc" or "desc"
         sort_direction = ASCENDING if sort_order == "asc" else DESCENDING
 
-        if player_id:
-            query["PlayerID"] = player_id
         if session_id:
             query["SessionID"] = session_id
         if game_version:
@@ -622,9 +797,6 @@ def get_moment_data():
     except Exception as e:
         print("[ERROR] Failed to fetch moment data:", str(e))
         return jsonify({"error": str(e)}), 500
-
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

@@ -32,6 +32,13 @@ function parseTimestampToDate(timestampStr) {
   }
 }
 
+// Format date as MM/DD
+function formatDateToMMDD(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
 const AverageSessionPerDayChart = ({ filter }) => {
   const [series, setSeries] = useState([]);
   const [labels, setLabels] = useState([]);
@@ -42,10 +49,11 @@ const AverageSessionPerDayChart = ({ filter }) => {
       setLoading(true);
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
+          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
@@ -93,7 +101,9 @@ const AverageSessionPerDayChart = ({ filter }) => {
         console.log('[GROUPED DATA] Version map:', versionMap);
 
         const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
-        setLabels(sortedDates);
+        // Keep original dates for data linking but format for display
+        const formattedDates = sortedDates.map(date => formatDateToMMDD(date));
+        setLabels(formattedDates);
 
         const formattedSeries = Object.entries(versionMap).map(([version, dateMap]) => {
           const data = sortedDates.map((date) => {
@@ -123,9 +133,16 @@ const AverageSessionPerDayChart = ({ filter }) => {
 
   return series.length && labels.length ? (
     <LineChart
-      xAxis={[{ data: labels, scaleType: 'point', label: 'Date' }]}
+      xAxis={[{ 
+        data: labels, 
+        scaleType: 'point', 
+        label: 'Date'
+      }]}
+      yAxis={[{
+        label: 'Average Session Duration (seconds)'
+      }]}
       series={series}
-      width={800}
+      width={650}
       height={400}
     />
   ) : (

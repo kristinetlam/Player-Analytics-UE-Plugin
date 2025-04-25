@@ -208,7 +208,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         CPUObject->SetStringField("Game Version", gameVersion);
         CPUObject->SetStringField("Timestamp", CPUPoints[i].Timestamp);
 
-        CPUObject->SetNumberField("CPU%Used", CPUPoints[i].CPUUsed);
+        CPUObject->SetNumberField("CPUPctUsed", CPUPoints[i].CPUUsed);
 
         CPUArray.Add(MakeShared<FJsonValueObject>(CPUObject));
     }
@@ -232,6 +232,7 @@ TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
         MomentObject->SetStringField("RAM", Moments[i].RAM);
         MomentObject->SetStringField("GPUName", GPUInfo.DeviceDescription);
         MomentObject->SetStringField("FPS", Moments[i].FPS);
+        MomentObject->SetNumberField("PlayerHealth", playerHealth);
 
         momentArray.Add(MakeShared<FJsonValueObject>(MomentObject));
     }

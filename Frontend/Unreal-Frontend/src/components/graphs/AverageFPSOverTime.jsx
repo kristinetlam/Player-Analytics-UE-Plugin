@@ -15,10 +15,11 @@ const FPSLineChart = ({ filter }) => {
         setLoading(true);
 
         const url = new URL('http://50.30.211.229:5000/get-avg-fps-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
+          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
@@ -85,10 +86,11 @@ const FPSLineChart = ({ filter }) => {
 
   return (
     <LineChart
-      width={500}
-      height={300}
+      width={580}
+      height={350}
       xAxis={[{ data: xLabels, scaleType: 'point', label: 'Date' }]}
-      series={[{ data: avgFpsPerDay, label: 'Avg FPS' }]}
+      series={[{ data: avgFpsPerDay, label: 'Avg FPS', area: true, color: '#e57373' }]}
+      grid={{ vertical: true, horizontal: true }}
       yAxis={[{ label: 'FPS' }]}
       legend={{ hidden: true }}
     />

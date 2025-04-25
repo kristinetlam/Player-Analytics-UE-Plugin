@@ -16,10 +16,11 @@ const PlayerSessionStats = ({ filter }) => {
     const fetchStats = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
-        const { playerId, patchVersion, startDate, endDate } = filter;
+        const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
         const params = {
           player_id: playerId,
+          gpu_group: gpuGroup,
           game_version: patchVersion,
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
@@ -49,7 +50,9 @@ const PlayerSessionStats = ({ filter }) => {
         const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
         const mid = Math.floor(lengths.length / 2);
         const median = lengths.length % 2 === 0 ? (lengths[mid - 1] + lengths[mid]) / 2 : lengths[mid];
-        const range = `${lengths[0]}s – ${lengths[lengths.length - 1]}s`;
+        // const range = `${lengths[0]}s – ${lengths[lengths.length - 1]}s`;
+        const range = `${lengths[0].toFixed(3)}s – ${lengths[lengths.length - 1].toFixed(3)}s`; // Fixed to 3 decimal places
+
 
         setStats({
           average: `${avg.toFixed(1)}s`,
