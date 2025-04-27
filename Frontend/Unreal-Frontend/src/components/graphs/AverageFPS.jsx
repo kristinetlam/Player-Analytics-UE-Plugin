@@ -55,8 +55,9 @@ const AverageFPS = ({ filter }) => {
 
         let lastMonthStart, lastMonthEnd;
         if (startDate && endDate) {
-          lastMonthStart = dayjs(startDate).subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-          lastMonthEnd = dayjs(endDate).subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+          lastMonthStart = dayjs(startDate).subtract(1, 'month').format('YYYY-MM-DD');
+          lastMonthEnd = dayjs(endDate).subtract(1, 'month').format('YYYY-MM-DD');
+
         } else {
           lastMonthStart = dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
           lastMonthEnd = dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
