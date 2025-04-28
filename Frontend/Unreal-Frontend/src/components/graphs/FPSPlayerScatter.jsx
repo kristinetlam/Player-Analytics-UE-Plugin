@@ -6,6 +6,8 @@ const FpsScatterChart = ({ filter }) => {
   const [seriesData, setSeriesData] = useState([]);
   const [xLabels, setXLabels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const COLORS = ['#F4A261', '#E76F51', '#2A9D8F', '#E9C46A'];
+
 
   useEffect(() => {
     if (!filter) return;
@@ -63,9 +65,10 @@ const FpsScatterChart = ({ filter }) => {
           xSet.add(dateLabel);
         });
 
-        const formattedSeries = Object.entries(grouped).map(([playerId, points]) => ({
+        const formattedSeries = Object.entries(grouped).map(([playerId, points], index) => ({
           label: `Player ${playerId.slice(0, 4)}`,
           data: points,
+          color: COLORS[index % COLORS.length],
         }));
 
         setSeriesData(formattedSeries);

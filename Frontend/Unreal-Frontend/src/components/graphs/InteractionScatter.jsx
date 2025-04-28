@@ -77,7 +77,7 @@ export default function PlayerInteractionsScatterChart({ filter }) {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position' }]}
-      series={[{ data }]} // Here, the data passed to the series contains 'label' for each point
+      series={[{ data, color: '#FFA726' }]} // Here, the data passed to the series contains 'label' for each point
       width={600}
       height={500}
       tooltip={({ data }) => (
