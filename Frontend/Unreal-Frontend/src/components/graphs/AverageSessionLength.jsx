@@ -51,7 +51,10 @@ const AverageSessionLength = ({ filter }) => {
   
         const result = await response.json();
         const sessionData = result['Sessions'] || [];
-        const totalSessionLength = sessionData.reduce((acc, item) => acc + parseFloat(item.EndTime), 0);
+        const totalSessionLength = sessionData.reduce((acc, item) => {
+          const sessionLength = parseFloat(item.EndTime) - parseFloat(item.StartTime);
+          return acc + (sessionLength > 0 ? sessionLength : 0);
+        }, 0);
         const avgSessionLengthValue = sessionData.length > 0 ? totalSessionLength / sessionData.length : 0;
         setAvgSessionLength(avgSessionLengthValue);
   
@@ -91,7 +94,10 @@ const AverageSessionLength = ({ filter }) => {
   
         const lastMonthResult = await lastMonthResponse.json();
         const lastMonthSessionData = lastMonthResult['Sessions'] || [];
-        const totalLastMonthSessionLength = lastMonthSessionData.reduce((acc, item) => acc + parseFloat(item.EndTime), 0);
+        const totalLastMonthSessionLength = lastMonthSessionData.reduce((acc, item) => {
+          const sessionLength = parseFloat(item.EndTime) - parseFloat(item.StartTime);
+          return acc + (sessionLength > 0 ? sessionLength : 0);
+        }, 0);
         const lastMonthAvg = lastMonthSessionData.length > 0 ? totalLastMonthSessionLength / lastMonthSessionData.length : 0;
         setLastMonthAvgSessionLength(lastMonthAvg);
   

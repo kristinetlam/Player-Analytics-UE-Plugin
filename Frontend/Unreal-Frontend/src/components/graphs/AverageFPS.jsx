@@ -26,8 +26,12 @@ const AverageFPS = ({ filter }) => {
           player_id: playerId,
           gpu_group: gpuGroup,
           game_version: patchVersion,
-          start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
-          end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
+          start_time: startDate 
+          ? dayjs(startDate).format('YYYY-MM-DD') 
+          : dayjs().subtract(30, 'day').startOf('day').format('YYYY-MM-DD'),
+        end_time: endDate 
+          ? dayjs(endDate).format('YYYY-MM-DD') 
+          : dayjs().endOf('day').format('YYYY-MM-DD'),
         };
 
         Object.entries(params).forEach(([key, value]) => {
@@ -46,22 +50,26 @@ const AverageFPS = ({ filter }) => {
 
         const result = await response.json();
         const fpsData = result['AVG FPS'] || [];
-        const totalFps = fpsData.reduce((acc, item) => acc + item.AverageFPS, 0);
-        const avgFpsValue = fpsData.length > 0 ? totalFps / fpsData.length : 0;
+        const validFpsData = fpsData.filter(item => item.AverageFPS != null);
+        const totalFps = validFpsData.reduce((acc, item) => acc + item.AverageFPS, 0);
+        const avgFpsValue = validFpsData.length > 0 ? totalFps / validFpsData.length : 0;
+
         setAvgFps(avgFpsValue);
 
         // fetch last month fps
         const lastMonthUrl = new URL('http://50.30.211.229:5000/get-avg-fps-data');
 
         let lastMonthStart, lastMonthEnd;
-        if (startDate && endDate) {
-          lastMonthStart = dayjs(startDate).subtract(1, 'month').format('YYYY-MM-DD');
-          lastMonthEnd = dayjs(endDate).subtract(1, 'month').format('YYYY-MM-DD');
 
+        if (startDate && endDate) {
+          const daysRange = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+          lastMonthStart = dayjs(startDate).subtract(daysRange, 'day').format('YYYY-MM-DD');
+          lastMonthEnd = dayjs(endDate).subtract(daysRange, 'day').format('YYYY-MM-DD');
         } else {
-          lastMonthStart = dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-          lastMonthEnd = dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+          lastMonthStart = dayjs().subtract(60, 'day').startOf('day').format('YYYY-MM-DD');
+          lastMonthEnd = dayjs().subtract(30, 'day').endOf('day').format('YYYY-MM-DD');
         }
+
 
         const lastMonthParams = {
           player_id: playerId,
@@ -87,8 +95,10 @@ const AverageFPS = ({ filter }) => {
 
         const lastMonthResult = await lastMonthResponse.json();
         const lastMonthFpsData = lastMonthResult['AVG FPS'] || [];
-        const totalLastMonthFps = lastMonthFpsData.reduce((acc, item) => acc + item.AverageFPS, 0);
-        const lastMonthAvg = lastMonthFpsData.length > 0 ? totalLastMonthFps / lastMonthFpsData.length : 0;
+        const validLastMonthFpsData = lastMonthFpsData.filter(item => item.AverageFPS != null);
+        const totalLastMonthFps = validLastMonthFpsData.reduce((acc, item) => acc + item.AverageFPS, 0);
+        const lastMonthAvg = validLastMonthFpsData.length > 0 ? totalLastMonthFps / validLastMonthFpsData.length : 0;
+
         setLastMonthAvgFps(lastMonthAvg);
 
       } catch (error) {
