@@ -31,9 +31,11 @@ const AverageSessionLength = ({ filter }) => {
         };
   
         if (!params.start_time || !params.end_time) {
-          params.start_time = dayjs().startOf('month').format('YYYY-MM-DD');
-          params.end_time = dayjs().endOf('month').format('YYYY-MM-DD');
+          params.start_time = dayjs().subtract(14, 'day').startOf('day').format('YYYY-MM-DD');
+          params.end_time = dayjs().endOf('day').format('YYYY-MM-DD');
         }
+        
+        
   
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
@@ -63,12 +65,14 @@ const AverageSessionLength = ({ filter }) => {
   
         let lastMonthStart, lastMonthEnd;
         if (startDate && endDate) {
-          lastMonthStart = dayjs(startDate).subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-          lastMonthEnd = dayjs(endDate).subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+          const daysRange = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+          lastMonthStart = dayjs(startDate).subtract(daysRange, 'day').format('YYYY-MM-DD');
+          lastMonthEnd = dayjs(endDate).subtract(daysRange, 'day').format('YYYY-MM-DD');
         } else {
-          lastMonthStart = dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-          lastMonthEnd = dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+          lastMonthStart = dayjs().subtract(28, 'day').startOf('day').format('YYYY-MM-DD');
+          lastMonthEnd = dayjs().subtract(14, 'day').endOf('day').format('YYYY-MM-DD');
         }
+        
   
         const lastMonthParams = {
           player_id: playerId,
