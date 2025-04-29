@@ -99,6 +99,7 @@ const PlayerTraversal = ({ filter }) => {
       series={[
         {
           data,
+          color: '#9CCC65',
           renderPoint: ({ x, y, id, dataIndex }) => {
             const point = data[dataIndex];
             return (

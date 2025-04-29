@@ -153,12 +153,13 @@ const AverageReturnTimeGraph = ({ filter }) => {
             maintainAspectRatio: false,
             plugins: {
               title: {
-                display: true,
+                display: false,
                 text: "Average Time Between Sessions",
                 font: { size: 20 },
                 padding: { top: 10, bottom: 30 },
               },
               legend: {
+                display: false,
                 labels: { font: { size: 14 } },
               },
               tooltip: {

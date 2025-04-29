@@ -110,7 +110,6 @@ export default function AverageSessionsGauge({ filter }) {
         startAngle={-110}
         endAngle={110}
         value={avgSessions}
-        minValue={0}
         valueMax={30}
       >
           {/* grey background track */}

@@ -19,6 +19,11 @@
 			"Name": "PlayerAnalyticsPlugin",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		}
+		}, 
+		{
+        		"Name": "PlayerAnalyticsPluginTests",
+       			"Type": "Developer",
+        		"LoadingPhase": "PostEngineInit"
+    		}
 	]
 }

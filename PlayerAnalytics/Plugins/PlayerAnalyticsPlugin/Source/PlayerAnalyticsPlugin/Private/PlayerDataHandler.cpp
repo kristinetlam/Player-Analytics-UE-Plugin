@@ -45,6 +45,9 @@ void UPlayerDataHandler::AddInventory(int size, int capacity, TArray<FString> it
     inventory.Size = size;
     inventory.Capacity = capacity;
     inventory.Timestamp = FDateTime::Now().ToString();
+
+    inventory.Items.SetNum(size); // Allocate memory
+
     for (int i = 0; i < size; i++) {
         inventory.Items[i].ItemName = itemNames[i];
         inventory.Items[i].Amount = itemAmounts[i];
