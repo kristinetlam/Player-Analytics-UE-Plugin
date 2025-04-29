@@ -61,7 +61,7 @@ export default function PlayerInteractionsScatterChart({ filter }) {
       .map((interaction) => ({
         x: interaction.InteractionLocation[0], // x position
         y: interaction.InteractionLocation[1], // y position
-        label: interaction.InteractionDescription?.split(':')[0]?.trim() || 'No description available',
+        label: interaction.InteractionDescription
       }));
   };
 
@@ -77,13 +77,11 @@ export default function PlayerInteractionsScatterChart({ filter }) {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position', labelStyle: { transform: 'translateX(-20px)' } }]}
-      series={[{ data, color: '#FFA726' }]} // Here, the data passed to the series contains 'label' for each point
+      series={[{ data, color: '#FFA726', valueFormatter: (point) => `${point.label} (x: ${point.x.toFixed(2)}, y: ${point.y.toFixed(2)})`}]}
+      voronoiMaxRadius= {25}
       width={600}
       height={500}
       margin={{ top: 30, right: 30, bottom: 50, left: 80 }}
-      tooltip={({ data }) => (
-        <div>{data.label}</div> // This will show the description stored in 'label'
-      )}
     />
   );
 }
