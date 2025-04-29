@@ -122,7 +122,7 @@ export default function AverageSessionsGauge({ filter }) {
         <GaugePointer strokeWidth={3} />
       </GaugeContainer>
       <Typography variant="h6" sx={{ fontWeight: 'bold', mt: -3}}>
-        ${avgSessions.toFixed(2)} follow-ups/player
+        {avgSessions.toFixed(2)} follow-ups/player
       </Typography>
     </div>
     );
