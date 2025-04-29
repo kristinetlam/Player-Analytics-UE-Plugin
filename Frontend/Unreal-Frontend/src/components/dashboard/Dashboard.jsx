@@ -46,25 +46,6 @@ import LocationLine from '../graphs/LocationLine';
 import Heatmap from '../graphs/Heatmap';
 import InteractionScatter from '../graphs/InteractionScatter';
 
-const NAVIGATION = [
-  {
-    kind: 'header',
-    title: 'Main items',
-  },
-  {
-    segment: 'dashboard',
-    title: 'Dashboard',
-    icon: <DashboardIcon />,
-  },
-  {
-    kind: 'divider',
-  },
-  {
-    segment: 'library',
-    title: 'UE5 Fab Library',
-    icon: <ShoppingCartIcon />,
-  },
- 
   // {
   //   kind: 'header',
   //   title: 'Analytics',
@@ -91,7 +72,6 @@ const NAVIGATION = [
   //   title: 'Integrations',
   //   icon: <LayersIcon />,
   // },
-];
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -197,6 +177,39 @@ function DashboardLayoutBasic() {
   const [openFilter, setOpenFilter] = useState(false);
   const [filter, setFilter] = useState({ playerId: '', patchVersion: '', startDate: null, endDate: null });
   const [searchQuery, setSearchQuery] = useState('');
+
+  const NAVIGATION = [
+    {
+      kind: 'header',
+      title: 'Main items',
+    },
+    {
+      segment: 'dashboard',
+      title: 'Dashboard',
+      icon: <DashboardIcon />,
+      onClick: () => setSearchQuery(''),
+    },
+    {
+      kind: 'divider',
+    },
+    {
+      segment: 'library',
+      title: 'UE5 Fab Library',
+      icon: <ShoppingCartIcon />,
+    },
+  ];
+  useEffect(() => {
+    const handleDashboardClick = (e) => {
+      if (e.target?.textContent?.trim() === 'Dashboard') {
+        router.navigate('/dashboard');  // <-- this forces react-router navigation
+        setSearchQuery('');              // <-- clear search manually
+      }
+    };
+    document.addEventListener('click', handleDashboardClick);
+    return () => document.removeEventListener('click', handleDashboardClick);
+  }, [router]);
+  
+  
 
   useEffect(() => {
     const collapseBtn = document.querySelector('[aria-label="collapse menu"]');
@@ -374,7 +387,7 @@ function DashboardLayoutBasic() {
       />
 
       <DashboardLayout 
-        navigation={undefined}
+        navigation={NAVIGATION}
         defaultSidebarCollapsed
         slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} setSearchQuery={setSearchQuery} /> }}
       >
