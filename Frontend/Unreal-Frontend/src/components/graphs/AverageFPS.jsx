@@ -119,8 +119,8 @@ const AverageFPS = ({ filter }) => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 'bold', mt: -1, mb: 2 }}>
-        {avgFps.toFixed(2)}
+      <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 4, mb: 2 }}>
+        {avgFps.toFixed(2)} FPS
       </Typography>
       <Typography variant="body1" sx={{ fontWeight: 'normal', color: color, mt: 1 }}>
         {symbol} {percent}%

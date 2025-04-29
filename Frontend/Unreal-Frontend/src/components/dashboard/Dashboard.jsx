@@ -235,7 +235,7 @@ function DashboardLayoutBasic() {
       fixed: true,
     },
     {
-      title: "Average Session Length",
+      title: "Avg Session Length",
       infoContent: "A calculation showing the average session length across all player sessions over the past 30 days. Each player’s session length is recorded when a session ends.",
       component: <AverageSessionLength filter={filter} />,
       sx: { flex: '1 1 300px', maxWidth: '300px', minWidth: '300px', minHeight: '240px', maxHeight: '300px', display: 'flex', flexDirection: 'column' },

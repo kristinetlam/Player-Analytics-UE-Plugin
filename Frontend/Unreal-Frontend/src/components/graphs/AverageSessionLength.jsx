@@ -124,7 +124,7 @@ const AverageSessionLength = ({ filter }) => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ fontWeight: 'bold', mt: -1, mb: 2 }}>
+      <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 4, mb: 2 }}>
         {avgSessionLength.toFixed(2)} seconds
       </Typography>
       <Typography variant="body1" sx={{ fontWeight: 'normal', color: color, mt: 1 }}>

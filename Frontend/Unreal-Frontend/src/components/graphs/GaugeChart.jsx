@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
+import { Typography } from '@mui/material';
 import {
   GaugeContainer,
   GaugeValueArc,
@@ -10,6 +11,7 @@ import {
   useGaugeState,
 } from '@mui/x-charts/Gauge';
 import dayjs from 'dayjs';
+import { AlignHorizontalCenter } from '@mui/icons-material';
 
 // A white tooltip with arrow
 const WhiteTooltip = styled(({ className, ...props }) => (
@@ -103,7 +105,7 @@ export default function AverageSessionsGauge({ filter }) {
 
   
   return (
-    <StyledTooltip title={`${avgSessions.toFixed(2)} follow-ups/player`}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <GaugeContainer
         width={200}
         height={200}
@@ -112,13 +114,16 @@ export default function AverageSessionsGauge({ filter }) {
         value={avgSessions}
         valueMax={30}
       >
-          {/* grey background track */}
-          <GaugeReferenceArc/>
-          {/* colored fill up to avgSessions */}
-          <GaugeValueArc style={{ fill: fillColor }} />
-          {/* red pointer */}
-          <GaugePointer strokeWidth={3} />
-        </GaugeContainer>
-      </StyledTooltip>
+        {/* grey background track */}
+        <GaugeReferenceArc/>
+        {/* colored fill up to avgSessions */}
+        <GaugeValueArc style={{ fill: fillColor }} />
+        {/* red pointer */}
+        <GaugePointer strokeWidth={3} />
+      </GaugeContainer>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', mt: -3}}>
+        ${avgSessions.toFixed(2)} follow-ups/player
+      </Typography>
+    </div>
     );
   }
