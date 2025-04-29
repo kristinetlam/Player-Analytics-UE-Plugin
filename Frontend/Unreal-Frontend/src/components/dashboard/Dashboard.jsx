@@ -361,6 +361,12 @@ function DashboardLayoutBasic() {
           //   width: '0 !important',
           //   overflowX: 'hidden !important',
           // },
+          'html, body, #root': {
+            height: '100%',
+            margin: 0,
+            padding: 0,
+            backgroundColor: '#f7f7f7',
+          },
           '[aria-label="Expand navigation menu"]': {
             display: 'none !important',
           },
@@ -372,7 +378,7 @@ function DashboardLayoutBasic() {
         defaultSidebarCollapsed
         slots={{ toolbarActions: () => <ToolbarActions setOpenFilter={setOpenFilter} setSearchQuery={setSearchQuery} /> }}
       >
-        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7' , minHeight: '100vh' }}>
+        <DashboardContent pathname={router.pathname} sx={{ backgroundColor: '#f7f7f7', minHeight: '100vh - 64px', paddingBottom: 4 }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
             {cardConfigs
               .filter(({ title, description }) =>
