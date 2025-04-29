@@ -351,7 +351,11 @@ function DashboardLayoutBasic() {
         defaultOpen={false}
         branding={{
           logo: (
-            <Box sx={{ display: 'flex', alignItems: 'center', height: 40 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', height: 40 }}
+            onClick={() => {
+              router.navigate('/dashboard');
+              setSearchQuery('');
+            }}>
               <img
                 src="/UE-Icon-2023-Black.svg"
                 alt="Unreal Engine 5 Logo"
@@ -361,7 +365,15 @@ function DashboardLayoutBasic() {
               />
             </Box>
           ),
-          title:<span style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }}>Player Analytics Plugin</span>
+          title:
+          <span 
+            style={{ color: 'rgba(0, 0, 0, 0.8)', marginLeft: '5px' }} 
+              onClick={() => {
+              router.navigate('/dashboard');
+              setSearchQuery('');
+            }}
+          >
+              Player Analytics Plugin</span>
         }}
       >
       <GlobalStyles
