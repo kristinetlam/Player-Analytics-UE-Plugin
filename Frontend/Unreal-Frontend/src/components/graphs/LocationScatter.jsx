@@ -95,7 +95,7 @@ const PlayerTraversal = ({ filter }) => {
   return (
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
-      yAxis={[{ label: 'Y Position' }]}
+      yAxis={[{ label: 'Y Position', labelStyle: { transform: 'translateX(-20px)' }}]}
       series={[
         {
           data,
@@ -115,7 +115,7 @@ const PlayerTraversal = ({ filter }) => {
       ]}
       width={600}
       height={500}
-      margin={{ top: 30, right: 30, bottom: 50, left: 70 }}
+      margin={{ top: 30, right: 30, bottom: 50, left: 80 }}
     />
   );
 };

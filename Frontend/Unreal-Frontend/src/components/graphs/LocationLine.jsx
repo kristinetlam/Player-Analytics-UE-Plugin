@@ -120,11 +120,11 @@ const PlayerLocation = ({ filter }) => {
   return (
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
-      yAxis={[{ label: 'Y Position' }]}
+      yAxis={[{ label: 'Y Position', labelStyle: { transform: 'translateX(-20px)' } }]}
       series={seriesData}
       height={500}
       width={600}
-      margin={{ top: 30, right: 30, bottom: 50, left: 70 }}
+      margin={{ top: 30, right: 30, bottom: 50, left: 80 }}
       slotProps={{
         legend: { hidden: true },
       }}
