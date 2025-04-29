@@ -127,7 +127,7 @@ const AverageReturnTimeGraph = ({ filter }) => {
   if (!returnGapData) return <p>No data to display.</p>;
 
   return (
-    <Box sx={{ width: '100%', height: '100%', p: 1 }}>
+    <Box sx={{ width: '600px', height: '100%', p: 1 }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
         <label style={{ marginRight: '8px', fontWeight: '600' }}>Time Unit:</label>
         <select
