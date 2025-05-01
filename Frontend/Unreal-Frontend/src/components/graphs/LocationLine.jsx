@@ -97,7 +97,6 @@ const PlayerLocation = ({ filter }) => {
         // Now, convert each group into a series. Sort each series by timestamp.
         const series = Object.entries(grouped).map(([playerId, points]) => ({
           id: playerId,
-          label: `Player ${playerId}`,
           color: getColorForId(playerId),
           data: points.sort((a, b) => a.timestamp - b.timestamp),
         }));

@@ -53,11 +53,11 @@ const PlayerTraversal = ({ filter }) => {
           const mappedData = responseData.Moments
             .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2 && moment.Timestamp)
             .map(moment => {
-              const timestamp = dayjs(moment.Timestamp, 'YYYY.MM.DD-HH.mm.ss').valueOf();
+              const timestamp = dayjs(moment.Timestamp, 'YYYY.MM.DD-HH.mm.ss').format('YYYY-MM-DD HH:mm:ss');
               return {
                 x: moment.Position[0],
                 y: moment.Position[1],
-                timestamp,
+                label: timestamp,
               };
             })
             .sort((a, b) => a.timestamp - b.timestamp);
@@ -96,24 +96,8 @@ const PlayerTraversal = ({ filter }) => {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position', labelStyle: { transform: 'translateX(-20px)' }}]}
-      series={[
-        {
-          data,
-          color: '#9CCC65',
-          renderPoint: ({ x, y, id, dataIndex }) => {
-            const point = data[dataIndex];
-            return (
-              <circle
-                key={id}
-                cx={x}
-                cy={y}
-                r={4}
-                fill={point.color ?? 'blue'}
-              />
-            );
-          },
-        },
-      ]}
+      series={[{ data, valueFormatter: (point) => `${point.label} (x: ${point.x.toFixed(2)}, y: ${point.y.toFixed(2)})`}]}
+      voronoiMaxRadius= {25}
       width={600}
       height={500}
       margin={{ top: 30, right: 30, bottom: 50, left: 80 }}
