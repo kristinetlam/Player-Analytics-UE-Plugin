@@ -29,22 +29,20 @@ import DashboardContent from './DashboardContent';
 
 // Graphs
 import AverageFPS from '../graphs/AverageFPS';
-import GaugeChartComp from '../graphs/GaugeChart';
-import LoadGauge from '../graphs/LoadGauge';
-import AverageSessionLength from '../graphs/AverageSessionLength';
-import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
-import PlayerRetentionGraph from '../graphs/PlayerRetentionGraph';
-import AverageReturnTimeGraph from '../graphs/AverageReturnTime';
-import BasicPie from '../graphs/PieChart';
-import PlayerSessionStats from '../graphs/SessionTable';
-import FPSOverTime from '../graphs/FPSPlayerScatter';
 import FPSLineChart from '../graphs/AverageFPSOverTime';
-import SessionLineChart from '../graphs/PlayerSessionLineGraph';
+import AverageReturnTimeGraph from '../graphs/AverageReturnTime';
+import AverageSessionLength from '../graphs/AverageSessionLength';
 import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
-import LocationScatterplot from '../graphs/LocationScatter';
-import LocationLine from '../graphs/LocationLine';
+import FPSOverTime from '../graphs/FPSPlayerScatter';
+import GaugeChartComp from '../graphs/GaugeChart';
 import Heatmap from '../graphs/Heatmap';
 import InteractionScatter from '../graphs/InteractionScatter';
+import LoadGauge from '../graphs/LoadGauge';
+import LocationLine from '../graphs/LocationLine';
+import LocationScatterplot from '../graphs/LocationScatter';
+import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
+import PlayerRetentionGraph from '../graphs/PlayerRetentionGraph';
+import PlayerSessionStats from '../graphs/SessionTable';
 
   // {
   //   kind: 'header',
