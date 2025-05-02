@@ -1,5 +1,3 @@
-// Merged and updated Dashboard component with navigation and universal filter
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
