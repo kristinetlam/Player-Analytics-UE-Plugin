@@ -33,7 +33,6 @@ const LoadGauge = ({ filter }) => {
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
 
-
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
@@ -71,8 +70,7 @@ const LoadGauge = ({ filter }) => {
           setGaugeMax(MAX_RAM);
           setGaugeText((RAMSum/momentData.length).toFixed(0) + " MB");
         }
-          
-
+        
         console.log(gaugeValue);
 
       } catch (error) {

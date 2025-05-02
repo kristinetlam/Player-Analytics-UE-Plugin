@@ -34,8 +34,6 @@ const AverageSessionLength = ({ filter }) => {
           params.start_time = dayjs().subtract(14, 'day').startOf('day').format('YYYY-MM-DD');
           params.end_time = dayjs().endOf('day').format('YYYY-MM-DD');
         }
-        
-        
   
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
@@ -72,8 +70,7 @@ const AverageSessionLength = ({ filter }) => {
           lastMonthStart = dayjs().subtract(28, 'day').startOf('day').format('YYYY-MM-DD');
           lastMonthEnd = dayjs().subtract(14, 'day').endOf('day').format('YYYY-MM-DD');
         }
-        
-  
+      
         const lastMonthParams = {
           player_id: playerId,
           gpu_group: gpuGroup,
@@ -115,7 +112,6 @@ const AverageSessionLength = ({ filter }) => {
     fetchAvgSessionLength();
   }, [filter]);
   
-
   if (avgSessionLength === null) {
     return <Typography>Loading...</Typography>;
   }

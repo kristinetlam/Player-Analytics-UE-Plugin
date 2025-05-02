@@ -1,15 +1,9 @@
-// Merged and updated Dashboard component with navigation and universal filter
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout, ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
@@ -29,49 +23,20 @@ import DashboardContent from './DashboardContent';
 
 // Graphs
 import AverageFPS from '../graphs/AverageFPS';
-import GaugeChartComp from '../graphs/GaugeChart';
-import LoadGauge from '../graphs/LoadGauge';
-import AverageSessionLength from '../graphs/AverageSessionLength';
-import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
-import PlayerRetentionGraph from '../graphs/PlayerRetentionGraph';
-import AverageReturnTimeGraph from '../graphs/AverageReturnTime';
-import BasicPie from '../graphs/PieChart';
-import PlayerSessionStats from '../graphs/SessionTable';
-import FPSOverTime from '../graphs/FPSPlayerScatter';
 import FPSLineChart from '../graphs/AverageFPSOverTime';
-import SessionLineChart from '../graphs/PlayerSessionLineGraph';
+import AverageReturnTimeGraph from '../graphs/AverageReturnTime';
+import AverageSessionLength from '../graphs/AverageSessionLength';
 import AverageSessionPerDayChart from '../graphs/AverageSessionPerDayChart';
-import LocationScatterplot from '../graphs/LocationScatter';
-import LocationLine from '../graphs/LocationLine';
+import FPSOverTime from '../graphs/FPSPlayerScatter';
+import GaugeChartComp from '../graphs/GaugeChart';
 import Heatmap from '../graphs/Heatmap';
 import InteractionScatter from '../graphs/InteractionScatter';
-
-  // {
-  //   kind: 'header',
-  //   title: 'Analytics',
-  // },
-  // {
-  //   segment: 'reports',
-  //   title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
-  //   icon: <BarChartIcon />,
-  //   children: [
-  //     {
-  //       segment: 'optimization',
-  //       title: 'Optimization Data',
-  //       icon: <DescriptionIcon />,
-  //     },
-  //     {
-  //       segment: 'interest',
-  //       title: 'Player Insights',
-  //       icon: <DescriptionIcon />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   segment: 'integrations',
-  //   title: 'Integrations',
-  //   icon: <LayersIcon />,
-  // },
+import LoadGauge from '../graphs/LoadGauge';
+import LocationLine from '../graphs/LocationLine';
+import LocationScatterplot from '../graphs/LocationScatter';
+import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
+import PlayerRetentionGraph from '../graphs/PlayerRetentionGraph';
+import PlayerSessionStats from '../graphs/SessionTable';
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -100,7 +65,6 @@ function DemoPageContent({ pathname }) {
         textAlign: 'center',
       }}
     >
-      {/* <Typography>Dashboard content for {pathname}</Typography> */}
     </Box>
   );
 }
@@ -378,14 +342,6 @@ function DashboardLayoutBasic() {
       >
       <GlobalStyles
         styles={{
-          // '.MuiDrawer-root': {
-          //   display: 'none !important',
-          // },
-          // '.MuiDrawer-docked': {
-          //   flex: '0 0 auto !important',
-          //   width: '0 !important',
-          //   overflowX: 'hidden !important',
-          // },
           'html, body, #root': {
             height: '100%',
             margin: 0,
@@ -430,14 +386,6 @@ function DashboardLayoutBasic() {
       <FilterDrawer open={openFilter} onClose={() => setOpenFilter(false)} filter={filter} setFilter={setFilter} />
     </AppProvider>
   );
-
-  // DashboardLayoutBasic.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * Remove this when copying and pasting into your project.
-//    */
-//   window: PropTypes.func,
-// };
 }
 
 export default DashboardLayoutBasic;

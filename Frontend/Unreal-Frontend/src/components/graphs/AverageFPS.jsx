@@ -70,7 +70,6 @@ const AverageFPS = ({ filter }) => {
           lastMonthEnd = dayjs().subtract(30, 'day').endOf('day').format('YYYY-MM-DD');
         }
 
-
         const lastMonthParams = {
           player_id: playerId,
           gpu_group: gpuGroup,

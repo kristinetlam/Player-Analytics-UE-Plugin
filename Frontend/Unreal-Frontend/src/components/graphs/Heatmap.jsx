@@ -213,7 +213,6 @@ const Heatmap = ({ filter, gpuGroup }) => {
         if (!response.ok) throw new Error('Failed to fetch Position data');
         const result = await response.json();
 
-
         console.log(result);
 
         const positionData = result['Moments'];
@@ -228,9 +227,6 @@ const Heatmap = ({ filter, gpuGroup }) => {
           minY = Math.min(minY, y);
           maxY = Math.max(maxY, y);
         });
-
-        // console.log("Minimum (x,y,z): " + minX + ", " + minY + ", " + minZ);
-        // console.log("Maximum (x,y,z): " + maxX + ", " + maxY + ", " + maxZ);
 
         const createIntervals = (min, max, steps) => {
           const interval = (max - min) / steps;
@@ -344,18 +340,6 @@ const Heatmap = ({ filter, gpuGroup }) => {
             }));
             break;
         }
-
-        // setState(prev => ({
-        //   ...prev,
-        //   series: data,
-        //   colors: colors,
-        //   options: {
-        //     ...prev.options,
-        //     xaxis: { ...prev.options.xaxis, categories }
-        //   }
-        // }));
-
-
       } catch (error) {
         console.error('Error fetching Position data:', error);
       }
@@ -437,4 +421,3 @@ const Heatmap = ({ filter, gpuGroup }) => {
 };
 
 export default Heatmap;
-
