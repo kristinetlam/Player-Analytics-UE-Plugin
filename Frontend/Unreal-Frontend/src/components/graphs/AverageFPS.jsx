@@ -2,21 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
+/**
+ * AverageFPS Component
+ *
+ * Displays the average FPS for the selected player/date filter,
+ * along with a percent change compared to the previous time period.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter for querying FPS data
+ * @param {string} props.filter.playerId - Player ID
+ * @param {string} props.filter.patchVersion - Game patch version
+ * @param {string} props.filter.gpuGroup - GPU group
+ * @param {string} [props.filter.startDate] - Start date (optional)
+ * @param {string} [props.filter.endDate] - End date (optional)
+ * @returns {JSX.Element} Rendered component
+ */
 const AverageFPS = ({ filter }) => {
   const [avgFps, setAvgFps] = useState(null);
   const [lastMonthAvgFps, setLastMonthAvgFps] = useState(null);
 
+  /**
+   * Calculates percentage change from previous to current FPS average.
+   *
+   * @param {number} current - Current average FPS
+   * @param {number|null} previous - Previous average FPS
+   * @returns {{ percent: string, color: string, symbol: string }} Change summary
+   */
   const calculateChange = (current, previous) => {
-    if (previous === 0 || previous == null) return { percent: 0, color: 'text.secondary', symbol: '' };
+    if (previous === 0 || previous == null) {
+      return { percent: '0', color: 'text.secondary', symbol: '' };
+    }
     const change = ((current - previous) / previous) * 100;
     return {
       percent: Math.abs(change).toFixed(1),
       color: change >= 0 ? 'green' : 'red',
-      symbol: change >= 0 ? '↑' : '↓'
+      symbol: change >= 0 ? '↑' : '↓',
     };
   };
 
   useEffect(() => {
+    /**
+     * Fetches current and last-period average FPS data from backend.
+     */
     const fetchAvgFps = async () => {
       try {
         const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter || {};
@@ -26,12 +54,12 @@ const AverageFPS = ({ filter }) => {
           player_id: playerId,
           gpu_group: gpuGroup,
           game_version: patchVersion,
-          start_time: startDate 
-          ? dayjs(startDate).format('YYYY-MM-DD') 
-          : dayjs().subtract(30, 'day').startOf('day').format('YYYY-MM-DD'),
-        end_time: endDate 
-          ? dayjs(endDate).format('YYYY-MM-DD') 
-          : dayjs().endOf('day').format('YYYY-MM-DD'),
+          start_time: startDate
+            ? dayjs(startDate).format('YYYY-MM-DD')
+            : dayjs().subtract(30, 'day').startOf('day').format('YYYY-MM-DD'),
+          end_time: endDate
+            ? dayjs(endDate).format('YYYY-MM-DD')
+            : dayjs().endOf('day').format('YYYY-MM-DD'),
         };
 
         Object.entries(params).forEach(([key, value]) => {
@@ -56,11 +84,10 @@ const AverageFPS = ({ filter }) => {
 
         setAvgFps(avgFpsValue);
 
-        // fetch last month fps
+        // ---- Last month period logic ----
         const lastMonthUrl = new URL('http://50.30.211.229:5000/get-avg-fps-data');
 
         let lastMonthStart, lastMonthEnd;
-
         if (startDate && endDate) {
           const daysRange = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
           lastMonthStart = dayjs(startDate).subtract(daysRange, 'day').format('YYYY-MM-DD');
@@ -96,10 +123,11 @@ const AverageFPS = ({ filter }) => {
         const lastMonthFpsData = lastMonthResult['AVG FPS'] || [];
         const validLastMonthFpsData = lastMonthFpsData.filter(item => item.AverageFPS != null);
         const totalLastMonthFps = validLastMonthFpsData.reduce((acc, item) => acc + item.AverageFPS, 0);
-        const lastMonthAvg = validLastMonthFpsData.length > 0 ? totalLastMonthFps / validLastMonthFpsData.length : 0;
+        const lastMonthAvg = validLastMonthFpsData.length > 0
+          ? totalLastMonthFps / validLastMonthFpsData.length
+          : 0;
 
         setLastMonthAvgFps(lastMonthAvg);
-
       } catch (error) {
         console.error('Error fetching FPS data:', error);
         setAvgFps(null);
@@ -124,7 +152,10 @@ const AverageFPS = ({ filter }) => {
       <Typography variant="body1" sx={{ fontWeight: 'normal', color: color, mt: 1 }}>
         {symbol} {percent}%
       </Typography>
-      <Typography variant="body2" sx={{ fontWeight: 'normal', color: 'text.secondary', fontSize: '0.8rem', mt: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{ fontWeight: 'normal', color: 'text.secondary', fontSize: '0.8rem', mt: 1 }}
+      >
         per player session
       </Typography>
     </>

@@ -2,14 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import dayjs from 'dayjs';
 
+/**
+ * FPSLineChart Component
+ *
+ * Displays a line chart of average FPS per day based on the given filter.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter object for data retrieval
+ * @param {string} props.filter.playerId - Player ID
+ * @param {string} props.filter.patchVersion - Game version
+ * @param {string} props.filter.gpuGroup - GPU group
+ * @param {string} [props.filter.startDate] - Start date (optional)
+ * @param {string} [props.filter.endDate] - End date (optional)
+ * @returns {JSX.Element} A line chart showing average FPS over time
+ */
 const FPSLineChart = ({ filter }) => {
-  const [xLabels, setXLabels] = useState([]);
-  const [avgFpsPerDay, setAvgFpsPerDay] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [xLabels, setXLabels] = useState([]); // Dates for x-axis
+  const [avgFpsPerDay, setAvgFpsPerDay] = useState([]); // Daily average FPS
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     if (!filter) return;
 
+    /**
+     * Fetches FPS data and aggregates it by day.
+     */
     const fetchFpsData = async () => {
       try {
         setLoading(true);
@@ -42,6 +60,7 @@ const FPSLineChart = ({ filter }) => {
         const result = await response.json();
         const fpsData = result['AVG FPS'] || [];
 
+        // Group FPS values by date label
         const grouped = {};
 
         fpsData.forEach((item) => {
@@ -56,10 +75,12 @@ const FPSLineChart = ({ filter }) => {
           grouped[dateLabel].push(item.AverageFPS);
         });
 
+        // Sort dates chronologically
         const sortedDates = Object.keys(grouped).sort(
           (a, b) => new Date(a) - new Date(b)
         );
 
+        // Calculate average FPS per day
         const averages = sortedDates.map((date) => {
           const values = grouped[date];
           return values.reduce((acc, v) => acc + v, 0) / values.length;

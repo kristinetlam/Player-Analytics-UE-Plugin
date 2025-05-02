@@ -4,23 +4,33 @@ import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
 
-// A helper function to assign a color per player id. Adjust or expand the color palette as needed.
+/**
+ * Maps a player ID to a consistent color from a preset palette.
+ *
+ * @param {string} id - Player ID
+ * @returns {string} A hex color string
+ */
 const getColorForId = (id) => {
-  // A simple color palette array.
   const colors = ['#1976d2', '#9c27b0', '#ef6c00', '#2e7d32', '#d81b60', '#00acc1'];
-  // Convert the player id into a number and use modulo to pick a color.
   return colors[parseInt(id, 36) % colors.length];
 };
 
-// A custom component to render a connecting line for a given series.
-// We now pass the series object (which contains its own color and sorted data) as a prop.
+/**
+ * LinkPoints
+ *
+ * A custom SVG renderer that draws a line between a series of points.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.series - Series object containing `data` and `color`
+ * @returns {JSX.Element|null} An SVG path connecting the series points
+ */
 function LinkPoints({ series }) {
   const xScale = useXScale();
   const yScale = useYScale();
 
   if (!series.data) return null;
 
-  // Build an SVG path string connecting each point.
   const path = series.data
     .map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`)
     .join(' L ');
@@ -35,7 +45,24 @@ function LinkPoints({ series }) {
   );
 }
 
-const PlayerLocation = ({ filter }) => {
+/**
+ * PlayerTraversal
+ *
+ * Displays player movement and routes using a scatter chart.
+ * Each player’s path is shown with connecting lines.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter object for data query
+ * @param {string} props.filter.playerId - Player ID
+ * @param {string} props.filter.patchVersion - Game patch version
+ * @param {string} props.filter.gpuGroup - GPU group identifier
+ * @param {string} [props.filter.startDate] - Optional start date
+ * @param {string} [props.filter.endDate] - Optional end date
+ *
+ * @returns {JSX.Element} A scatter chart with one series per player, with path lines
+ */
+const PlayerTraversal = ({ filter }) => {
   const [seriesData, setSeriesData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,6 +72,9 @@ const PlayerLocation = ({ filter }) => {
       return;
     }
 
+    /**
+     * Fetches moment data from the API and formats it by player ID.
+     */
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -59,9 +89,7 @@ const PlayerLocation = ({ filter }) => {
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
 
-        // Add fields parameter to get Position data
         url.searchParams.append('fields', 'Position');
-
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
@@ -76,13 +104,11 @@ const PlayerLocation = ({ filter }) => {
 
         if (!response.ok) throw new Error('Failed to fetch position data');
 
-        // Expecting a JSON response that includes a "Positions" array.
         const responseData = await response.json();
         const grouped = {};
 
-        // Group the position objects by player id.
+        // Group moments by player and convert into chart points
         responseData.Moments.forEach((pos) => {
-          // Ensure we have valid Position data and a Timestamp.
           if (!pos.Position || pos.Position.length < 2 || !pos.Timestamp) return;
           const playerId = pos.PlayerID;
           const timestamp = dayjs(pos.Timestamp, 'YYYY.MM.DD-HH.mm.ss').valueOf();
@@ -94,7 +120,7 @@ const PlayerLocation = ({ filter }) => {
           });
         });
 
-        // Now, convert each group into a series. Sort each series by timestamp.
+        // Create series for each player with sorted data
         const series = Object.entries(grouped).map(([playerId, points]) => ({
           id: playerId,
           color: getColorForId(playerId),
@@ -136,4 +162,4 @@ const PlayerLocation = ({ filter }) => {
   );
 };
 
-export default PlayerLocation;
+export default PlayerTraversal;

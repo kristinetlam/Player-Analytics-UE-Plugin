@@ -3,7 +3,25 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
-const PlayerTraversal = ({ filter }) => {
+/**
+ * PlayerLocation
+ *
+ * A React component that renders a scatter chart of a player's location
+ * based on positional "Moment" data retrieved from the backend.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter object used to query moment data
+ * @param {string} props.filter.playerId - The player ID to filter data for
+ * @param {string} props.filter.patchVersion - The game patch version
+ * @param {string} props.filter.gpuGroup - GPU group identifier
+ * @param {string} [props.filter.startDate] - Optional start date (YYYY-MM-DD)
+ * @param {string} [props.filter.endDate] - Optional end date (YYYY-MM-DD)
+ *
+ * @returns {JSX.Element} A scatter chart showing player movement or a loading/message state
+ */
+
+const PlayerLocation = ({ filter }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,7 +30,11 @@ const PlayerTraversal = ({ filter }) => {
       setLoading(false);
       return;
     }
-   
+
+    /**
+     * Fetches moment data from the API based on the provided filter.
+     * Transforms it into a format suitable for the scatter chart.
+     */
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -27,11 +49,9 @@ const PlayerTraversal = ({ filter }) => {
           start_time: startDate ? dayjs(startDate).format('YYYY-MM-DD') : null,
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
-        
-        // Add fields parameter to get Position data
+
+        // Include only valid query parameters
         url.searchParams.append('fields', 'Position');
-        
-        // Add all other parameters
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
@@ -49,7 +69,7 @@ const PlayerTraversal = ({ filter }) => {
         const responseData = await response.json();
         
         if (responseData.Moments && responseData.Moments.length > 0) {
-          // Map the moment data to get position coordinates
+          // Extract and map valid position data with timestamps
           const mappedData = responseData.Moments
             .filter(moment => moment.Position && Array.isArray(moment.Position) && moment.Position.length >= 2 && moment.Timestamp)
             .map(moment => {
@@ -62,7 +82,6 @@ const PlayerTraversal = ({ filter }) => {
             })
             .sort((a, b) => a.timestamp - b.timestamp);
 
-          // Guard clause in case no data after filtering
           if (mappedData.length === 0) {
             setData([]);
             return;
@@ -105,4 +124,4 @@ const PlayerTraversal = ({ filter }) => {
   );
 };
 
-export default PlayerTraversal;
+export default PlayerLocation;
