@@ -3,6 +3,22 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
+/**
+ * PlayerInteractionsScatterChart
+ *
+ * Displays interaction events on a scatter plot based on interaction location.
+ * Each point represents an interaction, labeled with its description.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter criteria for fetching data
+ * @param {string} props.filter.playerId - Player ID to filter interactions
+ * @param {string} props.filter.patchVersion - Game version
+ * @param {string} props.filter.gpuGroup - GPU group identifier
+ * @param {string} [props.filter.startDate] - Optional start date
+ * @param {string} [props.filter.endDate] - Optional end date
+ * @returns {JSX.Element} A scatter chart with interaction points
+ */
 export default function PlayerInteractionsScatterChart({ filter }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +29,9 @@ export default function PlayerInteractionsScatterChart({ filter }) {
       return;
     }
 
+    /**
+     * Fetch interaction data from the server using the provided filter.
+     */
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -55,13 +74,23 @@ export default function PlayerInteractionsScatterChart({ filter }) {
     fetchData();
   }, [filter]);
 
+  /**
+   * Maps interaction records to chart-friendly format with (x, y) and interaction description.
+   *
+   * @param {Array<Object>} interactions - Raw interaction data from API
+   * @returns {Array<Object>} Array of chart points with x, y, and interaction description
+   */
   const mapInteractionData = (interactions) => {
     return interactions
-      .filter((interaction) => Array.isArray(interaction.InteractionLocation) && interaction.InteractionLocation.length >= 2)
+      .filter(
+        (interaction) =>
+          Array.isArray(interaction.InteractionLocation) &&
+          interaction.InteractionLocation.length >= 2
+      )
       .map((interaction) => ({
-        x: interaction.InteractionLocation[0], // x position
-        y: interaction.InteractionLocation[1], // y position
-        label: interaction.InteractionDescription
+        x: interaction.InteractionLocation[0],
+        y: interaction.InteractionLocation[1],
+        label: interaction.InteractionDescription,
       }));
   };
 
@@ -77,8 +106,15 @@ export default function PlayerInteractionsScatterChart({ filter }) {
     <ScatterChart
       xAxis={[{ label: 'X Position' }]}
       yAxis={[{ label: 'Y Position', labelStyle: { transform: 'translateX(-20px)' } }]}
-      series={[{ data, color: '#FFA726', valueFormatter: (point) => `${point.label} (x: ${point.x.toFixed(2)}, y: ${point.y.toFixed(2)})`}]}
-      voronoiMaxRadius= {25}
+      series={[
+        {
+          data,
+          color: '#FFA726',
+          valueFormatter: (point) =>
+            `${point.label} (x: ${point.x.toFixed(2)}, y: ${point.y.toFixed(2)})`,
+        },
+      ]}
+      voronoiMaxRadius={25}
       width={600}
       height={500}
       margin={{ top: 30, right: 30, bottom: 50, left: 80 }}

@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import dayjs from "dayjs";
 
+// Register required Chart.js components
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -23,11 +24,31 @@ Chart.register(
   Legend
 );
 
+/**
+ * AverageReturnTimeGraph Component
+ *
+ * Displays a line chart showing the average time between game sessions.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filter object used to fetch session data
+ * @param {string} props.filter.playerId - Player ID
+ * @param {string} props.filter.patchVersion - Game version
+ * @param {string} props.filter.gpuGroup - GPU group
+ * @param {string} [props.filter.startDate] - Start date (optional)
+ * @param {string} [props.filter.endDate] - End date (optional)
+ * @returns {JSX.Element} A line chart displaying average return times
+ */
 const AverageReturnTimeGraph = ({ filter }) => {
-  const [returnGapData, setReturnGapData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [timeUnit, setTimeUnit] = useState("hours"); // "seconds", "minutes", "hours", "days"
+  const [returnGapData, setReturnGapData] = useState(null); // Chart.js data object
+  const [loading, setLoading] = useState(true); // Loading state
+  const [timeUnit, setTimeUnit] = useState("hours"); // Time unit for display
 
+  /**
+   * Converts seconds to the selected time unit.
+   * @param {number} seconds - Time in seconds
+   * @returns {number} Converted time
+   */
   const convertTime = (seconds) => {
     switch (timeUnit) {
       case "minutes": return seconds / 60;
@@ -40,6 +61,10 @@ const AverageReturnTimeGraph = ({ filter }) => {
   useEffect(() => {
     if (!filter) return;
 
+    /**
+     * Fetches session data, calculates average gaps between sessions,
+     * and sets up the Chart.js data structure.
+     */
     const fetchSessions = async () => {
       try {
         const url = new URL("http://50.30.211.229:5000/get-session-data");
@@ -71,6 +96,7 @@ const AverageReturnTimeGraph = ({ filter }) => {
         const sessions = result.Sessions;
         const playerSessions = {};
 
+        // Organize timestamps by player
         sessions.forEach((session) => {
           const playerId = session.PlayerID;
           const timestamp = dayjs(session.Timestamp, "YYYY.MM.DD-HH.mm.ss").valueOf();
@@ -78,18 +104,21 @@ const AverageReturnTimeGraph = ({ filter }) => {
           playerSessions[playerId].push(timestamp);
         });
 
+        // Sort each player's sessions chronologically
         Object.values(playerSessions).forEach((list) => list.sort((a, b) => a - b));
 
+        // Calculate gaps between sessions
         const gaps = {};
         Object.values(playerSessions).forEach((sessionTimes) => {
           for (let i = 1; i < sessionTimes.length; i++) {
-            const gap = (sessionTimes[i] - sessionTimes[i - 1]) / 1000;
+            const gap = (sessionTimes[i] - sessionTimes[i - 1]) / 1000; // in seconds
             const key = `${i}`;
             if (!gaps[key]) gaps[key] = [];
             gaps[key].push(gap);
           }
         });
 
+        // Prepare data for chart
         const labels = Object.keys(gaps).map((k) => `Session ${k}→${parseInt(k) + 1}`);
         const data = Object.values(gaps).map((gapList) => {
           const sum = gapList.reduce((a, b) => a + b, 0);
