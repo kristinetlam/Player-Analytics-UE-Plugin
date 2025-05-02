@@ -3,13 +3,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
-import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout, ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
@@ -44,33 +40,6 @@ import PlayerInteractionsBarGraph from '../graphs/PlayerInteractionGraph';
 import PlayerRetentionGraph from '../graphs/PlayerRetentionGraph';
 import PlayerSessionStats from '../graphs/SessionTable';
 
-  // {
-  //   kind: 'header',
-  //   title: 'Analytics',
-  // },
-  // {
-  //   segment: 'reports',
-  //   title: 'Reports', // make AI generated reports that have written data about the data points and outliers that can be exported??
-  //   icon: <BarChartIcon />,
-  //   children: [
-  //     {
-  //       segment: 'optimization',
-  //       title: 'Optimization Data',
-  //       icon: <DescriptionIcon />,
-  //     },
-  //     {
-  //       segment: 'interest',
-  //       title: 'Player Insights',
-  //       icon: <DescriptionIcon />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   segment: 'integrations',
-  //   title: 'Integrations',
-  //   icon: <LayersIcon />,
-  // },
-
 const demoTheme = createTheme({
   cssVariables: {
     colorSchemeSelector: 'data-toolpad-color-scheme',
@@ -98,7 +67,6 @@ function DemoPageContent({ pathname }) {
         textAlign: 'center',
       }}
     >
-      {/* <Typography>Dashboard content for {pathname}</Typography> */}
     </Box>
   );
 }
@@ -376,14 +344,6 @@ function DashboardLayoutBasic() {
       >
       <GlobalStyles
         styles={{
-          // '.MuiDrawer-root': {
-          //   display: 'none !important',
-          // },
-          // '.MuiDrawer-docked': {
-          //   flex: '0 0 auto !important',
-          //   width: '0 !important',
-          //   overflowX: 'hidden !important',
-          // },
           'html, body, #root': {
             height: '100%',
             margin: 0,
@@ -428,14 +388,6 @@ function DashboardLayoutBasic() {
       <FilterDrawer open={openFilter} onClose={() => setOpenFilter(false)} filter={filter} setFilter={setFilter} />
     </AppProvider>
   );
-
-  // DashboardLayoutBasic.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * Remove this when copying and pasting into your project.
-//    */
-//   window: PropTypes.func,
-// };
 }
 
 export default DashboardLayoutBasic;

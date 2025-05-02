@@ -50,9 +50,7 @@ const PlayerSessionStats = ({ filter }) => {
         const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
         const mid = Math.floor(lengths.length / 2);
         const median = lengths.length % 2 === 0 ? (lengths[mid - 1] + lengths[mid]) / 2 : lengths[mid];
-        // const range = `${lengths[0]}s – ${lengths[lengths.length - 1]}s`;
         const range = `${lengths[0].toFixed(3)}s – ${lengths[lengths.length - 1].toFixed(3)}s`; // Fixed to 3 decimal places
-
 
         setStats({
           average: `${avg.toFixed(1)}s`,

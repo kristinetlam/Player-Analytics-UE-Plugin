@@ -1,5 +1,3 @@
-// File: AverageSessionsGauge.jsx
-
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
@@ -11,7 +9,6 @@ import {
   useGaugeState,
 } from '@mui/x-charts/Gauge';
 import dayjs from 'dayjs';
-import { AlignHorizontalCenter } from '@mui/icons-material';
 
 // A white tooltip with arrow
 const WhiteTooltip = styled(({ className, ...props }) => (
