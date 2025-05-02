@@ -12,8 +12,23 @@ import {
 } from 'chart.js';
 import dayjs from 'dayjs';
 
+// Register required Chart.js components
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
+/**
+ * PlayerRetentionGraph fetches session data for players within a given filter range
+ * and calculates the percentage of players returning for successive sessions.
+ * The results are displayed as a line chart.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.filter - Filter criteria for fetching session data.
+ * @param {string} props.filter.playerId - Player ID to filter session data.
+ * @param {string} props.filter.patchVersion - Game version to filter sessions.
+ * @param {string|Date} props.filter.startDate - Start date for the session data range.
+ * @param {string|Date} props.filter.endDate - End date for the session data range.
+ * @returns {JSX.Element} Line chart displaying session-based retention percentages.
+ */
 const PlayerRetentionGraph = ({ filter }) => {
   const [loading, setLoading] = useState(false);
   const [retentionData, setRetentionData] = useState(null);
@@ -21,6 +36,10 @@ const PlayerRetentionGraph = ({ filter }) => {
   useEffect(() => {
     if (!filter) return;
 
+    /**
+     * Fetches session data from the backend, calculates retention rates,
+     * and formats data for rendering in a Chart.js line chart.
+     */
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -34,6 +53,7 @@ const PlayerRetentionGraph = ({ filter }) => {
           end_time: endDate ? dayjs(endDate).format('YYYY-MM-DD') : null,
         };
 
+        // Append query parameters to the URL
         Object.entries(params).forEach(([key, value]) => {
           if (value) url.searchParams.append(key, value);
         });
@@ -52,7 +72,7 @@ const PlayerRetentionGraph = ({ filter }) => {
         const sessions = result.Sessions || [];
         const playerSessions = {};
 
-        // Group sessions by player
+        // Group session start times by player
         sessions.forEach((session) => {
           const playerId = session.PlayerID;
           const startTime = parseFloat(session.StartTime);
@@ -60,9 +80,10 @@ const PlayerRetentionGraph = ({ filter }) => {
           playerSessions[playerId].push(startTime);
         });
 
-        // Sort sessions for each player
+        // Sort session start times for each player
         Object.values(playerSessions).forEach((list) => list.sort((a, b) => a - b));
 
+        // Calculate retention by session index
         const sessionCountRetention = {};
         Object.values(playerSessions).forEach((sessionList) => {
           sessionList.forEach((_, index) => {
@@ -71,6 +92,8 @@ const PlayerRetentionGraph = ({ filter }) => {
         });
 
         const totalPlayers = Object.keys(playerSessions).length;
+
+        // Format data for the line chart
         const labels = Object.keys(sessionCountRetention).map((key) => `Session ${key}`);
         const data = Object.values(sessionCountRetention).map((count) =>
           Math.round((count / totalPlayers) * 100)

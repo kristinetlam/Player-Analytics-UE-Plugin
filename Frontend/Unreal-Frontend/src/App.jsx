@@ -1,11 +1,18 @@
-import './App.css'
-// import Header from './components/header/Header'
-import DashboardLayoutBasic from './components/dashboard/Dashboard'
+import './App.css';
+import DashboardLayoutBasic from './components/dashboard/Dashboard';
 
+/**
+ * The main application component.
+ * 
+ * This component serves as the root of the React app and renders the
+ * primary layout component, `DashboardLayoutBasic`, which contains the main UI.
+ * 
+ * @returns {JSX.Element} The rendered root application component.
+ */
 function App() {
   return (
-    <DashboardLayoutBasic></DashboardLayoutBasic>
+    <DashboardLayoutBasic />
   );
 }
 
-export default App
+export default App;

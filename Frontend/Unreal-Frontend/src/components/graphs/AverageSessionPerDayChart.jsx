@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import dayjs from 'dayjs';
 
+/**
+ * Parses a custom-formatted timestamp string into an ISO date string ("YYYY-MM-DD").
+ *
+ * @param {string} timestampStr - A timestamp string in the format "YYYY.MM.DD-HH.MM.SS".
+ * @returns {string|null} ISO date string ("YYYY-MM-DD") or null if the input is invalid.
+ */
 function parseTimestampToDate(timestampStr) {
   if (!timestampStr || typeof timestampStr !== 'string') {
     console.warn('[SKIPPED] Empty or non-string timestamp:', timestampStr);
@@ -32,13 +38,32 @@ function parseTimestampToDate(timestampStr) {
   }
 }
 
-// Format date as MM/DD
+/**
+ * Converts a date string to "MM/DD" format.
+ *
+ * @param {string} dateStr - A string representing a date (e.g., "2023-10-15").
+ * @returns {string} The formatted date string in "MM/DD" format.
+ */
 function formatDateToMMDD(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
   return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
+/**
+ * Renders a line chart displaying the average session length per day grouped by game version.
+ * Fetches session data based on the provided filter and computes averages.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.filter - Filtering options for the data fetch.
+ * @param {string} [props.filter.playerId] - Filter by player ID.
+ * @param {string} [props.filter.patchVersion] - Filter by game version.
+ * @param {string} [props.filter.gpuGroup] - Filter by GPU group.
+ * @param {string} [props.filter.startDate] - Start date filter (ISO format).
+ * @param {string} [props.filter.endDate] - End date filter (ISO format).
+ * @returns {JSX.Element} A line chart or a loading/message element.
+ */
 const AverageSessionPerDayChart = ({ filter }) => {
   const [series, setSeries] = useState([]);
   const [labels, setLabels] = useState([]);
@@ -101,7 +126,6 @@ const AverageSessionPerDayChart = ({ filter }) => {
         console.log('[GROUPED DATA] Version map:', versionMap);
 
         const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
-        // Keep original dates for data linking but format for display
         const formattedDates = sortedDates.map(date => formatDateToMMDD(date));
         setLabels(formattedDates);
 

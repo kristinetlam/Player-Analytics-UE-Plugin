@@ -14,6 +14,24 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CloseIcon from '@mui/icons-material/Close';
 
+/**
+ * FilterDrawer is a UI component that presents a sidebar drawer to filter data
+ * based on player ID, GPU group, patch version, and a date range. It fetches options
+ * from backend endpoints and allows the user to apply or reset filters.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {boolean} props.open - Controls visibility of the drawer.
+ * @param {Function} props.onClose - Function to close the drawer.
+ * @param {Object} props.filter - Current filter values.
+ * @param {string} [props.filter.playerId] - Selected player ID.
+ * @param {string} [props.filter.patchVersion] - Selected patch version.
+ * @param {string} [props.filter.gpuGroup] - Selected GPU group.
+ * @param {Object} [props.filter.startDate] - Start date of the filter range (dayjs object).
+ * @param {Object} [props.filter.endDate] - End date of the filter range (dayjs object).
+ * @param {Function} props.setFilter - Function to update the filter state.
+ * @returns {JSX.Element} The rendered FilterDrawer component.
+ */
 export default function FilterDrawer({ open, onClose, filter, setFilter }) {
   const { playerId, patchVersion, gpuGroup, startDate, endDate } = filter;
 
@@ -63,6 +81,9 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
     fetchGpuGroups();
   }, []);
 
+  /**
+   * Resets all filters to their default state.
+   */
   const handleReset = () => {
     setFilter({
       playerId: '',
@@ -73,10 +94,20 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
     });
   };
 
+  /**
+   * Handles changes to the player ID dropdown.
+   * Resets GPU group when a player ID is selected.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The change event.
+   */
   const handlePlayerChange = (e) => {
     setFilter({ ...filter, playerId: e.target.value, gpuGroup: '' });
   };
 
+  /**
+   * Handles changes to the GPU group dropdown.
+   * Resets player ID when a GPU group is selected.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The change event.
+   */
   const handleGpuChange = (e) => {
     setFilter({ ...filter, gpuGroup: e.target.value, playerId: '' });
   };
@@ -122,6 +153,8 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           size="small"
           value={playerId || ''}
           onChange={handlePlayerChange}
+          displayEmpty
+          disabled={!!gpuGroup}
           sx={{
             mb: 2,
             '& .MuiSelect-select': {
@@ -135,8 +168,6 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
             },
             color: playerId === '' ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
           }}
-          displayEmpty
-          disabled={!!gpuGroup}
         >
           <MenuItem value="">All Players</MenuItem>
           {playerIds.map((id) => (
@@ -153,6 +184,8 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
           size="small"
           value={gpuGroup || ''}
           onChange={handleGpuChange}
+          displayEmpty
+          disabled={!!playerId}
           sx={{
             mb: 2,
             '& .MuiSelect-select': {
@@ -164,10 +197,8 @@ export default function FilterDrawer({ open, onClose, filter, setFilter }) {
               right: 8,
               pointerEvents: 'none',
             },
-              color: !gpuGroup ? 'rgba(0, 0, 0, 0.38)' : 'inherit',  /* aaa */
+            color: !gpuGroup ? 'rgba(0, 0, 0, 0.38)' : 'inherit',
           }}
-          displayEmpty
-          disabled={!!playerId}
         >
           <MenuItem value="">All GPUs</MenuItem>
           {gpuGroups.map((group) => (

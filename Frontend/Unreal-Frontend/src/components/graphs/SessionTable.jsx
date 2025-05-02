@@ -5,6 +5,20 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import dayjs from 'dayjs';
 
+/**
+ * Component that displays a player's session statistics including average session time,
+ * median session time, and session time range.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.filter - Filter criteria for fetching session data.
+ * @param {string} props.filter.playerId - The player's unique identifier.
+ * @param {string} props.filter.patchVersion - The version of the game being filtered.
+ * @param {string} props.filter.gpuGroup - GPU group associated with the player.
+ * @param {string|Date|null} props.filter.startDate - Start date for the data range.
+ * @param {string|Date|null} props.filter.endDate - End date for the data range.
+ * @returns {JSX.Element} A React component showing average, median, and range session stats.
+ */
 const PlayerSessionStats = ({ filter }) => {
   const [stats, setStats] = useState({
     average: null,
@@ -13,6 +27,10 @@ const PlayerSessionStats = ({ filter }) => {
   });
 
   useEffect(() => {
+    /**
+     * Fetches session statistics based on the given filters,
+     * then calculates and sets the average, median, and range.
+     */
     const fetchStats = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-session-data');
@@ -40,7 +58,11 @@ const PlayerSessionStats = ({ filter }) => {
 
         const result = await response.json();
         const sessionData = result['Sessions'] || [];
-        const lengths = sessionData.map(s => parseFloat(s.EndTime)).filter(n => !isNaN(n)).sort((a, b) => a - b);
+
+        const lengths = sessionData
+          .map(s => parseFloat(s.EndTime))
+          .filter(n => !isNaN(n))
+          .sort((a, b) => a - b);
 
         if (lengths.length === 0) {
           setStats({ average: '0s', median: '0s', range: '0s – 0s' });
@@ -49,8 +71,10 @@ const PlayerSessionStats = ({ filter }) => {
 
         const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
         const mid = Math.floor(lengths.length / 2);
-        const median = lengths.length % 2 === 0 ? (lengths[mid - 1] + lengths[mid]) / 2 : lengths[mid];
-        const range = `${lengths[0].toFixed(3)}s – ${lengths[lengths.length - 1].toFixed(3)}s`; // Fixed to 3 decimal places
+        const median = lengths.length % 2 === 0
+          ? (lengths[mid - 1] + lengths[mid]) / 2
+          : lengths[mid];
+        const range = `${lengths[0].toFixed(3)}s – ${lengths[lengths.length - 1].toFixed(3)}s`;
 
         setStats({
           average: `${avg.toFixed(1)}s`,

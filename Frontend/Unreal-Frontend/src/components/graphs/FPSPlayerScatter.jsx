@@ -2,16 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import dayjs from 'dayjs';
 
+/**
+ * Renders a scatter chart displaying average FPS values over time,
+ * grouped by player. Each player's data is shown as a separate color-coded series.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.filter - Filter options for fetching FPS data.
+ * @param {string} [props.filter.playerId] - Player ID to filter data.
+ * @param {string} [props.filter.patchVersion] - Game version/patch to filter by.
+ * @param {string} [props.filter.gpuGroup] - GPU group to filter by.
+ * @param {string} [props.filter.startDate] - Start date (ISO format) for data range.
+ * @param {string} [props.filter.endDate] - End date (ISO format) for data range.
+ * @returns {JSX.Element} A rendered scatter chart or a loading/empty message.
+ */
 const FpsScatterChart = ({ filter }) => {
   const [seriesData, setSeriesData] = useState([]);
   const [xLabels, setXLabels] = useState([]);
   const [loading, setLoading] = useState(true);
   const COLORS = ['#F4A261', '#E76F51', '#2A9D8F', '#E9C46A'];
 
-
   useEffect(() => {
     if (!filter) return;
 
+    /**
+     * Fetches average FPS data from the backend and processes it into
+     * a format suitable for rendering in a scatter chart.
+     */
     const fetchFpsData = async () => {
       try {
         setLoading(true);

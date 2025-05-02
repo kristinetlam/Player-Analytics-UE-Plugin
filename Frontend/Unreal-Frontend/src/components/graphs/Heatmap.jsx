@@ -9,16 +9,35 @@ import {
 import { styled } from '@mui/system';
 import dayjs from 'dayjs';
 
-
+/**
+ * Heatmap component to display spatial heatmaps of player metrics (Position, FPS, CPU, RAM).
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.filter - Filters for the data fetch (playerId, patchVersion, startDate, endDate)
+ * @param {string} props.gpuGroup - GPU group filter for data
+ * @returns {JSX.Element}
+ */
 const Heatmap = ({ filter, gpuGroup }) => {
 
   const [binSize, setBin] = React.useState(20);
   const [mapType, setMapType] = React.useState('CPU');
-
+  /**
+ * Event handler to switch between heatmap types (Position, FPS, CPU, RAM).
+ *
+ * @param {React.MouseEvent<HTMLElement>} event - The click event.
+ * @param {string} newMapType - The newly selected map type.
+ */
   const handleMapType = (event, newMapType) => {
     setMapType(newMapType);
   };
 
+  /**
+ * Custom styled number input component using MUI BaseNumberInput.
+ * Used to set the bin size for the heatmap grid.
+ *
+ * @component
+ */
   const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
     return (
       <BaseNumberInput
@@ -63,6 +82,11 @@ const Heatmap = ({ filter, gpuGroup }) => {
     900: '#1C2025',
   };
   
+  /**
+ * Styled root container for number input.
+ *
+ * @type {import('@mui/system').StyledComponent}
+ */
   const StyledInputRoot = styled('div')(
     ({ theme }) => `
     font-family: 'IBM Plex Sans', sans-serif;
@@ -95,6 +119,11 @@ const Heatmap = ({ filter, gpuGroup }) => {
   `,
   );
   
+  /**
+ * Styled input element for numeric input.
+ *
+ * @type {import('@mui/system').StyledComponent}
+ */
   const StyledInputElement = styled('input')(
     ({ theme }) => `
     font-size: 0.875rem;
@@ -112,6 +141,11 @@ const Heatmap = ({ filter, gpuGroup }) => {
   `,
   );
   
+  /**
+ * Styled increment and decrement buttons for number input.
+ *
+ * @type {import('@mui/system').StyledComponent}
+ */
   const StyledButton = styled('button')(
     ({ theme }) => `
     display: flex;
@@ -182,6 +216,12 @@ const Heatmap = ({ filter, gpuGroup }) => {
   `,
   );
 
+  /**
+ * Side effect to fetch and process position and performance data
+ * when the filter, bin size, or map type changes.
+ *
+ * Data is transformed into heatmap series data for ApexCharts.
+ */
   useEffect(() => {
     if (!filter) return;
 
@@ -351,6 +391,13 @@ const Heatmap = ({ filter, gpuGroup }) => {
 
     const colors = ['#008FFB'];
 
+    /**
+    * State for ApexCharts series and options.
+    *
+    * @type {[Object, Function]}
+    * @property {Array} state.series - The data series for the heatmap
+    * @property {Object} state.options - ApexCharts configuration options
+    */
     const [state, setState] = React.useState({
         series: [],
         options: {

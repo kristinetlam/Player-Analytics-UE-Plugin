@@ -4,15 +4,34 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import dayjs from 'dayjs';
 
+/**
+ * LoadGauge displays either average CPU or RAM usage in a gauge format,
+ * based on filtered player session data. Users can toggle between CPU and RAM views.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.filter - The filter object for querying moment data.
+ * @param {string} props.filter.playerId - The player ID to fetch data for.
+ * @param {string} props.filter.patchVersion - The game version.
+ * @param {string} props.filter.gpuGroup - The GPU group.
+ * @param {string|Date} props.filter.startDate - Start date for data range.
+ * @param {string|Date} props.filter.endDate - End date for data range.
+ * @returns {JSX.Element} A gauge with toggle buttons for CPU and RAM usage.
+ */
 const LoadGauge = ({ filter }) => {
+  const [mapType, setMapType] = React.useState('CPU'); // 'CPU' or 'RAM'
+  const [gaugeValue, setGauge] = React.useState(0.0); // Current average value for gauge
+  const [gaugeMax, setGaugeMax] = React.useState(100); // Max value for gauge
+  const [gaugeText, setGaugeText] = React.useState("No Data"); // Text shown inside the gauge
 
-  const [mapType, setMapType] = React.useState('CPU');
-  const [gaugeValue, setGauge] = React.useState(0.0);
-  const [gaugeMax, setGaugeMax] = React.useState(100);
-  const [gaugeText, setGaugeText] = React.useState("No Data");
+  const MAX_RAM = 16000; // Maximum RAM for gauge (in MB)
 
-  const MAX_RAM = 16000; // MB
-
+  /**
+   * Handles user toggling between CPU and RAM views.
+   *
+   * @param {React.MouseEvent} event - The mouse event.
+   * @param {string} newMapType - The selected map type ('CPU' or 'RAM').
+   */
   const handleMapType = (event, newMapType) => {
     setMapType(newMapType);
   };
@@ -20,6 +39,10 @@ const LoadGauge = ({ filter }) => {
   useEffect(() => {
     if (!filter) return;
 
+    /**
+     * Fetches moment data for the specified filter, calculates average CPU or RAM usage,
+     * and updates the gauge accordingly.
+     */
     const fetchUsageData = async () => {
       try {
         const url = new URL('http://50.30.211.229:5000/get-moment-data');
@@ -53,24 +76,24 @@ const LoadGauge = ({ filter }) => {
         const momentData = result['Moments'];
 
         momentData.forEach(item => {
-          if(item.CPU.length > 0){
-            CPUSum += Math.min(parseFloat(item.CPU),100.0);
+          if (item.CPU.length > 0) {
+            CPUSum += Math.min(parseFloat(item.CPU), 100.0);
             RAMSum += parseFloat(item.RAM);
           }
         });
 
-        if(mapType === 'CPU'){
-          setGauge(parseFloat(CPUSum/momentData.length).toFixed(2));
+        if (mapType === 'CPU') {
+          const avgCPU = CPUSum / momentData.length;
+          setGauge(parseFloat(avgCPU.toFixed(2)));
           setGaugeMax(100);
-          setGaugeText((CPUSum/momentData.length).toFixed(2) + "%");
-        }
-          
-        else{
-          setGauge(parseFloat(RAMSum/momentData.length).toFixed(0));
+          setGaugeText(`${avgCPU.toFixed(2)}%`);
+        } else {
+          const avgRAM = RAMSum / momentData.length;
+          setGauge(parseFloat(avgRAM.toFixed(0)));
           setGaugeMax(MAX_RAM);
-          setGaugeText((RAMSum/momentData.length).toFixed(0) + " MB");
+          setGaugeText(`${avgRAM.toFixed(0)} MB`);
         }
-        
+
         console.log(gaugeValue);
 
       } catch (error) {
@@ -89,27 +112,27 @@ const LoadGauge = ({ filter }) => {
 
   return (
     <div>
-      <div style={{ paddingTop: "15px", paddingBottom: "5px"}}>
-      <Gauge
-        {...settings}
-        value={parseFloat(gaugeValue)}
-        valueMax={gaugeMax}
-        cornerRadius="50%"
-        sx={(theme) => ({
-          [`& .${gaugeClasses.valueText}`]: {
-            fontSize: 22,
-          },
-          [`& .${gaugeClasses.valueArc}`]: {
-            fill: '#008FFB',
-          },
-          [`& .${gaugeClasses.referenceArc}`]: {
-            fill: theme.palette.text.disabled,
-          },
-        })}
-        text={gaugeText}
-      />
+      <div style={{ paddingTop: "15px", paddingBottom: "5px" }}>
+        <Gauge
+          {...settings}
+          value={parseFloat(gaugeValue)}
+          valueMax={gaugeMax}
+          cornerRadius="50%"
+          sx={(theme) => ({
+            [`& .${gaugeClasses.valueText}`]: {
+              fontSize: 22,
+            },
+            [`& .${gaugeClasses.valueArc}`]: {
+              fill: '#008FFB',
+            },
+            [`& .${gaugeClasses.referenceArc}`]: {
+              fill: theme.palette.text.disabled,
+            },
+          })}
+          text={gaugeText}
+        />
       </div>
-      <div style={{ paddingBottom: "15px"}}>
+      <div style={{ paddingBottom: "15px" }}>
         <ToggleButtonGroup
           value={mapType}
           exclusive
@@ -125,8 +148,6 @@ const LoadGauge = ({ filter }) => {
         </ToggleButtonGroup>
       </div>
     </div>
-    
-    
   );
 };
 

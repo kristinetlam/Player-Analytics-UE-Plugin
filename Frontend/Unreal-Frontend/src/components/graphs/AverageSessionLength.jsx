@@ -2,19 +2,45 @@ import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
+/**
+ * Calculates the percentage change between two values.
+ *
+ * @param {number} current - The current average session length.
+ * @param {number|null} previous - The previous average session length.
+ * @returns {{
+ *   percent: string,
+ *   color: string,
+ *   symbol: string
+ * }} Object containing formatted percent change, color indicator, and symbol.
+ */
+const calculateChange = (current, previous) => {
+  if (previous === 0 || previous == null) return { percent: 0, color: 'text.secondary', symbol: '' };
+  const change = ((current - previous) / previous) * 100;
+  return {
+    percent: Math.abs(change).toFixed(1),
+    color: change >= 0 ? 'green' : 'red',
+    symbol: change >= 0 ? '↑' : '↓'
+  };
+};
+
+/**
+ * Component that fetches and displays the average session length for a filtered set of players.
+ * Also compares it to the previous equivalent date range.
+ *
+ * @component
+ * @param {Object} props
+ * @param {{
+ *   playerId?: string,
+ *   patchVersion?: string,
+ *   gpuGroup?: string,
+ *   startDate?: string,
+ *   endDate?: string
+ * }} props.filter - Optional filtering criteria for session data
+ * @returns {JSX.Element}
+ */
 const AverageSessionLength = ({ filter }) => {
   const [avgSessionLength, setAvgSessionLength] = useState(null);
   const [lastMonthAvgSessionLength, setLastMonthAvgSessionLength] = useState(null);
-
-  const calculateChange = (current, previous) => {
-    if (previous === 0 || previous == null) return { percent: 0, color: 'text.secondary', symbol: '' };
-    const change = ((current - previous) / previous) * 100;
-    return {
-      percent: Math.abs(change).toFixed(1),
-      color: change >= 0 ? 'green' : 'red',
-      symbol: change >= 0 ? '↑' : '↓'
-    };
-  };
 
   useEffect(() => {
     const fetchAvgSessionLength = async () => {
@@ -51,14 +77,19 @@ const AverageSessionLength = ({ filter }) => {
   
         const result = await response.json();
         const sessionData = result['Sessions'] || [];
+
         const totalSessionLength = sessionData.reduce((acc, item) => {
           const sessionLength = parseFloat(item.EndTime) - parseFloat(item.StartTime);
           return acc + (sessionLength > 0 ? sessionLength : 0);
         }, 0);
-        const avgSessionLengthValue = sessionData.length > 0 ? totalSessionLength / sessionData.length : 0;
+
+        const avgSessionLengthValue = sessionData.length > 0
+          ? totalSessionLength / sessionData.length
+          : 0;
+
         setAvgSessionLength(avgSessionLengthValue);
   
-        // last month fetch stays same
+        // Fetch previous equivalent period
         const lastMonthUrl = new URL('http://50.30.211.229:5000/get-session-data');
   
         let lastMonthStart, lastMonthEnd;
@@ -95,11 +126,16 @@ const AverageSessionLength = ({ filter }) => {
   
         const lastMonthResult = await lastMonthResponse.json();
         const lastMonthSessionData = lastMonthResult['Sessions'] || [];
+
         const totalLastMonthSessionLength = lastMonthSessionData.reduce((acc, item) => {
           const sessionLength = parseFloat(item.EndTime) - parseFloat(item.StartTime);
           return acc + (sessionLength > 0 ? sessionLength : 0);
         }, 0);
-        const lastMonthAvg = lastMonthSessionData.length > 0 ? totalLastMonthSessionLength / lastMonthSessionData.length : 0;
+
+        const lastMonthAvg = lastMonthSessionData.length > 0
+          ? totalLastMonthSessionLength / lastMonthSessionData.length
+          : 0;
+
         setLastMonthAvgSessionLength(lastMonthAvg);
   
       } catch (error) {
