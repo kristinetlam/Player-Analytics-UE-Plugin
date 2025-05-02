@@ -18,10 +18,12 @@ protected:
 public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     
-    UFUNCTION(BlueprintCallable, Category = "PositionTracking")
+    UFUNCTION(BlueprintCallable, Category = "PositionTracking",
+        meta=(DisplayName = "Start Position Tracking", ToolTip="Starts tracking the player's position at set intervals"))
     void StartPositionTracking();
 
-    UFUNCTION(BlueprintCallable, Category = "PositionTracking")
+    UFUNCTION(BlueprintCallable, Category = "PositionTracking",
+        meta=(DisplayName = "Stop Position Tracking", ToolTip="Stops tracking the player's position"))
     void StopPositionTracking();
 private:
     void TrackPlayerPosition();

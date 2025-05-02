@@ -8,19 +8,22 @@
 #include "GenericPlatform/GenericPlatformMemory.h"
 #include "GenericPlatform/GenericPlatformTime.h"
 
-
+/**
+ * @brief  Constructor for the UPlayerDataHandler class.
+ * 
+ * This constructor initializes the playerData object.
+ */
 UPlayerDataHandler::UPlayerDataHandler()
 {
     playerData = NewObject<UPlayerData>();
 }
 
-/// <summary>
-/// Adds an interaction to the playerData class
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="InteractionDescription"></param>
-/// <param name="InteractionLocation"></param>
-/// <param name="InteractionID"></param>
+/**
+ * @brief  Adds an interaction to the playerData object.
+ * 
+ * @param InteractionDescription A description of the interaction.
+ * @param InteractionLocation The location of the interaction.
+ */
 void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector InteractionLocation)
 {
     FinteractionData interaction;
@@ -32,13 +35,14 @@ void UPlayerDataHandler::AddInteraction(FString InteractionDescription, FVector 
     playerData->interactions.Add(interaction);
 }
 
-/// <summary>
-/// Adds an inventory to the playerData class. Inventory is specified by two arrays of equal size, one listing item names, and one listing corresponding amounts of those items.
-/// </summary>
-/// <param name="Size"></param>
-/// <param name="Capacity"></param>
-/// <param name="ItemNames"></param>
-/// <param name="ItemAmounts"></param>
+/**
+ * @brief  Adds an inventory to the playerData object.
+ * 
+ * @param size The size of the inventory.
+ * @param capacity The capacity of the inventory.
+ * @param itemNames The names of the items in the inventory.
+ * @param itemAmounts The amounts of the items in the inventory.
+ */
 void UPlayerDataHandler::AddInventory(int size, int capacity, TArray<FString> itemNames, TArray<int> itemAmounts)
 {
     FinventoryData inventory;
@@ -55,11 +59,11 @@ void UPlayerDataHandler::AddInventory(int size, int capacity, TArray<FString> it
     playerData->Inventories.Add(inventory);
 }
 
-/// <summary>
-/// Adds a position to the playerData object
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="Position"></param>
+/** 
+* @brief  Adds a position to the playerData object.
+* 
+* @param Position The position of the player.
+*/  
 void UPlayerDataHandler::AddPosition(FVector Position)
 {
     FpositionData position;
@@ -70,11 +74,11 @@ void UPlayerDataHandler::AddPosition(FVector Position)
     playerData->positions.Add(position);
 }
 
-/// <summary>
-/// Adds FPS data point to the playerData object
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="Position"></param>
+/**
+ * @brief  Adds an average FPS data point to the playerData object.
+ * 
+ * @param AVGfps The average FPS value.
+ */
 void UPlayerDataHandler::AddAVGfps(int AVGfps) {
     FfpsData fpsData;
     fpsData.PlayerID = playerData->playerID;
@@ -84,11 +88,14 @@ void UPlayerDataHandler::AddAVGfps(int AVGfps) {
     playerData->AvgFPSPoints.Add(fpsData);
 }
 
-/// <summary>
-/// Adds a Session data point to the playerData object
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="Position"></param>
+/**
+ * @brief  Adds a session to the playerData object.
+ * 
+ * @param SessionName The name of the session.
+ * @param StartTime The start time of the session.
+ * @param EndTime The end time of the session.
+ * @param EndType The end type of the session.
+ */
 void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FString EndTime, FString EndType) {
     FsessionData session;
     session.PlayerID = playerData->playerID;
@@ -101,6 +108,12 @@ void UPlayerDataHandler::AddSession(FString SessionName, FString StartTime, FStr
     playerData->Sessions.Add(session);
 }
 
+/**
+ * @brief  Adds a UI interaction to the playerData object.
+ * 
+ * @param elementName The name of the UI element.
+ * @param actionType The type of action performed on the UI element.
+ */
 void  UPlayerDataHandler::AddUiInteraction(FString elementName, FString actionType) {
     FuiInteractionData interaction;
     interaction.PlayerID = playerData->playerID;
@@ -110,6 +123,12 @@ void  UPlayerDataHandler::AddUiInteraction(FString elementName, FString actionTy
     playerData->uiInteractions.Add(interaction);
 }
 
+/**
+ * @brief  Adds a screen visit to the playerData object.
+ * 
+ * @param screenName The name of the screen visited.
+ * @param duration The duration of the visit.
+ */
 void  UPlayerDataHandler::AddScreenVisit(FString screenName, float duration) {
     FuiScreenVisitData visit;
     visit.PlayerID = playerData->playerID;
@@ -119,11 +138,12 @@ void  UPlayerDataHandler::AddScreenVisit(FString screenName, float duration) {
     playerData->screenVisits.Add(visit);
 }
 
-/// <summary>
-/// Adds a RAM usage data point to the playerData object
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="RAM"></param>
+/**
+ * @brief  Adds a memory usage data point to the playerData object.
+ * 
+ * @param ActorName The name of the actor.
+ * @param RAM The amount of RAM used.
+ */
 void UPlayerDataHandler::AddMemory() {
     FmemoryUsage RAMData;
     RAMData.PlayerID = playerData->playerID;
@@ -133,11 +153,12 @@ void UPlayerDataHandler::AddMemory() {
     playerData->MemoryPoints.Add(RAMData);
 }
 
-/// <summary>
-/// Adds a CPU usage data point to the playerData object
-/// </summary>
-/// <param name="ActorName"></param>
-/// <param name="CPU"></param>
+/**
+ * @brief  Adds a CPU usage data point to the playerData object.
+ * 
+ * @param ActorName The name of the actor.
+ * @param CPU The amount of CPU used.
+ */
 void UPlayerDataHandler::AddCPUUsage() {
     FCPUUsage CPUData;
     CPUData.PlayerID = playerData->playerID;
@@ -147,6 +168,14 @@ void UPlayerDataHandler::AddCPUUsage() {
     playerData->CPUPoints.Add(CPUData);
 }
 
+/**
+ * @brief  Adds a moment to the playerData object.
+ * 
+ * @param position The position of the moment.
+ * @param CPU The CPU usage at the moment.
+ * @param RAM The RAM usage at the moment.
+ * @param FPS The FPS at the moment.
+ */
 void UPlayerDataHandler::AddMoment(FVector position, FString CPU, FString RAM, FString FPS) {
     Fmoment moment;
     moment.PlayerID = playerData->playerID;
@@ -160,13 +189,20 @@ void UPlayerDataHandler::AddMoment(FVector position, FString CPU, FString RAM, F
     playerData->Moments.Add(moment);
 }
 
+/**
+ * @brief  Updates the player's health in the playerData object.
+ * 
+ * @param newHealth The new health value.
+ */
 void UPlayerDataHandler::UpdatePlayerHealth(int newHealth) {
     playerData->playerHealth = newHealth;
 } 
 
-/// <summary>
-/// Saves player data to a JSON file 
-/// </summary>
+/**
+ * @brief  Saves the player data to a JSON file.
+ * 
+ * @return FString The name of the saved file.
+ */
 FString UPlayerDataHandler::SaveToJSON() {
 
     TSharedPtr<FJsonObject> JsonObject = playerData->ToJson();
