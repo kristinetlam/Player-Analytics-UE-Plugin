@@ -7,6 +7,11 @@
 #include "Misc/FileHelper.h"
 #include "HAL/PlatformFilemanager.h"
 
+/**
+ * @brief  Sends player data to the server.
+ * 
+ * @param FileName The name of the file to send.
+ */
 void UServerFunctions::SendPlayerData(FString FileName)
 {
     FString SavedDir = FPaths::ProjectSavedDir();

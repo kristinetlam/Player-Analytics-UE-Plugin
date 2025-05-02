@@ -6,22 +6,41 @@
 #include "TimerManager.h"
 #include "Misc/App.h"
 
+/**
+ * @brief Construct a new UMomentTracking::UMomentTracking object
+ * 
+ */
 UMomentTracking::UMomentTracking()
 {
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+/**
+ * @brief Called when the game starts
+ * 
+ */
 void UMomentTracking::BeginPlay()
 {
     Super::BeginPlay();
 
 }
 
+/**
+ * @brief Called every frame
+ * 
+ * @param DeltaTime Time since last frame
+ * @param TickType Type of tick
+ * @param ThisTickFunction Pointer to the tick function
+ */
 void UMomentTracking::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+/**
+ * @brief Starts tracking the player's position at set intervals
+ * 
+ */
 void UMomentTracking::StartMomentTracking()
 {
     if (!bIsTracking)
@@ -33,6 +52,10 @@ void UMomentTracking::StartMomentTracking()
     }
 }
 
+/**
+ * @brief Stops tracking the player's position
+ * 
+ */
 void UMomentTracking::StopMomentTracking()
 {
     if (bIsTracking)
@@ -42,6 +65,10 @@ void UMomentTracking::StopMomentTracking()
     }
 }
 
+/**
+ * @brief Tracks the player's position and other data
+ * 
+ */
 void UMomentTracking::TrackMoment()
 {
     if (AActor* Owner = GetOwner())

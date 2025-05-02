@@ -5,22 +5,46 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
+/**
+ * @brief  Constructor for the UPlayerPositionTracking class.
+ * 
+ * This constructor initializes the component and sets it to tick every frame.
+ */
 UPlayerPositionTracking::UPlayerPositionTracking()
 {
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+/**
+ * @brief  Called when the game starts.
+ * 
+ * This function is called when the game starts or when the actor is spawned.
+ */
 void UPlayerPositionTracking::BeginPlay()
 {
     Super::BeginPlay();
     
 }
 
+/**
+ * @brief  Called every frame.
+ * 
+ * This function is called every frame, and it can be used to update the component's state.
+ * 
+ * @param DeltaTime Time since last frame
+ * @param TickType Type of tick
+ * @param ThisTickFunction Pointer to the tick function
+ */
 void UPlayerPositionTracking::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+/**
+ * @brief  Starts tracking the player's position at set intervals.
+ * 
+ * This function starts tracking the player's position at set intervals.
+ */
 void UPlayerPositionTracking::StartPositionTracking()
 {
     if (!bIsTracking)
@@ -32,6 +56,11 @@ void UPlayerPositionTracking::StartPositionTracking()
     }
 }
 
+/**
+ * @brief  Stops tracking the player's position.
+ * 
+ * This function stops tracking the player's position.
+ */
 void UPlayerPositionTracking::StopPositionTracking()
 {
     if (bIsTracking)
@@ -41,6 +70,11 @@ void UPlayerPositionTracking::StopPositionTracking()
     }
 }
 
+/**
+ * @brief  Tracks the player's position and stores it in the PlayerPositions array.
+ * 
+ * This function tracks the player's position and stores it in the PlayerPositions array.
+ */
 void UPlayerPositionTracking::TrackPlayerPosition()
 {
     if (AActor* Owner = GetOwner())

@@ -2,6 +2,12 @@
 #include "GameFramework/Actor.h"
 #include "Misc/OutputDeviceDebug.h"
 
+/**
+ * @brief  Logs player interactions with a given actor.
+ * 
+ * @param InteractingActor The actor that is interacting with the player.
+ * @param InteractionDescription A description of the interaction.
+ */
 void UPlayerInteraction::LogPlayerInteraction(AActor* InteractingActor, FString InteractionDescription)
 {
     if (!InteractingActor)
@@ -30,6 +36,13 @@ void UPlayerInteraction::LogPlayerInteraction(AActor* InteractingActor, FString 
     // }
 }
 
+/**
+ * @brief  Logs player health changes with a given actor.
+ * 
+ * @param InteractingActor The actor that is changing the player's health.
+ * @param InteractionDescription A description of the interaction.
+ * @param health The new health value.
+ */
 void UPlayerInteraction::LogPlayerHealthChange(AActor* InteractingActor, FString InteractionDescription, int health)
 {
     //actor that is changing the health (Enemy, Bullet, Spikes on the ground, Health Potion, etc.)

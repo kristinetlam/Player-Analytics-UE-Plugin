@@ -10,6 +10,11 @@
 #include "GenericPlatform/GenericPlatformDriver.h"
 #include "GenericPlatform/GenericPlatformMemory.h"
 
+/**
+ * @brief  Generates a unique machine ID using MD5 hashing.
+ * 
+ * @return FString 
+ */
 FString GetMD5HashedMachineId()
 {
     // Get machine ID
@@ -22,6 +27,11 @@ FString GetMD5HashedMachineId()
     return MD5Hash;
 }
 
+/**
+ * @brief  Generates a unique machine ID using SHA256 hashing.
+ * 
+ * @return FString 
+ */
 UPlayerData::UPlayerData()
 {
     playerID = FGuid::NewGuid().ToString();
@@ -30,7 +40,11 @@ UPlayerData::UPlayerData()
     GPUInfo = FPlatformMisc::GetGPUDriverInfo(FPlatformMisc::GetPrimaryGPUBrand());
 }
 
-
+/**
+ * @brief  Converts the player data to a JSON object.
+ * 
+ * @return TSharedPtr<FJsonObject, ESPMode::ThreadSafe> 
+ */
 TSharedPtr<FJsonObject, ESPMode::ThreadSafe> UPlayerData::ToJson()
 {
     // Create a JSON object
